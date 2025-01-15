@@ -25,7 +25,7 @@ namespace SitoLtb.Utilities
             if (!_roleManager.RoleExistsAsync(WebsiteRoles.WebsiteAdmin).GetAwaiter().GetResult())
             {
                 _roleManager.CreateAsync(new IdentityRole(WebsiteRoles.WebsiteAdmin)).GetAwaiter().GetResult();
-      
+
                 _userManager.CreateAsync(new ApplicationUser()
                 {
                     UserName = "admin@gmail.com",
@@ -38,34 +38,7 @@ namespace SitoLtb.Utilities
                 if (appUser != null)
                 {
                     _userManager.AddToRoleAsync(appUser, WebsiteRoles.WebsiteAdmin).GetAwaiter().GetResult();
-                }
-
-
-                var listOfPages = new List<Page>()
-                {
-                    new Page()
-                    {
-                        Title = "Prossimi Tornei",
-                        Url = "Prossimi-Tornei"
-                    },
-                    new Page()
-                    {
-                        Title = "Articoli",
-                        Url = "Articoli"
-                    },
-                    new Page()
-                    {
-                        Title = "Comala",
-                        Url = "Serata-Comala"
-                    },
-                    new Page()
-                    {
-                        Title = "Dove si gioca a Torino",
-                        Url = "Dove-Torino"
-                    }
-
-                };
-                _context.Pages!.AddRange(listOfPages);
+                }       
                
             }
             _context.SaveChanges();

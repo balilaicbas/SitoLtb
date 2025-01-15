@@ -9,7 +9,7 @@ namespace SitoLtb.Data
 
         public string? ApplicationUserId { get; set; }
 
-        public string Image{ get; set; }
+        public string? Image{ get; set; }
 
         public string Url { get; set; }
         public DateTime? DateTimeCreated { get; set; } = DateTime.Now;
