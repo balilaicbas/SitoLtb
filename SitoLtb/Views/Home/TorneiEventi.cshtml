@@ -1,1 +1,179 @@
-﻿<h1>ciao</h1>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        /* Rimuove i bordi e personalizza i bottoni */
+        .btn-custom {
+            border: none;
+            padding: 0;
+            background-color: transparent;
+            position: relative;
+            overflow: hidden;
+            text-align: center;
+        }
+
+            /* Immagini e video nei bottoni */
+            .btn-custom img,
+            .btn-custom video {
+                object-fit: cover;
+                width: 100%;
+                height: 100%;
+            }
+
+        /* Scritte sovrapposte con riquadro */
+        .btn-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            pointer-events: none; /* Evita che il testo sia cliccabile separatamente */
+            /* Riquadro dietro il testo */
+            background-color: rgba(0, 0, 0, 0.7); /* Sfondo opaco scuro */
+            padding: 8px 15px; /* Spazio interno */
+            border-radius: 8px; /* Angoli arrotondati */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4); /* Ombra per maggiore visibilità */
+        }
+
+        /* Quadrati */
+        .aspect-ratio {
+            position: relative;
+            padding-top: 100%; /* Mantiene proporzione 1:1 */
+        }
+
+            .aspect-ratio > * {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+    </style>
+
+
+
+
+</head>
+<body class="bg-light">
+
+
+
+    <!-- Hero Section -->
+    <div class="calendar">
+        <div class="calendar-header" id="calendar-header"></div>
+        <div class="calendar-grid" id="calendar-grid">
+            <!-- Headers for Days -->
+            <div class="day day-header">Sun</div>
+            <div class="day day-header">Mon</div>
+            <div class="day day-header">Tue</div>
+            <div class="day day-header">Wed</div>
+            <div class="day day-header">Thu</div>
+            <div class="day day-header">Fri</div>
+            <div class="day day-header">Sat</div>
+        </div>
+    </div>
+    <!-- Intro Section -->
+    <section class="text-center py-5">
+        <div class="container">
+            <p class="lead">
+                L'attività principale di LTB conta un torneo al mercoledì presso la bocciofila "La Verdolina" in via Bena 10/a e un torneo al giovedì in cooperazione con il Club Polito Scacchi presso l'associazione "Comala"
+        </div>
+    </section>
+
+    <section class="py-5">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Prima riga -->
+                <div class="col-md-8">
+                    <button class="btn btn-custom w-100 h-100">
+                        <img src="/images/retro2.jpg" alt="Prossimi Tornei" class="w-100 h-100">
+                        <span class="btn-label">Prossimi Tornei</span>
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-custom w-100 aspect-ratio">
+                        <video muted autoplay loop class="w-100 h-100">
+                            <source src="/images/test.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <span class="btn-label">Articoli</span>
+                    </button>
+                </div>
+
+                <!-- Seconda riga -->
+                <div class="col-md-4">
+                    <button class="btn btn-custom w-100 aspect-ratio">
+                        <video muted autoplay loop class="w-100 h-100">
+                            <source src="/images/test2.mp4" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <span class="btn-label">Comala</span>
+                    </button>
+                </div>
+                <div class="col-md-8">
+                    <button class="btn btn-custom w-100 h-100">
+                        <img src="/images/retro5.jpg" alt="Dove giocare a Torino" class="w-100 h-100">
+                        <span class="btn-label">Dove giocare a Torino</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Bootstrap JS -->
+    <script>
+        function generateCalendar() {
+            const calendarHeader = document.getElementById('calendar-header');
+            const calendarGrid = document.getElementById('calendar-grid');
+
+            // Get current date
+            const today = new Date();
+            const currentYear = today.getFullYear();
+            const currentMonth = today.getMonth();
+            const currentDay = today.getDate();
+
+            // Month names
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+            // Update header with current month and year
+            calendarHeader.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+            // Get first day of the month and number of days in the month
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+            // Clear previous days
+            const dayElements = Array.from(calendarGrid.querySelectorAll('.day:not(.day-header)'));
+            dayElements.forEach(day => day.remove());
+
+            // Add empty divs for the first row padding
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDiv = document.createElement('div');
+                emptyDiv.classList.add('day');
+                calendarGrid.appendChild(emptyDiv);
+            }
+
+            // Add days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dayDiv = document.createElement('div');
+                dayDiv.classList.add('day');
+                if (day === currentDay) {
+                    dayDiv.classList.add('today');
+                }
+                dayDiv.textContent = day;
+                calendarGrid.appendChild(dayDiv);
+            }
+        }
+
+        // Generate calendar on load
+        generateCalendar();
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

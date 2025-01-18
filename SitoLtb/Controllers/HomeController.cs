@@ -22,6 +22,15 @@ namespace SitoLtb.Controllers
         {
             return View();
         }
+        public IActionResult InserimentoSoci()
+        {
+            return View();
+        }
+        public IActionResult Scuola()
+        {
+            return View();
+        }
+
 
     }
 }
