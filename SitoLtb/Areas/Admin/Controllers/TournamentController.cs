@@ -7,7 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using NuGet.Packaging.Rules;
 using SitoLtb.Data;
 using SitoLtb.Models;
+using SitoLtb.Utilities;
 using SitoLtb.ViewModels;
+using X.PagedList;
 
 namespace SitoLtb.Area.Admin.Controllers
 {
@@ -20,45 +22,43 @@ namespace SitoLtb.Area.Admin.Controllers
         public INotyfService _notification { get; }
 
          public TournamentController(ApplicationDbContext context,
-                                INotyfService notyfService)
+             UserManager<ApplicationUser> userManager,
+             INotyfService notyfService)
         {
             _context = context;
             _notification = notyfService;
+            _userManager = userManager;
         }
         [HttpGet]
         public async Task<IActionResult> Index(int? page)
         {
+            var listOfTournaments = await _context.Tournaments.ToListAsync(); ;
+
+            var loggedInUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
             
-            IQueryable<Tournament> query = _context.Tournaments!
-                .AsQueryable();  // Mantieni la query come IQueryable
 
+            var listOfTournamentsVM = listOfTournaments.Select(x => new TournamentVM()
+            {
+                Id = x.Id,
+                Nome=x.Nome,
+                Data=x.Data,
+                LinkBando=x.LinkBando,
+                LinkPreiscrizione=x.LinkPreiscrizione
+            }).ToList();
 
+            int pageSize = 5;
+            int pageNumber = (page ?? 1);
 
-            // Ordina la query
-            var orderedQuery = query.OrderByDescending(x => x.Data);
-
-            // Pagina la query
-            var paginatedList = await orderedQuery
-                .Skip((page ?? 1 - 1) * 5)  // Calcola il numero di elementi da saltare
-                .Take(5)                    // Prendi i successivi 5 elementi
-                .Select(x => new TournamentVM()   // Trasforma i dati in PostVM
-                {
-                    Id = x.Id,
-                    Nome = x.Nome,
-                    Data = x.Data,
-                    LinkBando= x.LinkBando,
-                    LinkPreiscrizione = x.LinkPreiscrizione
-
-                })
-                .ToListAsync();  // Materializza la lista
-
-            // Creazione della vista con la lista paginata
-            return View(paginatedList);
+            return View(await listOfTournamentsVM.OrderByDescending(x => x.Data).ToPagedListAsync(pageNumber, pageSize));
         }
-        
-        
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
         [HttpPost]
-        public async Task<IActionResult> Create(TournamentVM vm)
+        public async Task<IActionResult> Create(CreateTournamentVM vm)
         {
             if (!ModelState.IsValid) { return View(vm); }
 

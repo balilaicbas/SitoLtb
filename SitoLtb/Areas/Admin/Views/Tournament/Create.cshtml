@@ -1,0 +1,48 @@
+﻿@model SitoLtb.ViewModels.CreateTournamentVM
+
+
+<div class="container-fluid">
+    <a class="btn btn-primary mb-1" asp-action="Index" asp-controller="Tournament">Indietro</a>
+    <div class="card">
+        <div class="card-header bg-primary">
+            <h4 class="card-title text-white">Nuovo torneo</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" asp-controller="Tournament" asp-area="Admin" enctype="multipart/form-data">
+
+                <div class="row mb-2">
+                    <div class="col-9">
+                    <div class="mb-2">
+                        <label>Nome</label>
+                        <input type="text" asp-for="Nome" class="form-control" />
+                        <span asp-validation-for="Nome" class="text-danger"></span>
+                    </div>
+                        <div class="mb-2">
+                            <label>Link Bando</label>
+                            <input type="text" asp-for="LinkBando" class="form-control" />
+                            <span asp-validation-for="LinkBando" class="text-danger"></span>
+                        </div>
+                    
+                    <div class="mb-2">
+                        <label>Link Preiscrizioni</label>
+                         <textarea id="richEditor" asp-for="LinkPreiscrizione" class="form-control" rows="8"></textarea>
+                        <span asp-validation-for="LinkPreiscrizione" class="text-danger"></span>
+                    </div>
+                </div>
+                    <div class="mb-2">
+                        <label>Data</label>
+                        <input type="date" asp-for="Data" class="form-control" />
+                        <span asp-validation-for="Data" class="text-danger"></span>
+                    </div>
+                  
+                
+                <div class="mb-2">
+                    <button type="submit" class="btn btn-primary w-100">Salva</button>
+                </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+}
