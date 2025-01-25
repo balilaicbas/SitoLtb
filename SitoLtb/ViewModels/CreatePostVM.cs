@@ -11,6 +11,8 @@ namespace SitoLtb.ViewModels
         public string? ShortDescription { get; set; }
         public string? ApplicationUserId { get; set; }
         public string? Description { get; set; }
+        public string? Categoria { get; set; }
+
         public string? ThumbnailUrl { get; set; }
         public IFormFile? Thumbnail { get; set; }
     }

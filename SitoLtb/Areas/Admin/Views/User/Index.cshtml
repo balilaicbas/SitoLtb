@@ -19,7 +19,8 @@
                         <th>UserName</th>
                         <th>Email</th>
                         <th>Role</th>
-                        <th>Action</th>
+                        <th>Reset</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,6 +34,14 @@
                             <td>@user.Role</td>
                             <td>
                                 <a class="btn btn-info" asp-action="ResetPassword" asp-controller="User" asp-route-id="@user.Id">Reset Password</a>
+                            </td>
+                            <td>
+                                <!-- Modulo per la richiesta POST di eliminazione -->
+                                <form action="@Url.Action("Delete", "User")" method="POST" onsubmit="return confirm('Sei sicuro di voler eliminare?');">
+                                    <!-- Campo nascosto per passare l'ID dell'utente da eliminare -->
+                                    <input type="hidden" name="id" value="@user.Id" />
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
                             </td>
                         </tr>
                     }

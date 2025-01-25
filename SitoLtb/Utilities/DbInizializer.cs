@@ -28,11 +28,11 @@ namespace SitoLtb.Utilities
 
                 _userManager.CreateAsync(new ApplicationUser()
                 {
-                    UserName = "admin@gmail.com",
-                    Email = "admin@gmail.com",
-                    FirstName = "Super",
-                    LastName = "Admin"
-                }, "Admin@0011").Wait();
+                    UserName = "balilaicbas",
+                    Email = "marco.mina999@gmail.com",
+                    FirstName = "Marco",
+                    LastName = "Mina"
+                }, "Dadomom0!").Wait();
 
                 var appUser = _context.ApplicationUsers!.FirstOrDefault(x => x.Email== "admin@gmail.com");
                 if (appUser != null)
