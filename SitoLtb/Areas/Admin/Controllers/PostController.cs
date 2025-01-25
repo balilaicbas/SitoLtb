@@ -1,11 +1,11 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using SitoLtb.Data;
-using SitoLtb.Utilities;
 using SitoLtb.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using X.PagedList;
 
 namespace SitoLtb.Areas.Admin.Controllers
 {
@@ -32,34 +32,39 @@ namespace SitoLtb.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(int? page)
         {
-            var loggedInUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
-            
+            var listOfPosts = new List<Post>();
 
-            IQueryable<Post> query = _context.Posts!
-                .Include(x => x.ApplicationUser)
-                .AsQueryable();  // Mantieni la query come IQueryable
+            // Ottieni l'utente loggato
+            var loggedInUser = await _userManager.Users
+                .FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
 
-           
-
-            // Ordina la query
-            var orderedQuery = query.OrderByDescending(x => x.DateTimeCreated);
-
-            // Pagina la query
-            var paginatedList = await orderedQuery
-                .Skip((page ?? 1 - 1) * 5)  // Calcola il numero di elementi da saltare
-                .Take(5)                    // Prendi i successivi 5 elementi
-                .Select(x => new PostVM()   // Trasforma i dati in PostVM
+            // Trasforma i post in un IQueryable di PostVM
+            var listOfPostsVM = listOfPosts
+                .AsQueryable() // Assicurati di lavorare con IQueryable
+                .Select(x => new PostVM()
                 {
                     Id = x.Id,
                     Title = x.Title,
                     CreatedDate = x.DateTimeCreated,
-                    ThumbnailUrl = x.Image,
+                    ThumbnailUrl = x.Url,
                     AuthorName = x.ApplicationUser!.FirstName + " " + x.ApplicationUser.LastName
-                })
-                .ToListAsync();  // Materializza la lista
+                });
 
-            // Creazione della vista con la lista paginata
-            return View(paginatedList);
+            int pageSize = 5;
+            int pageNumber = (page ?? 1);
+
+            // Applica l'ordinamento e la paginazione in modo asincrono
+            var pagedList = await listOfPostsVM
+                .OrderByDescending(x => x.CreatedDate)
+                .ToPagedListAsync(pageNumber, pageSize);
+
+            return View(pagedList);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View(new CreatePostVM());
         }
 
 

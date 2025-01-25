@@ -42,34 +42,21 @@
         <div class="container">
             <div class="row g-4">
                 <div class="col-md-6 col-lg-4">
-                    <button>
+                    <a asp-controller="Scuola" asp-action="RedirectToExternalUrl">Testa il tuo livello!
                         <img src="/images/retro2.jpg" alt="Testa il tuo livello!" class="img-fluid rounded">
-                        <p>Testa il tuo livello!</p>>
-                    </button>
+                        <span class="btn-label position-absolute text-white">Testa il tuo livello!!</span>
+                    </a>
                 </div>
                 <div class="col-md-6 col-lg-4">
-                    <button>
-                        <img src="project2.jpg" alt="Project 2" class="img-fluid rounded">
-                        <p>La scuola di scacchi LTB</p>
-                    </button>
-                </div>
-                <div class="col-md-6 col-lg-4">
-                    <button>
-                        <img src="project3.jpg" alt="Project 3" class="img-fluid rounded">
-                        <p>Materiale utile per principianti</p>
-                    </button>
-                </div>
-                <div class="col-md-6 col-lg-4">
-                    <button>
-                        <img src="project4.jpg" alt="Project 4" class="img-fluid rounded">
-                        <p>Scuole e progetti</p>
-                    </button>
+                    <a asp-controller="Scuola" asp-action="BundlePrincipianti">
+                        Testa il tuo livello!
+                        <img src="/images/retro5.jpg" alt="Testa il tuo livello!" class="img-fluid rounded">
+                        <span class="btn-label position-absolute text-white">Materiale per migliorare</span>
+                    </a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

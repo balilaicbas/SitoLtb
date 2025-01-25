@@ -4,7 +4,7 @@ namespace SitoLtb.Area.Admin.Controllers
 {
     public class DashboardController : Controller
     {
-        public IActionResult Dashboard()
+        public IActionResult Index()
         {
             return View();
         }

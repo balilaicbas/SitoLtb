@@ -79,7 +79,7 @@ namespace SitoLtb.Areas.Admin.Controllers
                 return View(vm);
             }
             var token = await _userManager.GeneratePasswordResetTokenAsync(existingUser);
-            var result = await _userManager.ResetPasswordAsync(existingUser, token, vm.NewPassword);
+            var result = await _userManager.ResetPasswordAsync(existingUser, token, vm.NewPassword!);
             if (result.Succeeded)
             {
                 _notification.Success("Password reset succuful");
@@ -131,7 +131,28 @@ namespace SitoLtb.Areas.Admin.Controllers
             }
             return View(vm);
         }
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id)
+        {
+            var user = await _userManager.Users!.FirstOrDefaultAsync(x => x.Id == id);
 
+            var loggedInUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
+
+
+            var result = await _userManager.DeleteAsync(user!);
+            if (result.Succeeded)
+            {
+                _notification.Success("Post Deleted Successfully");
+                return RedirectToAction("Index", "User", new { area = "Admin" });
+            }
+            else
+            {
+                _notification.Error("Non è stato possibile rimuovere l'utente, rimuovere direttamente a db");
+                return RedirectToAction("Index", "User", new { area = "Admin" });
+            }
+
+
+        }
 
         [HttpGet("Login")]
         public IActionResult Login()
