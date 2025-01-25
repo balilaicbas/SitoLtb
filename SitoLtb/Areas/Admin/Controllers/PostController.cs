@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using X.PagedList;
+using SitoLtb.Utilities;
 
 namespace SitoLtb.Areas.Admin.Controllers
 {
@@ -32,33 +33,26 @@ namespace SitoLtb.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(int? page)
         {
-            var listOfPosts = new List<Post>();
+            var listOfPosts = await _context.Posts.ToListAsync();
 
-            // Ottieni l'utente loggato
-            var loggedInUser = await _userManager.Users
-                .FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
 
-            // Trasforma i post in un IQueryable di PostVM
-            var listOfPostsVM = listOfPosts
-                .AsQueryable() // Assicurati di lavorare con IQueryable
-                .Select(x => new PostVM()
-                {
-                    Id = x.Id,
-                    Title = x.Title,
-                    CreatedDate = x.DateTimeCreated,
-                    ThumbnailUrl = x.Url,
-                    AuthorName = x.ApplicationUser!.FirstName + " " + x.ApplicationUser.LastName
-                });
+            var loggedInUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
+            
+
+            var listOfPostsVM = listOfPosts.Select(x => new PostVM()
+            {
+                Id = x.Id,
+                Title = x.Title,
+                CreatedDate = x.DateTimeCreated,
+                ThumbnailUrl = x.Url,
+                Categoria=x.Categoria,
+                AuthorName = x.ApplicationUser!.FirstName + " " + x.ApplicationUser.LastName
+            }).ToList();
 
             int pageSize = 5;
             int pageNumber = (page ?? 1);
 
-            // Applica l'ordinamento e la paginazione in modo asincrono
-            var pagedList = await listOfPostsVM
-                .OrderByDescending(x => x.CreatedDate)
-                .ToPagedListAsync(pageNumber, pageSize);
-
-            return View(pagedList);
+            return View(await listOfPostsVM.OrderByDescending(x => x.CreatedDate).ToPagedListAsync(pageNumber, pageSize));
         }
 
         [HttpGet]
@@ -80,6 +74,7 @@ namespace SitoLtb.Areas.Admin.Controllers
 
             post.Title = vm.Title;
             post.Description = vm.Description;
+            post.Categoria = vm.Categoria;
             post.ApplicationUserId = loggedInUser!.Id;
 
             if (post.Title != null)
@@ -155,6 +150,7 @@ namespace SitoLtb.Areas.Admin.Controllers
 
             post.Title = vm.Title;
             post.Description = vm.Description;
+            post.Categoria = vm.Categoria;
 
             if (vm.Thumbnail != null)
             {
