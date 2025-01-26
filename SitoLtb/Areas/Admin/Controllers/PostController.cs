@@ -1,12 +1,13 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
-using SitoLtb.Data;
+using SitoLtb.Models;
 using SitoLtb.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using X.PagedList;
-using SitoLtb.Utilities;
+using SitoLtb.Data;
+
 
 namespace SitoLtb.Areas.Admin.Controllers
 {
@@ -46,7 +47,7 @@ namespace SitoLtb.Areas.Admin.Controllers
                 CreatedDate = x.DateTimeCreated,
                 ThumbnailUrl = x.Url,
                 Categoria=x.Categoria,
-                AuthorName = x.ApplicationUser!.FirstName + " " + x.ApplicationUser.LastName
+                AuthorName = x.ApplicationUser.FirstName + " " + x.ApplicationUser.LastName
             }).ToList();
 
             int pageSize = 5;

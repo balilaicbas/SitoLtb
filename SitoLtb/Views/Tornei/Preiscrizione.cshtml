@@ -1,5 +1,47 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model IEnumerable<SitoLtb.Models.Tournament>
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+
+<!-- Page Header-->
+<h1>Preiscrizione Tornei</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nome</th>
+            <th>Data</th>
+            <th>Link Bando</th>
+            <th>Link Preiscrizione</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tournament in Model)
+        {
+            <tr>
+                <td>@tournament.Nome</td>
+                <td>@tournament.Data.ToString("dd/MM/yyyy")</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(tournament.LinkBando))
+                    {
+                        <a href="@tournament.LinkBando" target="_blank">Bando</a>
+                    }
+                    else
+                    {
+                        <span>Non disponibile</span>
+                    }
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(tournament.LinkPreiscrizione))
+                    {
+                        <a href="@tournament.LinkPreiscrizione" target="_blank">Preiscrizione</a>
+                    }
+                    else
+                    {
+                        <span>Non disponibile</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

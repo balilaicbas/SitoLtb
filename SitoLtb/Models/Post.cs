@@ -1,5 +1,7 @@
 ﻿
-namespace SitoLtb.Data
+using SitoLtb.Data;
+
+namespace SitoLtb.Models
 {
     public class Post
     {
@@ -8,13 +10,13 @@ namespace SitoLtb.Data
         public string Description{ get; set; }
 
         public string? ApplicationUserId { get; set; }
-
+      
         public string? Image{ get; set; }
 
         public string Url { get; set; }
 
         public string? Categoria {  get; set; }
-        public DateTime? DateTimeCreated { get; set; } = DateTime.Now;
+        public DateTime DateTimeCreated { get; set; } = DateTime.Now;
         public ApplicationUser? ApplicationUser{ get; set; }
 
     }

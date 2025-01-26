@@ -12,5 +12,7 @@ namespace SitoLtb.Data
         public DbSet<ApplicationUser>? ApplicationUsers { get; set; }
         public DbSet<Post>? Posts { get; set; }
         public DbSet<Tournament>? Tournaments { get; set; }
+
+        
     }
 }

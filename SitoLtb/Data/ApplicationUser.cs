@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace SitoLtb.Data
+namespace SitoLtb.Models
 {
     public class ApplicationUser: IdentityUser
     {
