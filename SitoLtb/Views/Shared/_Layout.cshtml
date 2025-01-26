@@ -11,19 +11,18 @@
 </head>
 <body>
     <div class="d-flex justify-content-between align-items-center">
-        <a asp-controller="Home" asp-action="Index" target="_blank">
+        <a asp-controller="Home" asp-action="Index">
             <img src="/images/King.png" class="rl_navbar5_icon" width="30" />
             <span>Home</span>
         </a>
-        <a asp-controller="Home" asp-action="TorneiEventi" target="_blank">
+        <a asp-controller="Home" asp-action="TorneiEventi" >
             <img src="/images/King.png" class="rl_navbar5_icon" width="30" />
             <span>Tornei</span>
         </a>
-        <a asp-controller="Home" asp-action="Scuola" target="_blank">
+        <a asp-controller="Home" asp-action="Scuola" >
             <img src="/images/scacchiera.png" class="rl_navbar5_icon" width="30" />
             <span>Scuola di scacchi</span>
         </a>
-        <button type="button" onclick="location.href='@Url.Action("InserimentoSoci","Home")'">Blog</button>
     </div>
 
 

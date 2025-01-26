@@ -1,6 +1,5 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
-using SitoLtb.Data;
-using SitoLtb.Utilities;
+using SitoLtb.Models;
 using SitoLtb.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
