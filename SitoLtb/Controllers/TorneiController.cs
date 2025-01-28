@@ -21,7 +21,7 @@ namespace SitoLtb.Controllers
             
             int pageSize = 4;
             int pageNumber = (page ?? 1);
-            var vm = await _context.Tournaments
+            var vm = await _context.Tournaments!
             .OrderBy(t => t.Data)
             .Where(x => x.Data >= DateTime.Today)
             .ToPagedListAsync(pageNumber, pageSize);

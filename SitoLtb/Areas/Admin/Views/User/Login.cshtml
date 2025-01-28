@@ -7,48 +7,45 @@
 
 <!-- Outer Row -->
 <!-- Outer Row -->
-<div class="row justify-content-center">
+<div class="container">
 
-    <div class="col-xl-10 col-lg-12 col-md-9">
+    <!-- Outer Row -->
+    <div class="row justify-content-center align-items-center" style="height: 100vh;">
 
-        <div class="card o-hidden border-0 shadow-lg my-5">
-            <div class="card-body p-0">
-                <!-- Nested Row within Card Body -->
-                <div class="row">
-                    <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
-                    <div class="col-lg-6">
-                        <div class="p-5">
-                            <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
-                            </div>
-                            <form method="post" asp-controller="User" asp-action="Login">
-                                <div class="form-group">
-                                    <input asp-for="Username" type="text" class="form-control form-control-user"
-                                           id="exampleInputEmail" aria-describedby="emailHelp"
-                                           placeholder="Inserisci Username...">
-                                    <span asp-validation-for="Username" class="text-danger"></span>
+        <div class="col-xl-10 col-lg-12 col-md-9">
+
+            <div class="card o-hidden border-0 shadow-lg">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="row">
+                        <div class="col-lg-6 p-0">
+                            <img src="/images/fotoLogin.jpg" class="img-fluid h-100" style="object-fit: cover;" alt="Login Image">
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="p-5">
+                                <div class="text-center">
+                                    <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                 </div>
-                                <div class="form-group">
-                                    <input asp-for="Password" type="password" class="form-control form-control-user"
-                                           id="exampleInputPassword" placeholder="Password">
-                                    <span asp-validation-for="Password" class="text-danger"></span>
-                                </div>
-                                
-                                
-                                <input type="submit" class="btn btn-primary btn-user btn-block" value="Login">
+                                <form method="post" action="/Login">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Inserisci Username..." name="Username" value="">
+                                        <span class="text-danger field-validation-valid" data-valmsg-for="Username" data-valmsg-replace="true"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" class="form-control form-control-user" id="exampleInputPassword" placeholder="Password" name="Password">
+                                        <span class="text-danger field-validation-valid" data-valmsg-for="Password" data-valmsg-replace="true"></span>
+                                    </div>
 
-                            </form>
-                            <hr>
-                            <div class="text-center">
-                                <a class="small" href="forgot-password.html">Forgot Password?</a>
-                            </div>
-                            <div class="text-center">
-                                <a class="small" href="register.html">Create an Account!</a>
+                                    <input type="submit" class="btn btn-primary btn-user btn-block" value="Login">
+
+                                    <input name="__RequestVerificationToken" type="hidden" value="CfDJ8ImpjDSO8WxBrDS1oWBuGMfN-l9Z5gCnwMzp_tMFPgzNo_a8AB9A2PrRxuA81MQmdjplyA0G9fiIpGAV3MEuoHoyx9yQjPSGvgf4KN_eWdatHn5gOB23YtevUjZMX7l_Toh77YKsvtfHhFxcqziZn4k" />
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
 
     </div>

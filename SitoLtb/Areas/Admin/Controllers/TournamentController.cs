@@ -1,13 +1,10 @@
-﻿using AspNetCoreGeneratedDocument;
-using AspNetCoreHero.ToastNotification.Abstractions;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Packaging.Rules;
 using SitoLtb.Data;
 using SitoLtb.Models;
-using SitoLtb.Utilities;
 using SitoLtb.ViewModels;
 using X.PagedList;
 

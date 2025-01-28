@@ -39,9 +39,9 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" asp-area="Admin" asp-controller="Post" asp-action="Index">
                 <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-laugh-wink"></i>
+                    <i class="fas fa-gear"></i>
                 </div>
                 <div class="sidebar-brand-text mx-3">Gestionale</div>
             </a>
@@ -51,19 +51,17 @@
 
             <li class="nav-item active">
                 <a class="nav-link" asp-action="Index" asp-controller="Post" asp-area="Admin">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <i class="fas fa-fw fa-bell"></i>
                     <span>Post</span>
                 </a>
             </li>
 
             <hr class="sidebar-divider my-0">
 
-          
-              
 
                 <li class="nav-item active">
                     <a class="nav-link" asp-action="Index" asp-controller="User" asp-area="Admin">
-                        <i class="fas fa-fw fa-user"></i>
+                    <i class="fas fa-fw fa-user"></i>
                         <span>Utenti</span>
                     </a>
                 </li>
@@ -74,13 +72,14 @@
 
                 <li class="nav-item active">
                     <a class="nav-link" asp-action="Index" asp-controller="Tournament" asp-area="Admin">
-                        <i class="fas fa-fw fa-gear"></i>
+                    <i class="fas fa-fw fa-chess"></i>
                         <span>Tornei</span>
                     </a>
                 </li>
+            <hr class="sidebar-divider my-0">
                 <li class="nav-item active">
                     <a class="nav-link" asp-action="Index" asp-controller="Dashboard" asp-area="Admin">
-                        <i class="fas fa-fw fa-gear"></i>
+                    <i class="fas fa-fw fa-database"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>

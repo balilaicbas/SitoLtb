@@ -92,7 +92,7 @@ namespace SitoLtb.Areas.Admin.Controllers
 
             await _context.Posts!.AddAsync(post);
             await _context.SaveChangesAsync();
-            _notification.Success("Post Created Successfully");
+            _notification.Success("Post Creato");
             return RedirectToAction("Index");
         }
 

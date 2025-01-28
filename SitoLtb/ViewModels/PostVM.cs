@@ -1,4 +1,5 @@
-﻿namespace SitoLtb.ViewModels
+﻿
+namespace SitoLtb.ViewModels
 {
     public class PostVM
     {
