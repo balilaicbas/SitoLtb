@@ -1,0 +1,117 @@
+﻿/* Stile del bottone */
+.button {
+    display: flex;
+    align-items: center;
+    background-color: #CDC673;
+    color: black; /* Mantiene il colore originale */
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    text-decoration: none; /* Rimuove la sottolineatura */
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out, font-weight 0.2s;
+}
+
+    /* Effetto al passaggio del mouse */
+    .button:hover {
+        background-color: #8B864E;
+        font-weight: bold;
+        color:black;
+    }
+
+    
+
+    /* Immagine nel bottone */
+    .button img {
+        width: 40px; /* Dimensione dell'immagine */
+        height: 40px;
+        margin-right: 10px; /* Spazio tra immagine e testo */
+        transition: transform 2s ease-in-out;
+    }
+
+    /* Ruota l'immagine quando il bottone è in hover */
+    .button:hover img {
+        transform: rotate(360deg);
+    }
+/*@keyframes tail_motion {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    50% {
+        transform: rotate(15deg);
+    }
+
+    100% {
+        transform: rotate(0deg);
+    }
+}
+    
+    body {
+        padding:0;
+        margin:0;
+        font-family:sans-serif;
+        background-color:#63ec85;
+
+    }
+.wrapper {
+    position: absolute;
+    height: calc(100vh - 100px);
+    width: 100%;
+    top: 0;
+}
+    .ground{
+        position:absolute;
+        bottom:0;
+        width:100%;
+        height:60px;
+        background-color:rgb(1,143,96);
+    }
+    .cat{
+        position:absolute;
+        left:100px;
+        height:30px;
+        width:60px;
+        transition:1.5s;
+        transform-origin:center;
+        background-color:transparent;
+    }
+    .body{
+        position:absolute;
+        height:30px;
+        width:60px;
+    }
+    .cat_head{
+        position:absolute;
+        height:40px;
+        width:48px;
+        right:-10px;
+        top:-30px;
+        transition:0.5s;
+        z-index:50;
+    }
+
+    .tail{
+        position:absolute;
+        top:-25px;
+        height:36px;
+        width:15px;
+        animation:tail_motion forwards 2s;
+        transform-origin:bottom right;
+    }
+    .leg{
+        position:absolute;
+        height:20px;
+        width:10px;
+        transform-origin:top center;
+    }
+    polygon.eyes{
+        fill:rgb(1,143,96)
+    }
+    polygon,
+    path{
+        fill:white
+    }
+
+    */
