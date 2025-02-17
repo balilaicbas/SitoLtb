@@ -18,17 +18,26 @@ namespace SitoLtb.Controllers
         }
         public async Task<IActionResult> Preiscrizione(int? page)
         {
-            
             int pageSize = 4;
             int pageNumber = (page ?? 1);
-            var vm = await _context.Tournaments!
-            .OrderBy(t => t.Data)
-            .Where(x => x.Data >= DateTime.Today)
-            .ToPagedListAsync(pageNumber, pageSize);
-            return View(vm);
+
+            var tournaments = await _context.Tournaments!
+                .OrderBy(t => t.Data)
+                .Where(x => x.Data >= DateTime.Today)
+                .Select(t => new SitoLtb.ViewModels.TournamentVM
+                {
+                    Nome = t.Nome,
+                    Data = t.Data,
+                    LinkBando = t.LinkBando,
+                    LinkPreiscrizione = t.LinkPreiscrizione
+                })
+                .ToPagedListAsync(pageNumber, pageSize); // Converte in PagedList
+
+            return View(tournaments); // Passa il modello corretto alla vista
         }
-       
-            public async Task<IActionResult> Blog(int? page)
+
+
+        public async Task<IActionResult> Blog(int? page)
         {
             var vm = new BlogVM();
             int pageSize = 4;

@@ -6,7 +6,7 @@
 <!-- Page Header-->
 <h1>Preiscrizione Tornei</h1>
 
-<table class="table">
+<table class="table table-striped table-hover">
     <thead>
         <tr>
             <th>Nome</th>
@@ -20,11 +20,11 @@
         {
             <tr>
                 <td>@tournament.Nome</td>
-                <td>@tournament.Data.ToString("dd/MM/yyyy")</td>
+                <td>@(tournament.Data != null ? tournament.Data.ToString("dd/MM/yyyy") : "Data non disponibile")</td>
                 <td>
                     @if (!string.IsNullOrEmpty(tournament.LinkBando))
                     {
-                        <a href="@tournament.LinkBando" target="_blank">Bando</a>
+                        <a href="@Html.Raw(tournament.LinkBando)" target="_blank">Bando</a>
                     }
                     else
                     {
@@ -34,7 +34,7 @@
                 <td>
                     @if (!string.IsNullOrEmpty(tournament.LinkPreiscrizione))
                     {
-                        <a href="@tournament.LinkPreiscrizione" target="_blank">Preiscrizione</a>
+                        <a href="@Html.Raw(tournament.LinkPreiscrizione)" target="_blank">Preiscrizione</a>
                     }
                     else
                     {

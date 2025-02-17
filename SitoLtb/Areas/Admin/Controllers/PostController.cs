@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using X.PagedList;
 using SitoLtb.Data;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 
 namespace SitoLtb.Areas.Admin.Controllers
@@ -47,7 +48,10 @@ namespace SitoLtb.Areas.Admin.Controllers
                 CreatedDate = x.DateTimeCreated,
                 ThumbnailUrl = x.Url,
                 Categoria=x.Categoria,
-                AuthorName = x.ApplicationUser.FirstName + " " + x.ApplicationUser.LastName
+                AuthorName = _userManager.Users
+                    .Where(u => u.Id == x.ApplicationUserId)
+                    .Select(u => u.FirstName + " " + u.LastName)
+                    .FirstOrDefault() ?? "Utente sconosciuto" // Gestisce il caso in cui l'utente non venga trovato
             }).ToList();
 
             int pageSize = 5;
@@ -57,9 +61,21 @@ namespace SitoLtb.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View(new CreatePostVM());
+            var users = await _userManager.Users
+         .Select(u => new SelectListItem
+         {
+             Value = u.Id,
+             Text = u.FirstName + " " + u.LastName 
+                      })
+         .ToListAsync();
+
+            var model = new CreatePostVM();
+            ViewBag.Users = users; // Passiamo la lista di utenti alla vista
+
+            return View(model);
+          
         }
 
 
@@ -76,7 +92,7 @@ namespace SitoLtb.Areas.Admin.Controllers
             post.Title = vm.Title;
             post.Description = vm.Description;
             post.Categoria = vm.Categoria;
-            post.ApplicationUserId = loggedInUser!.Id;
+            post.ApplicationUserId = vm.ApplicationUserId;
 
             if (post.Title != null)
             {

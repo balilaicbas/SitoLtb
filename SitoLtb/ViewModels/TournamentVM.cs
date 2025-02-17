@@ -1,4 +1,5 @@
 ﻿
+
 namespace SitoLtb.ViewModels
 {
     public class TournamentVM
@@ -11,6 +12,8 @@ namespace SitoLtb.ViewModels
 
         public string LinkPreiscrizione { get; set; }
         public string Url { get; set; }
+  
+
 
     }
 }
