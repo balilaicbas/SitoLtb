@@ -4,28 +4,33 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Libero Torneificio del Borgo ormai da 15 anni porta scacchi e bar ad un livello superiore" />
     <title> Home</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/WebApplication1.styles.css" asp-append-version="true" />
     <link rel="icon" type="image/png" href="~/images/logo_LTB_Site_Icon.png">
     <link  rel="stylesheet" href="~/css/layout.css"/>
 
 </head>
 <body>
-    <div class="d-flex justify-content-between align-items-center">
-        <a asp-controller="Home" asp-action="Index" class="button">
+    <nav class="flex-container">
+        <div class="first-item">Libero Torneificio del Borgo</div>
+        <div class="flex-item"> <a asp-controller="Home" asp-action="Index" class="button">
             <img src="/images/LoginImage1.jpg" class="rl_navbar5_icon" width="30" />
             <span>Home</span>
         </a>
+        </div>
+        <div class="flex-item">
         <a asp-controller="Home" asp-action="TorneiEventi" class="button">
             <img src="/images/LoginImage2.jpg" class="rl_navbar5_icon" width="30" />
             <span>Tornei</span>
         </a>
+        </div>
+        <div class="flex-item">
         <a asp-controller="Home" asp-action="Scuola" class="button">
             <img src="/images/LoginImage3.jpg" class="rl_navbar5_icon" width="30" />
             <span>Scuola di scacchi</span>
         </a>
-    </div>
+        </div>
+    </nav>
 
 
     <div class="container">
@@ -36,7 +41,6 @@
 
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
     @await Component.InvokeAsync("Notyf")
