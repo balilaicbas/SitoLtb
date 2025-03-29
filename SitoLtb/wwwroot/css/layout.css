@@ -1,20 +1,38 @@
-﻿/* Stile del bottone */
-.button {
+﻿
+
+body {
+    margin:0;
+
+
+
+}
+div.first-item {
+    font-size: 2rem;
+    font-weight: bold;
+    font-style: italic;
+    margin-right: 20px;
+}
+
+.flex-container {
     display: flex;
-    align-items: center;
-    background-color: #CDC673;
-    color: black; /* Mantiene il colore originale */
+    justify-content: space-between;
+    padding: 20px;
+}
+
+/* Stile del bottone */
+.flex-item {
+    gap: 15px;
+    color: black;
     padding: 10px 20px;
     border: none;
-    border-radius: 8px;
     font-size: 18px;
-    text-decoration: none; /* Rimuove la sottolineatura */
+    text-decoration: none;
     cursor: pointer;
     transition: background-color 0.3s ease-in-out, font-weight 0.2s;
 }
 
     /* Effetto al passaggio del mouse */
-    .button:hover {
+    .flex-item:hover {
         background-color: #8B864E;
         font-weight: bold;
         color:black;
@@ -34,84 +52,30 @@
     .button:hover img {
         transform: rotate(360deg);
     }
-/*@keyframes tail_motion {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    50% {
-        transform: rotate(15deg);
-    }
-
-    100% {
-        transform: rotate(0deg);
-    }
+a {
+    text-decoration: none;
+    color: black;
 }
-    
-    body {
-        padding:0;
-        margin:0;
-        font-family:sans-serif;
-        background-color:#63ec85;
 
-    }
-.wrapper {
-    position: absolute;
-    height: calc(100vh - 100px);
-    width: 100%;
-    top: 0;
+.section {
+    width: 100vw; /* Larghezza schermo intero */
+    height: 100vh; /* Altezza schermo intero */
 }
-    .ground{
-        position:absolute;
-        bottom:0;
-        width:100%;
-        height:60px;
-        background-color:rgb(1,143,96);
-    }
-    .cat{
-        position:absolute;
-        left:100px;
-        height:30px;
-        width:60px;
-        transition:1.5s;
-        transform-origin:center;
-        background-color:transparent;
-    }
-    .body{
-        position:absolute;
-        height:30px;
-        width:60px;
-    }
-    .cat_head{
-        position:absolute;
-        height:40px;
-        width:48px;
-        right:-10px;
-        top:-30px;
-        transition:0.5s;
-        z-index:50;
-    }
 
-    .tail{
-        position:absolute;
-        top:-25px;
-        height:36px;
-        width:15px;
-        animation:tail_motion forwards 2s;
-        transform-origin:bottom right;
-    }
-    .leg{
-        position:absolute;
-        height:20px;
-        width:10px;
-        transform-origin:top center;
-    }
-    polygon.eyes{
-        fill:rgb(1,143,96)
-    }
-    polygon,
-    path{
-        fill:white
-    }
 
-    */
+.section1{
+    background-color:white;
+
+}
+
+.section2{
+    background-color:purple;
+}
+.section3 {
+    background-color: white;
+}
+
+.section4 {
+    background-color: purple;
+}
+
