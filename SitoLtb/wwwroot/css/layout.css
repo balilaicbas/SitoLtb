@@ -35,10 +35,12 @@ body {
         height: 75px;
     }
 
-    .logo-title h1 {
+    .logo-title a {
         font-style: italic;
-        font-size: 40px%;
+        font-size: 40px;
         margin: 0;
+        color:black;
+        text-decoration:none;
     }
 
 .main-navbar ul {
@@ -62,4 +64,22 @@ body {
         position: absolute;
         right: -20px;
         color: #aaa;
+    }
+
+.section1 {
+    position: relative;
+    width: 100%;
+    display: inline-block;
+}
+    .section1 img {
+        width: 100%;
+        height: auto; /* mantiene proporzioni e altezza naturale */
+        display: block;
+    }
+    .section1 div {
+        position: absolute;
+        top: 50%;
+        color: white;
+        text-align: center;
+        padding: 20px;
     }
