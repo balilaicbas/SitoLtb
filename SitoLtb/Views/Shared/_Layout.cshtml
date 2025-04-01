@@ -14,7 +14,7 @@
     <header class="main-header">
         <div class="logo-title">
             <img src="/images/logo_LTB_Site_Icon.png" alt="Logo LTB" />
-            <h1>Libero Torneificio del Borgo</h1>
+            <a asp-controller="Home" asp-action="Index">Libero Torneificio del Borgo</a>
         </div>
 
         <nav class="main-navbar" aria-label="Menu principale">
@@ -29,9 +29,9 @@
         </nav>
     </header>
 
-    <main class="container" role="main">
+  
         @RenderBody()
-    </main>
+    
 
     <script src="/lib/jquery/dist/jquery.min.js"></script>
     <script src="/js/site.js" asp-append-version="true"></script>
