@@ -1,81 +1,65 @@
-﻿
+﻿* {
+    box-sizing: border-box;
+}
 
 body {
-    margin:0;
-
-
-
-}
-div.first-item {
-    font-size: 2rem;
-    font-weight: bold;
-    font-style: italic;
-    margin-right: 20px;
+    margin: 0;
+    font-family: sans-serif;
 }
 
-.flex-container {
+.upper-header {
+    padding: 30px;
+    background-color: black;
+}
+
+/* HEADER */
+
+.main-header {
+    background-color: white;
+    color: black;
+    padding: 20px 5%;
     display: flex;
     justify-content: space-between;
-    padding: 20px;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
-/* Stile del bottone */
-.flex-item {
-    gap: 15px;
-    color: black;
-    padding: 10px 20px;
-    border: none;
-    font-size: 18px;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease-in-out, font-weight 0.2s;
+.logo-title {
+    display: flex;
+    align-items: center;
+    gap: 20px;
 }
 
-    /* Effetto al passaggio del mouse */
-    .flex-item:hover {
-        background-color: #8B864E;
-        font-weight: bold;
-        color:black;
+    .logo-title img {
+        width: 75px;
+        height: 75px;
     }
 
-    
-
-    /* Immagine nel bottone */
-    .button img {
-        width: 40px; /* Dimensione dell'immagine */
-        height: 40px;
-        margin-right: 10px; /* Spazio tra immagine e testo */
-        transition: transform 2s ease-in-out;
+    .logo-title h1 {
+        font-style: italic;
+        font-size: 40px%;
+        margin: 0;
     }
 
-    /* Ruota l'immagine quando il bottone è in hover */
-    .button:hover img {
-        transform: rotate(360deg);
+.main-navbar ul {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+    padding: 0;
+    margin: 0;
+}
+
+    .main-navbar ul li a {
+        display: block;
+        text-decoration: none;
+        color: black;
+        font-size: 18px;
+        position: relative;
     }
-a {
-    text-decoration: none;
-    color: black;
-}
 
-.section {
-    width: 100vw; /* Larghezza schermo intero */
-    height: 100vh; /* Altezza schermo intero */
-}
-
-
-.section1{
-    background-color:white;
-
-}
-
-.section2{
-    background-color:purple;
-}
-.section3 {
-    background-color: white;
-}
-
-.section4 {
-    background-color: purple;
-}
-
+    .main-navbar ul li:not(:last-child)::after {
+        content: "|";
+        position: absolute;
+        right: -20px;
+        color: #aaa;
+    }
