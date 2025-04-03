@@ -112,7 +112,10 @@ body {
             transform: translateY(0);
         }
 
-
+.section-2 {
+    background-color: purple;
+    height: 65vh;
+}
 .slider-wrapper {
     width: 100%;
     max-width: 1200px;
@@ -131,7 +134,7 @@ body {
       flex: 0 0 calc(100% / 3); /* 3 cards visible */
       margin: 10px;
       background: gold;
-      height: 200px;
+      height: 400px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -140,3 +143,24 @@ body {
       border-radius: 8px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     }
+.container-div {
+    display: flex;
+    gap: 20px; /* spazio tra i due div */
+    align-items: stretch; /* o center, a seconda del layout che vuoi */
+}
+
+.container1 {
+    flex: 1; /* prende metà spazio o più */
+    background: lightgray;
+    height: 300px; /* esempio visivo */
+}
+
+.container2 {
+    flex: 1;
+    background: gold;
+    padding: 20px;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
