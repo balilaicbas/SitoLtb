@@ -30,31 +30,51 @@
     </div>
 </div>
 </section>
-    
-<div>
-    <h2>La verdolina</h2>
-</div>
-
 <section class="section-3">
-<h2>Dove siamo</h2>
+<h2>Chi siamo</h2>
 <div class="container-div">
 <div class="container1" id="map"></div>
 <div class="container2"> mercoledì, è arrivato il momento</div>
 </div>
 </section>
-<div class="section section3">
-    <h2>La scuola di scacchi LTB</h2>
-</div>
-<div class="section section4">
-    <h2> gli eventi sociali</h2>
-</div>
-
-<style>
-    #map {
-        height: 500px;
-        width: 100%;
-    }
-</style>
+<section class="section-4">
+    <h2>La nostra Galleria</h2>
+    <img src="#" alt="Alternate Text" />
+    <img src="#" alt="Alternate Text" />
+    <img src="#" alt="Alternate Text" />
+    <img src="#" alt="Alternate Text" />
+    <img src="#" alt="Alternate Text" />
+    <img src="#" alt="Alternate Text" />
+</section>
+<section class="section-5">
+    <ul>
+        <li>
+            <img src="#" alt="Alternate Text" />
+            <span>Comala</span>
+        </li>
+        <li>
+            <img src="#" alt="Alternate Text" />
+            <span>Parco Ruffini</span>
+        </li>
+        <li>
+            <img src="#" alt="Alternate Text" />
+            <span>Bar Centoni</span>
+        </li>
+    </ul>
+</section>
+<section class="section-6">
+    <div class="split-container" id="splitContainer">
+        <div class="image-left"></div>
+        <div class="image-right" id="imageRight"></div>
+        <div class="divider" id="dragBar">
+            <div class="dot"></div>
+        </div>
+    </div>
+</section>
+<section class="section-7">
+    <h2>Dove giocare a scacchi a Torino</h2>
+</section>
+    
 
 <script>
     function initMap() {
@@ -95,3 +115,39 @@
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=@googleMapsApiKey&callback=initMap">
 </script>
+
+<script>
+    const dragBar = document.getElementById("dragBar");
+    const imageRight = document.getElementById("imageRight");
+    const container = document.getElementById("splitContainer");
+
+    let isDragging = false;
+
+    dragBar.addEventListener("mousedown", (e) => {
+      isDragging = true;
+      document.body.style.cursor = "col-resize";
+      e.preventDefault();
+    });
+
+    document.addEventListener("mouseup", () => {
+      isDragging = false;
+      document.body.style.cursor = "default";
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (!isDragging) return;
+
+      const rect = container.getBoundingClientRect();
+      let x = e.clientX - rect.left;
+
+      // Limita il drag ai bordi
+      x = Math.max(0, Math.min(x, rect.width));
+
+      // Sposta il divisore
+      dragBar.style.left = `${x}px`;
+
+      // Ridimensiona la clip della seconda immagine
+      const percentage = (x / rect.width) * 100;
+      imageRight.style.clipPath = `inset(0 0 0 ${percentage}%)`;
+    });
+</script>   

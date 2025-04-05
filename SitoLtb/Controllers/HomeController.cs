@@ -37,7 +37,10 @@ namespace SitoLtb.Controllers
         {
             return View();
         }
-
+        public IActionResult DoveGiocare()
+        {
+            return View();
+        }
 
     }
 }
