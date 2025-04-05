@@ -170,21 +170,23 @@ body {
     padding: 40px 20px;
 }
 
-.section-5{
-    height:50vh;
+.section-6{
+    height:80vh;
+    padding:5%;
+    position:relative;
 }
 
 .split-container {
     min-height: 100vh;
-    height: 100vh;
+    height: 80vh;
     display: block;
 }
 
 .image-left,
 .image-right {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 0%;
+    left: 0%;
     height: 100%;
     width: 100%;
     background-size: cover;
@@ -192,12 +194,11 @@ body {
 }
 
 .image-left {
-    background-image: url('https://picsum.photos/id/1015/1200/800'); /* Immagine sinistra */
-    z-index: 1;
+    background-image: url('https://picsum.photos/id/1015/1200/800'); z-index: 1;
 }
 
 .image-right {
-    background-image: url('https://picsum.photos/id/1016/1200/800'); /* Immagine destra */
+    background-image: url('https://picsum.photos/id/1016/1200/800');
     clip-path: inset(0 0 0 50%);
     z-index: 2;
     transition: clip-path 0.05s ease-out;
@@ -205,7 +206,7 @@ body {
 
 .divider {
     position: absolute;
-    top: 0;
+    top: 0%;
     left: 50%;
     width: 6px;
     height: 100%;
