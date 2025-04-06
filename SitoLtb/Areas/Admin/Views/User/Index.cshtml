@@ -4,15 +4,17 @@
     ViewData["Title"] = "Utenti";
 }
 
-<div >
+
+<main>
+<div class="title-button">
     <a  asp-action="Register" asp-controller="User">Aggiungi Utente</a>
-    <div>
-        <div>
+    </div>
+        <div class="Title-list-of-users">
             <h4>List of Users</h4>
         </div>
-        <div>
+        <section>
             <table id="UsersTable">
-                <thead>
+                <thead> 
                     <tr>
                         <th>Nome</th>
                         <th>Cognome</th>
@@ -33,21 +35,18 @@
                             <td>@user.Email</td>
                             <td>@user.Role</td>
                             <td>
-                                <a class="btn btn-info" asp-action="ResetPassword" asp-controller="User" asp-route-id="@user.Id">Reset Password</a>
+                                <a asp-action="ResetPassword" asp-controller="User" asp-route-id="@user.Id">Reset Password</a>
                             </td>
                             <td>
                                 <!-- Modulo per la richiesta POST di eliminazione -->
-                                <form action="@Url.Action("Delete", "User")" method="POST" onsubmit="return confirm('Sei sicuro di voler eliminare?');">
-                                    <!-- Campo nascosto per passare l'ID dell'utente da eliminare -->
-                                    <input type="hidden" name="id" value="@user.Id" />
-                                    <button type="submit">Delete</button>
-                                </form>
+                        <button type="submit" class="btn btn-danger" title="Elimina">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
-        </div>
-    </div>
-</div>
+        </section>
+</main>
 
