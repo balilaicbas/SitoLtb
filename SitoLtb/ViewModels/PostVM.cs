@@ -9,5 +9,6 @@ namespace SitoLtb.ViewModels
         public string? Categoria { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         public string? ThumbnailUrl { get; set; }
+        public string Description { get; set; }
     }
 }
