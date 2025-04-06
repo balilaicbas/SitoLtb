@@ -8,7 +8,7 @@
 <div>
 <h1>Il Libero Torneificio del Borgo </h1>
 <h2>Tutti i mercoledì nella sede in via Bena 10/a e tutti i giovedì presso l'associazione "Comala" puoi partecipare agli eventi del circolo</h2>
-<button>Scopri gli eventi</button>
+<button asp-controller="Home" asp-action="Preiscrizione">Scopri gli eventi</button>
     </div>
 </section>
 <section class="section-2">
@@ -52,15 +52,15 @@
     <ul>
         <li>
             <img src="https://picsum.photos/id/1016/1200/800" alt="Alternate Text" />
-            <span>Comala</span>
+            <span><a asp-controller="Home" asp-action="PreiscrizioneVerdolina">La Verdolina</a></span>
         </li>
         <li>
             <img src="https://picsum.photos/id/1016/1200/800" alt="Alternate Text" />
-            <span>Parco Ruffini</span>
+            <span><a asp-controller="Home" asp-action="PreiscrizioneComala">Comala</a></span>
         </li>
         <li>
             <img src="https://picsum.photos/id/1016/1200/800" alt="Alternate Text" />
-            <span>Bar Centoni</span>
+            <span><a asp-controller="Home" asp-action="PreiscrizioneWeekend">Tornei più seri</a></span>
         </li>
     </ul>
 </section>

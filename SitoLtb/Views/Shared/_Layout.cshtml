@@ -20,12 +20,12 @@
 
         <nav class="main-navbar" aria-label="Menu principale">
             <ul>
-                <li><a asp-controller="Home" asp-action="TorneiEventi">Tornei</a></li>
-                <li><a asp-controller="Home" asp-action="Scuola">Corsi</a></li>
-                <li><a href="#">Notizie</a></li>
-                <li><a asp-controller="Tornei" asp-action="Universita">Università</a></li>
-                <li><a href="#">Chi siamo</a></li>
-                <li><a href="#">Contatti</a></li>
+                <li><a asp-controller="Home" asp-action="Preiscrizione">Tornei</a></li>
+                <li><a asp-controller="Home" asp-action="Corsi">Corsi</a></li>
+                <li><a asp-controller="Home" asp-action="Blog">Notizie</a></li>
+                    <li><a asp-controller="Home" asp-action="Universita">Universita</a></li>
+                    <li><a asp-controller="Home" asp-action="ChiSiamo">Chi siamo</a></li>
+                    <li><a asp-controller="Home" asp-action="Contatti">Contatti</a></li>
                 <li><a asp-controller="Home" asp-action="DoveGiocare">Dove giocare a Torino</a></li>
 
             </ul>
@@ -37,7 +37,9 @@
         @RenderBody()
 
 
-    <footer class="main-footer">info generiche LTB</footer>
+    <footer class="main-footer">
+        <a Href=”https://wa:me/+393397703130”> <img src="/images/logoWhattsapp.jpg" alt="Alternate Text" /> > scrivici un messagio </a>
+    </footer>
 
     <script src="/lib/jquery/dist/jquery.min.js"></script>
     <script src="/js/site.js" asp-append-version="true"></script>
