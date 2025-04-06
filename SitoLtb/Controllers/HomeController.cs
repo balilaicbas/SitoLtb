@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 using SitoLtb.Data;
 using SitoLtb.ViewModels;
 using X.PagedList;
+using SitoLtb.Services;
 
 namespace SitoLtb.Controllers
 {
@@ -13,21 +14,31 @@ namespace SitoLtb.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IConfiguration _configuration;
         private readonly ApplicationDbContext _context;
+        private readonly IPostService _postService;
+        private readonly ITournamentService _tournamentService;
 
-        public HomeController(ILogger<HomeController> logger,IConfiguration configuration, ApplicationDbContext context)
+        public HomeController(ILogger<HomeController> logger,IConfiguration configuration, ApplicationDbContext context, IPostService postService, ITournamentService tournamentService)
         {
             _logger = logger;
             _configuration = configuration;
             _context = context;
+            _postService = postService;
+            _tournamentService = tournamentService;
+
         }
 
         public IActionResult Index()
         {
+            var vm = new IndexVM
+            { 
+                Posts = _postService.GetAll(),
+                Tournaments = _tournamentService.GetAll()
+            };
             var googleMapsApiKey = _configuration["GoogleMaps:ApiKey"];
 
 
             ViewData["ApiKey"] = googleMapsApiKey;
-            return View();
+            return View(vm);
         }
         public async Task<IActionResult> Preiscrizione(int? page)
         {
@@ -54,7 +65,7 @@ namespace SitoLtb.Controllers
             int pageNumber = (page ?? 1);
 
             var tournaments = await _context.Tournaments!
-                .OrderBy(t => t.Data)
+                .OrderByDescending(t => t.Data)
                 .Where(x => x.Data >= DateTime.Today)
                 .Where(x=> x.Tipologia=="Verdolina")
                 .Select(t => new SitoLtb.ViewModels.TournamentVM
@@ -74,7 +85,7 @@ namespace SitoLtb.Controllers
             int pageNumber = (page ?? 1);
 
             var tournaments = await _context.Tournaments!
-                .OrderBy(t => t.Data)
+                .OrderByDescending(t => t.Data)
                 .Where(x => x.Data >= DateTime.Today)
                 .Where(x => x.Tipologia == "Comala")
                 .Select(t => new SitoLtb.ViewModels.TournamentVM
@@ -94,7 +105,7 @@ namespace SitoLtb.Controllers
             int pageNumber = (page ?? 1);
 
             var tournaments = await _context.Tournaments!
-                .OrderBy(t => t.Data)
+                .OrderByDescending(t => t.Data)
                 .Where(x => x.Data >= DateTime.Today)
                 .Where(x => x.Tipologia == "Weekend")
                 .Select(t => new SitoLtb.ViewModels.TournamentVM

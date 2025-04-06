@@ -361,3 +361,166 @@ footer a{
     position:absolute;
     left:0%;
 }
+
+.page-title {
+    text-align: center;
+    color: Black;
+    font-size: 2rem;
+    margin-top: 30px;
+    margin-bottom: 40px;
+    font-family: 'Nunito', sans-serif;
+}
+
+.tournament-section {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Nunito', sans-serif;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+    background-color: white;
+}
+
+    .styled-table thead {
+        background-color: darkslateblue;
+        color: white;
+    }
+
+    .styled-table th,
+    .styled-table td {
+        padding: 14px 18px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+    }
+
+    .styled-table tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .styled-table tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .styled-table a {
+        color: darkslateblue;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+        .styled-table a:hover {
+            text-decoration: underline;
+        }
+
+.text-muted {
+    color: #999;
+    font-style: italic;
+}
+
+.blog-container {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Featured post (il primo) */
+.blog-card-featured {
+    width: 100%;
+    height: 500px;
+    border-radius: 12px;
+
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Regular post */
+.blog-card-regular {
+    width: 100%;
+    height: 100px;
+    border-radius: 12px;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+}
+
+.blog-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.blog-image {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.blog-overlay {
+    position: absolute;
+    bottom: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    color: white;
+    padding: 30px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.blog-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.blog-description {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.blog-category {
+    font-size: 0.9rem;
+    font-style: italic;
+    color: #ccc;
+}
+
+/* Pagination */
+.pagination-container {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+}
+
+.page-item {
+    padding: 8px 14px;
+    border: 1px solid darkslateblue;
+    border-radius: 6px;
+    color: darkslateblue;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+    .page-item:hover {
+        background-color: black;
+        color: white;
+        font-weight:bold;
+    }
+
+    .page-item.active {
+        background-color: darkslateblue;
+        color: white;
+    }

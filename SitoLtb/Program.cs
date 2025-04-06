@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SitoLtb.Data;
 using SitoLtb.Models;
+using SitoLtb.Services;
 using SitoLtb.Utilities;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +23,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 
 
 builder.Services.AddScoped<IDbInizializer, DbInizializer>();
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<ITournamentService, TournamentService>();
 
 
 
