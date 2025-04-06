@@ -7,7 +7,7 @@ namespace SitoLtb.ViewModels
         public string? Title { get; set; }
         public string? AuthorName { get; set; }
         public string? Categoria { get; set; }
-        public DateTime? CreatedDate { get; set; } = DateTime.Now;
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
         public string? ThumbnailUrl { get; set; }
     }
 }
