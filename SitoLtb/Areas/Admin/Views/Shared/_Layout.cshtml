@@ -18,185 +18,96 @@
     <meta name="author" content="">
 
     <title>@ViewData["Title"] - Gestionale</title>
-
-    <!-- Custom fonts for this template-->
-    <link href="~/dashboard/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-    rel="stylesheet">
-
-    <!-- Custom styles for this template-->
-    <link href="~/dashboard/css/sb-admin-2.min.css" rel="stylesheet">
-    <link href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css" rel="stylesheet">
-    <link rel="icon" type="image/png" href="~/images/logo_LTB_Site_Icon.png">
-
+    <link rel="stylesheet" href="/css/adminLayout.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 
-<body id="page-top">
+<body>
 
     <!-- Page Wrapper -->
-    <div id="wrapper">
+    <header>
+        <nav class="main-navbar">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
+        <ul>
+            <li>
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" asp-area="Admin" asp-controller="Post" asp-action="Index">
-                <div class="sidebar-brand-icon rotate-n-15">
-                    <i class="fas fa-gear"></i>
-                </div>
-                <div class="sidebar-brand-text mx-3">Gestionale</div>
-            </a>
+                <a asp-area="Admin" asp-controller="Post" asp-action="Index">
+                    <div>
+                        <i class="fas fa-gear"></i>
+                    </div>
+                    <div>Gestionale</div>
+                </a>
+            </li>
 
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-            <li class="nav-item active">
-                <a class="nav-link" asp-action="Index" asp-controller="Post" asp-area="Admin">
+            <li>
+                <a asp-action="Index" asp-controller="Post" asp-area="Admin">
                     <i class="fas fa-fw fa-bell"></i>
                     <span>Post</span>
                 </a>
             </li>
 
-            <hr class="sidebar-divider my-0">
-
-
-                <li class="nav-item active">
-                    <a class="nav-link" asp-action="Index" asp-controller="User" asp-area="Admin">
+                <li>
+                    <a asp-action="Index" asp-controller="User" asp-area="Admin">
                     <i class="fas fa-fw fa-user"></i>
                         <span>Utenti</span>
                     </a>
                 </li>
-
-            <hr class="sidebar-divider my-0">
-
-               
-
-                <li class="nav-item active">
-                    <a class="nav-link" asp-action="Index" asp-controller="Tournament" asp-area="Admin">
+                <li>
+                    <a asp-action="Index" asp-controller="Tournament" asp-area="Admin">
                     <i class="fas fa-fw fa-chess"></i>
                         <span>Tornei</span>
                     </a>
                 </li>
-            <hr class="sidebar-divider my-0">
-                <li class="nav-item active">
-                    <a class="nav-link" asp-action="Index" asp-controller="Dashboard" asp-area="Admin">
+                <li>
+                    <a asp-action="Index" asp-controller="Dashboard" asp-area="Admin">
                     <i class="fas fa-fw fa-database"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
-               
-            
-
-
-          
-
         </ul>
-        <!-- End of Sidebar -->
-        <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
+        </nav>
 
-            <!-- Main Content -->
-            <div id="content">
+
 
                 <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
-
-                    
-
-                    <!-- Topbar Navbar -->
-                    <ul class="navbar-nav ml-auto">
-
-
-                        <div class="topbar-divider d-none d-sm-block"></div>
-
-                        <!-- Nav Item - User Information -->
-                        <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                <nav class="upper-navbar">                  
+                    <div class="logout-user-container">
+                            <a id="userLogged">
+                                <span class="user-logged">
                                     @loggedInUser?.FirstName @loggedInUser?.LastName
                                 </span>
                             </a>
-                            <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                 aria-labelledby="userDropdown">
-                                <div class="dropdown-divider"></div>
-                                <form asp-action="Logout" asp-controller="User" asp-area="Admin" method="post">
-                                    <button type="submit" class="dropdown-item">
-                                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                          
+                             <form asp-action="Logout" asp-controller="User" asp-area="Admin" method="post">
+                                    <button id="logoutButton">
+                                        <i class="fas fa-sign-out-alt fa-sm fa-fw"></i>
                                         Logout
                                     </button>
                                 </form>
-                            </div>
-                        </li>
-
-                    </ul>
-
+            </div>
                 </nav>
+
+                </header>
                 <!-- End of Topbar -->
                 <!-- Begin Page Content -->
                 @RenderBody()
-                <!-- /.container-fluid -->
 
-            </div>
-            <!-- End of Main Content -->
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Fine Blog 2022</span>
-                    </div>
+            <footer>
+                <div>
                 </div>
             </footer>
-            <!-- End of Footer -->
 
-        </div>
-        <!-- End of Content Wrapper -->
-
-    </div>
-    
-    <!-- End of Page Wrapper -->
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
-
-    <!-- Bootstrap core JavaScript-->
-    <script src="~/dashboard/vendor/jquery/jquery.min.js"></script>
-    <script src="~/dashboard/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="~/dashboard/vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="~/dashboard/js/sb-admin-2.min.js"></script>
-
-    <!-- Page level plugins -->
-    <script src="~/dashboard/vendor/chart.js/Chart.min.js"></script>
-
-    <!-- Page level custom scripts -->
-    <script src="~/dashboard/js/demo/chart-area-demo.js"></script>
-    <script src="~/dashboard/js/demo/chart-pie-demo.js"></script>
-    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.tiny.cloud/1/7qjkjvz7eegr5schf3b8iwvemcxjb82zvn5nvbm02u8l4xkb/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
-        $(document).ready(function () {
-            $('#myTable').DataTable();
-        });
+        document.addEventListener("DOMContentLoaded", function () {
+            const btn = document.getElementById('logoutButton');
+            const trigger = document.getElementById('userLogged');
 
-        tinymce.init({
-            selector: '#richEditor',
-            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
-            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+            trigger.addEventListener('click', function () {
+                btn.style.display = btn.style.display === 'block' ? 'none' : 'block';
+            });
         });
     </script>
-    @await RenderSectionAsync("Scripts", required: false)
-    @await Component.InvokeAsync("Notyf")
-</body>
 
+</body>
 </html>

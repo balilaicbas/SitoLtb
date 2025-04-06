@@ -5,6 +5,7 @@
         public int Id { get; set; }
         public string? Nome { get; set; }
         public DateTime Data { get; set; }
+        public string Tipologia { get; set; }
 
         public string? LinkBando { get; set; }
 

@@ -1,0 +1,310 @@
+﻿body{
+    margin:0px; 
+    padding-left:220px;
+}
+
+main {
+    margin: 100px;
+}
+.title-button {
+    padding: 10px;
+    display: inline;
+    border: 1px solid black;
+    border-radius: 20px;
+    background-color: darkslateblue;
+}
+
+.title-button a {
+        text-decoration: none;
+        color: white;
+    }
+.main-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 220px;
+    background-color: darkslateblue;
+    color: white;
+    padding-top: 1rem;
+    z-index: 1000;
+}
+
+    .main-navbar ul {
+        list-style: none;
+        padding-left: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+        .main-navbar ul li {
+            padding: 10px 20px;
+            display: block;
+        }
+
+            .main-navbar ul li a {
+                text-decoration: none;
+                color: #ddd;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+                .main-navbar ul li a:hover {
+                    background-color: #495057;
+                    color: white;
+                    border-radius: 4px;
+                }
+
+    .main-navbar a:last-child {
+        font-weight: bold;
+        color: #fff;
+        text-decoration: none;
+        padding-bottom: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        margin-bottom: 20px;
+    }
+.upper-navbar {
+    position:relative;
+    margin:0px;
+    height: 60px;
+    background-color: darkslateblue;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    position: sticky;
+    top: 0;
+    z-index: 900;
+}
+.logout-user-container {
+    position:absolute;
+    top: 5%px;
+    right: 20px;
+    z-index: 1100;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.user-logged {
+    cursor: pointer;
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 12px;
+    background-color: white;
+    margin-bottom: 5px;
+}
+
+#logoutButton {
+    position:absolute;
+    right:5%;
+    top:150%;
+    display: none;
+    background-color: white;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Stile base per la tabella */
+#UsersTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-family: 'Nunito', sans-serif;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+    /* Intestazioni */
+    #UsersTable thead {
+        background-color: darkslateblue;
+        color: white;
+        text-align: left;
+    }
+
+    #UsersTable th, #UsersTable td {
+        padding: 12px 16px;
+        border-bottom: 1px solid #ddd;
+    }
+
+    /* Zebra striping */
+    #UsersTable tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    #UsersTable tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    /* Link per reset */
+    #UsersTable a {
+        color: darkslateblue;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+        #UsersTable a:hover {
+            text-decoration: underline;
+        }
+
+    /* Bottone delete con icona */
+    #UsersTable .btn.btn-danger {
+        background-color: #dc3545;
+        border: none;
+        color: white;
+        padding: 6px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+        #UsersTable .btn.btn-danger:hover {
+            background-color: #bb2d3b;
+        }
+/* Container centrale */
+.reset-password-container {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 20px 30px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #fdfdfd;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    font-family: 'Nunito', sans-serif;
+}
+
+h4{
+    margin-left:40%;
+}
+.reset-password-form .form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Label */
+.reset-password-form label {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+/* Input */
+.reset-password-form .form-control {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+/* Validation message */
+.validation-message {
+    color: red;
+    font-size: 0.875rem;
+    margin-top: 5px;
+}
+
+/* Button */
+.form-actions {
+    text-align: right;
+}
+
+.submit-button {
+    background-color: darkslateblue;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.submit-button:hover {
+    background-color: #5b4a99;
+}
+
+
+.login-container {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+.login-image {
+    flex: 1;
+    background-color: #eee;
+    overflow: hidden;
+}
+
+    .login-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.login-form-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 60px;
+    background-color: white;
+}
+
+    .login-form-container h1 {
+        font-size: 2rem;
+        color: darkslateblue;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+
+.login-form {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-control {
+    padding: 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+.validation-message {
+    color: red;
+    font-size: 0.875rem;
+    margin-top: 5px;
+}
+
+.form-actions {
+    text-align: center;
+}
+
+.submit-button {
+    background-color: darkslateblue;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+    .submit-button:hover {
+        background-color: #5b4a99;
+    }
+
