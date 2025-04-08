@@ -1,5 +1,6 @@
 using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SitoLtb.Data;
@@ -35,6 +36,11 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/login";
     options.AccessDeniedPath = "/AccessDenied";
 });
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 10485760; // 10MB
+});
+
 // Aggiungi il servizio di configurazione per ConnectionStrings
 
 var app = builder.Build();

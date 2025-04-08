@@ -82,32 +82,53 @@ namespace SitoLtb.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreatePostVM vm)
         {
-            if (!ModelState.IsValid) { return View(vm); }
+            if (!ModelState.IsValid)
+                return View(vm);
 
-            //get logged in user id
-            var loggedInUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
+            // Ottieni l'utente loggato
+            var loggedInUser = await _userManager.Users
+                .FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
 
-            var post = new Post();
-
-            post.Title = vm.Title;
-            post.Description = vm.Description;
-            post.Categoria = vm.Categoria;
-            post.ApplicationUserId = vm.ApplicationUserId;
-
-            if (post.Title != null)
+            // ✅ Protezione extra: gestisci utente null
+            if (loggedInUser == null)
             {
-                string slug = vm.Title!.Trim();
-                slug = slug.Replace(" ", "-");
+                _notification.Error("Utente non autenticato.");
+                return RedirectToAction("Login", "Account"); // o un'altra azione sicura
+            }
+
+            var post = new Post
+            {
+                Title = vm.Title,
+                Description = vm.Description,
+                Categoria = vm.Categoria,
+                ApplicationUserId = loggedInUser.Id
+            };
+
+            // Slug + GUID
+            if (!string.IsNullOrWhiteSpace(vm.Title))
+            {
+                string slug = vm.Title.Trim().Replace(" ", "-");
                 post.Url = slug + "-" + Guid.NewGuid();
             }
 
+            // Gestione immagine
             if (vm.Thumbnail != null)
             {
-                post.Image = UploadImage(vm.Thumbnail);
+                try
+                {
+                    post.Image = UploadImage(vm.Thumbnail); // O async se hai UploadImageAsync
+                }
+                catch (Exception ex)
+                {
+                    _notification.Error("Errore nel caricamento dell'immagine.");
+                    ModelState.AddModelError("Thumbnail", ex.Message);
+                    return View(vm);
+                }
             }
 
-            await _context.Posts!.AddAsync(post);
+            await _context.Posts.AddAsync(post);
             await _context.SaveChangesAsync();
+
             _notification.Success("Post Creato");
             return RedirectToAction("Index");
         }
@@ -179,21 +200,42 @@ namespace SitoLtb.Areas.Admin.Controllers
             return RedirectToAction("Index", "Post", new { area = "Admin" });
         }
 
-       
+
 
 
         private string UploadImage(IFormFile file)
         {
-            string uniqueFileName = "";
-            var folderPath = Path.Combine(_webHostEnvironment.WebRootPath, "thumbnails");
-            uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-            var filePath = Path.Combine(folderPath, uniqueFileName);
-            using(FileStream fileStream = System.IO.File.Create(filePath))
+            // 1. Controllo sul contenuto
+            if (file == null || file.Length == 0)
+                throw new ArgumentException("File non valido");
+
+            // 2. Controllo estensione del file
+            var estensioniConsentite = new[] { ".jpg", ".jpeg", ".png", ".gif",".webp" };
+            var estensione = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+            if (!estensioniConsentite.Contains(estensione))
+                throw new ArgumentException("Formato file non supportato");
+
+            // 3. Genera nome univoco
+            var nomeFileUnico = Guid.NewGuid().ToString() + estensione;
+
+            // 4. Percorso di destinazione
+            var cartella = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+            if (!Directory.Exists(cartella))
+                Directory.CreateDirectory(cartella);
+
+            var pathCompleto = Path.Combine(cartella, nomeFileUnico);
+
+            // 5. Salva il file
+            using (var stream = new FileStream(pathCompleto, FileMode.Create))
             {
-                file.CopyTo(fileStream);
+                file.CopyTo(stream);
             }
-            return uniqueFileName;
+
+            // 6. Ritorna il path relativo (es: da salvare nel DB o usare in un <img>)
+            return Path.Combine("uploads", nomeFileUnico).Replace("\\", "/");
         }
+
 
     }
 }
