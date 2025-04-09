@@ -103,10 +103,11 @@ body {
     }
     .section-1 div button {
         background-color: #e91e63;
-        position:absolute;
+        position: absolute;
         top: 50%;
-        left:5%;
+        left: 5%;
         color: white;
+        text-decoration: none;
         border: none;
         padding: 12px 24px;
         font-size: 40px;
@@ -286,6 +287,9 @@ body {
     height:80vh;
     padding:5%;
     position:relative;
+}
+.section-6 h5{
+    font-weight:bold;
 }
 
 .split-container {
@@ -523,4 +527,4 @@ footer a{
     .page-item.active {
         background-color: darkslateblue;
         color: white;
-    }
+    }   
