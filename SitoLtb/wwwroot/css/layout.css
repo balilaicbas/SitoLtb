@@ -37,6 +37,7 @@ body {
     z-index: 999;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     padding:60px;
+
 }
 
 .logo-title {
@@ -78,7 +79,7 @@ body {
 .section-1 {
     position: relative;
     width: 100%;
-    display: inline-block;
+    display: block;
 }
     .section-1 img {
         width: 100%;
@@ -140,14 +141,16 @@ body {
     position: relative;
 }
 
-    .slider {
-      display: flex;
-      transition: transform 0.5s ease-in-out;
-    }
+.slider {
+    display: flex;
+    gap: 20px; /* aggiunge spazio tra le card */
+    transition: transform 0.5s ease-in-out;
+    padding: 10px; /* facoltativo, per aggiustare bordo slider */
+    box-sizing: border-box;
+}
 
     .card {
       flex: 0 0 calc(100% / 3); /* 3 cards visible */
-      margin: 10px;
       background: gold;
       height: 400px;
       display: flex;
@@ -272,14 +275,6 @@ body {
         letter-spacing: 1px;
         text-transform: uppercase;
         margin-bottom: 5px;
-    }
-
-    .section-5 li::after {
-        content: "$8.95";
-        display: block;
-        font-size: 13px;
-        font-style: italic;
-        color: #444;
     }
 
 
