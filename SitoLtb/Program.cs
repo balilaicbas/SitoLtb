@@ -1,4 +1,4 @@
-using AspNetCoreHero.ToastNotification;
+﻿using AspNetCoreHero.ToastNotification;
 using AspNetCoreHero.ToastNotification.Extensions;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Identity;
@@ -38,7 +38,11 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 builder.Services.Configure<FormOptions>(options =>
 {
-    options.MultipartBodyLengthLimit = 10485760; // 10MB
+    options.MultipartBodyLengthLimit = 10485760; // 10 MB
+});
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.Limits.MaxRequestBodySize = 10485760; // 10 MB
 });
 
 // Aggiungi il servizio di configurazione per ConnectionStrings
@@ -51,6 +55,10 @@ DataSeeding();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
+}
+else
+{
+    app.UseDeveloperExceptionPage(); // ✅ solo in dev
 }
 
 app.UseNotyf();

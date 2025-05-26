@@ -20,11 +20,12 @@ namespace SitoLtb.Controllers
         [HttpGet("[controller]/{slug}")]
         public IActionResult Post(string slug)
         {
-            if (slug == "")
+            if (string.IsNullOrWhiteSpace(slug))
             {
-                _notification.Error("Post not found");
+                _notification.Error("Post non trovato");
                 return View();
             }
+
             var post = _context.Posts!.Include(x => x.ApplicationUser).FirstOrDefault(x => x.Url == slug);
             if (post == null)
             {
@@ -35,7 +36,9 @@ namespace SitoLtb.Controllers
             {
                 Id = post.Id,
                 Title = post.Title,
-                AuthorName = post.ApplicationUser!.FirstName + " " + post.ApplicationUser.LastName,
+                AuthorName = post.ApplicationUser is not null
+                 ? $"{post.ApplicationUser.FirstName} {post.ApplicationUser.LastName}"
+                 : "Autore sconosciuto",
                 CreatedDate = post.DateTimeCreated,
                 ThumbnailUrl = post.Image,
                 Description = post.Description
