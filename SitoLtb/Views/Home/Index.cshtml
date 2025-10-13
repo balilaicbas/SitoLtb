@@ -1,150 +1,138 @@
-﻿﻿@{
+﻿@{
     ViewData["Title"] = "Home Page";
     var googleMapsApiKey = ViewData["ApiKey"];
 }
 @model SitoLtb.ViewModels.IndexVM
 
 <section class="section-1">
-<img src="~/images/HeroImage.jpg" alt="Chessboard" />
-<div>
-<h1>Il Libero Torneificio del Borgo </h1>
-<h2>Tutti i mercoledì nella sede in via Bena 10/a e tutti i giovedì presso l'associazione "Comala" puoi partecipare agli eventi del circolo</h2>
-<button asp-controller="Home" asp-action="Preiscrizione">Scopri gli eventi</button>
+    <img src="~/images/HeroImage.jpg" alt="Chessboard" />
+    <div class="hero-copy">
+        <h1>Il Libero Torneificio del Borgo</h1>
+        <h2>Tutti i mercoledì nella sede in via Bena 10/a e tutti i giovedì presso l'associazione "Comala" puoi partecipare agli eventi del circolo</h2>
+        <button asp-controller="Home" asp-action="Preiscrizione">Scopri gli eventi</button>
     </div>
 </section>
+
 <section class="section-2">
-<div class="slider-wrapper">
-    <div class="slider" id="slider">
+    <div class="slider-wrapper">
+        <div class="slider" id="slider">
             @foreach (var post in Model.Posts.OrderByDescending(p => p.CreatedDate).Take(10))
-{
-        <!-- Le 10 card -->
-        <div class="card">
-            <ul>
-                         <li>@post.Title</li>
+            {
+                <div class="card">
+                    <ul>
+                        <li>@post.Title</li>
                         <li>@post.ThumbnailUrl</li>
                         <li>@post.Description</li>
                         <li>@post.CreatedDate</li>
-</ul>
-</div>
-}
-</div>
-</div>
+                    </ul>
+                </div>
+            }
+        </div>
+    </div>
 </section>
+
 <section class="section-3">
-<h2>Chi siamo</h2>
-<div class="container-div">
-<div class="container1" id="map"></div>
-<div class="container2"> mercoledì, è arrivato il momento</div>
-</div>
+    <h2>Chi siamo</h2>
+    <div class="container-div">
+        <div class="container1" id="map" aria-label="Mappa"></div>
+        <div class="container2">mercoledì, è arrivato il momento</div>
+    </div>
 </section>
+
 <section class="section-4">
     <h2>La nostra Galleria</h2>
     <div class="section4-gallery-grid">
-    <img class="section4-img-1" src="https://picsum.photos/id/1015/1200/800" alt="Alternate Text" />
-        <img class="section4-img-2" src="https://picsum.photos/id/1015/1200/800" alt="Alternate Text" />
-        <img class="section4-img-3" src="https://picsum.photos/id/1015/1200/800" alt="Alternate Text" />
-        <img class="section4-img-4" src="https://picsum.photos/id/1015/1200/800" alt="Alternate Text" />
-        <img class="section4-img-5" src="https://picsum.photos/id/1015/1200/800" alt="Alternate Text" />
-        <img class="section4-img-6" src="https://picsum.photos/id/1015/1200/800" alt="Alternate Text" />
+        <img class="section4-img-1" src="https://picsum.photos/id/1015/1200/800" alt="Galleria 1" />
+        <img class="section4-img-2" src="https://picsum.photos/id/1015/1200/800" alt="Galleria 2" />
+        <img class="section4-img-3" src="https://picsum.photos/id/1015/1200/800" alt="Galleria 3" />
+        <img class="section4-img-4" src="https://picsum.photos/id/1015/1200/800" alt="Galleria 4" />
+        <img class="section4-img-5" src="https://picsum.photos/id/1015/1200/800" alt="Galleria 5" />
+        <img class="section4-img-6" src="https://picsum.photos/id/1015/1200/800" alt="Galleria 6" />
     </div>
 </section>
+
 <section class="section-5">
     <ul>
         <li>
-            <img src="https://picsum.photos/id/1016/1200/800" alt="Alternate Text" />
+            <img src="https://picsum.photos/id/1016/1200/800" alt="La Verdolina" />
             <span><a asp-controller="Home" asp-action="PreiscrizioneVerdolina">La Verdolina</a></span>
         </li>
         <li>
-            <img src="https://picsum.photos/id/1016/1200/800" alt="Alternate Text" />
+            <img src="https://picsum.photos/id/1016/1200/800" alt="Comala" />
             <span><a asp-controller="Home" asp-action="PreiscrizioneComala">Comala</a></span>
         </li>
         <li>
-            <img src="https://picsum.photos/id/1016/1200/800" alt="Alternate Text" />
+            <img src="https://picsum.photos/id/1016/1200/800" alt="Tornei del weekend" />
             <span><a asp-controller="Home" asp-action="PreiscrizioneWeekend">Tornei più seri</a></span>
         </li>
     </ul>
 </section>
+
 <section class="section-6">
-    <div class="split-container" id="splitContainer">
-        <div class="image-left"></div>
-        <div class="image-right" id="imageRight"></div>
-        <div class="divider" id="dragBar">
-            <div class="dot"></div>
+    <div class="image-comparison">
+        <div class="images-container">
+            <img class="before-image" src="https://picsum.photos/id/1015/1200/800" alt="Tornei del weekend" />
+            <img class="after-image" src="https://picsum.photos/id/1015/1200/800" alt="Tornei del weekend" />
+
+            <div class="slider-line"></div>
+            <div class="slider-icon">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke-width="1.5"
+                     stroke="currentColor"
+                     class="w-6 h-6">
+                    <path stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
+                </svg>
+            </div>
+
+            <input type="range" class="slider" min="0" max="100" />
         </div>
     </div>
-</section>  
+</section>
 
-<script>
-    function initMap() {
-        var location = { lat:45.073662, lng: 7.622538 }; // La verdolina
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 15,
-            center: location
-        });
-        var marker = new google.maps.Marker({
-            position: location,
-            map: map
-        });
-    }
+@section Scripts {
+    <script>
+        function initMap() {
+          const location = { lat:45.073662, lng: 7.622538 };
+          const map = new google.maps.Map(document.getElementById('map'), { zoom: 15, center: location });
+          new google.maps.Marker({ position: location, map });
+        }
+    </script>
 
-</script>
-<script>
-    const slider = document.getElementById('slider');
-    const totalCards = 10;
-    const visibleCards = 3;
-    let index = 0;
+    <script>
+        const sliderS2 = document.getElementById('slider');
+        const totalCards = 10;
+        let index = 0;
+        setInterval(() => {
+          index++;
+          sliderS2.style.transition = "transform 0.5s ease-in-out";
+          sliderS2.style.transform = `translateX(-${(100 / 3) * index}%)`;
+          if (index === totalCards) {
+            setTimeout(() => {
+              sliderS2.style.transition = "none";
+              sliderS2.style.transform = `translateX(0)`;
+              index = 0;
+            }, 500);
+          }
+        }, 3000);
+    </script>
+    <script>
+            const slider = document.querySelector(".image-comparison .slider");
+        const beforeImage = document.querySelector(".image-comparison .before-image");
+        const sliderLine = document.querySelector(".image-comparison .slider-line");
+        const sliderIcon = document.querySelector(".image-comparison .slider-icon");
 
-    setInterval(() => {
-      index++;
-      slider.style.transition = "transform 0.5s ease-in-out";
-      slider.style.transform = `translateX(-${(100 / 3) * index}%)`;
+        slider.addEventListener("input", (e) => {
+          let sliderValue = e.target.value + "%";
 
-      // Reset after last full set
-      if (index === totalCards) {
-        setTimeout(() => {
-          slider.style.transition = "none";
-          slider.style.transform = `translateX(0)`;
-          index = 0;
-        }, 500);
-      }
-    }, 3000);
-</script>
+          beforeImage.style.width = sliderValue;
+          sliderLine.style.left = sliderValue;
+          sliderIcon.style.left = sliderValue;
+        });</script>
 
-<script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=@googleMapsApiKey&callback=initMap">
-</script>
 
-<script>
-    const dragBar = document.getElementById("dragBar");
-    const imageRight = document.getElementById("imageRight");
-    const container = document.getElementById("splitContainer");
-
-    let isDragging = false;
-
-    dragBar.addEventListener("mousedown", (e) => {
-      isDragging = true;
-      document.body.style.cursor = "col-resize";
-      e.preventDefault();
-    });
-
-    document.addEventListener("mouseup", () => {
-      isDragging = false;
-      document.body.style.cursor = "default";
-    });
-
-    document.addEventListener("mousemove", (e) => {
-      if (!isDragging) return;
-
-      const rect = container.getBoundingClientRect();
-      let x = e.clientX - rect.left;
-
-      // Limita il drag ai bordi
-      x = Math.max(0, Math.min(x, rect.width));
-
-      // Sposta il divisore
-      dragBar.style.left = `${x}px`;
-
-      // Ridimensiona la clip della seconda immagine
-    imageRight.style.clipPath = `inset(0 0 0 ${x}px)`;
-    });
-</script>   
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=@googleMapsApiKey&callback=initMap"></script>
+}
