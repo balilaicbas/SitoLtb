@@ -61,8 +61,6 @@ else
     app.UseDeveloperExceptionPage(); // ✅ solo in dev
 }
 
-app.UseNotyf();
-
 app.UseStaticFiles();
 
 app.UseRouting();

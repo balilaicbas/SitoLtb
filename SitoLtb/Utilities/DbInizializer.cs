@@ -34,7 +34,7 @@ namespace SitoLtb.Utilities
                     LastName = "Mina"
                 }, "Dadomom0!").Wait();
 
-                var appUser = _context.ApplicationUsers!.FirstOrDefault(x => x.Email== "admin@gmail.com");
+                var appUser = _context.ApplicationUsers!.FirstOrDefault(x => x.Email== "marco.mina999@gmail.com");
                 if (appUser != null)
                 {
                     _userManager.AddToRoleAsync(appUser, WebsiteRoles.WebsiteAdmin).GetAwaiter().GetResult();
