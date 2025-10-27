@@ -69,27 +69,20 @@
 </section>
 
 <section class="section-6">
-    <div class="image-comparison">
-        <div class="images-container">
-            <img class="before-image" src="https://picsum.photos/id/1015/1200/800" alt="Tornei del weekend" />
-            <img class="after-image" src="https://picsum.photos/id/1015/1200/800" alt="Tornei del weekend" />
-
-            <div class="slider-line"></div>
-            <div class="slider-icon">
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     fill="none"
-                     viewBox="0 0 24 24"
-                     stroke-width="1.5"
-                     stroke="currentColor"
-                     class="w-6 h-6">
-                    <path stroke-linecap="round"
-                          stroke-linejoin="round"
-                          d="M8.25 15L12 18.75 15.75 15m-7.5-6L12 5.25 15.75 9" />
-                </svg>
+    <div class="image-comparison-slider">
+    <img src="~/images/split-test1.jpg" alt="before"/>
+    <div class="img-wrapper">
+            <img src="~/images/split-test2.jpg" alt="after" />
+    </div>
+    <span class="label label-before">Before</span>
+        <span class="label label-after">After</span>
+    <div class="handle">
+        <div class="handle-line"></div>
+            <div class="handle-circle">
+                <i class="fas fa-chevron-left"></i>
+                <i class="fas fa-chevron-right"></i>
             </div>
-
-            <input type="range" class="slider" min="0" max="100" />
-        </div>
+    </div>
     </div>
 </section>
 
@@ -120,18 +113,62 @@
         }, 3000);
     </script>
     <script>
-            const slider = document.querySelector(".image-comparison .slider");
-        const beforeImage = document.querySelector(".image-comparison .before-image");
-        const sliderLine = document.querySelector(".image-comparison .slider-line");
-        const sliderIcon = document.querySelector(".image-comparison .slider-icon");
+    const slider = document.querySelector(".image-comparison-slider");
+    const sliderImgWrapper = document.querySelector(".image-comparison-slider .img.wrapper");
+    const sliderHandle = document.querySelector(".image-comparison-slider .handle");
 
-        slider.addEventListener("input", (e) => {
-          let sliderValue = e.target.value + "%";
+        VanillaTilt.init(document.querySelector(".image-comparison-slider"), {
+            max: 25,
+            speed: 400
+        });
 
-          beforeImage.style.width = sliderValue;
-          sliderLine.style.left = sliderValue;
-          sliderIcon.style.left = sliderValue;
-        });</script>
+
+    slider.addEventListener("mousemove", sliderMouseMove);
+    slider.addEventListener("touchmove",sliderMouseMove);
+
+    function sliderMouseMove(event){
+
+        if (isSliderLocked) return;
+        const sliderLeftx=slider.offsetLeft;
+        const sliderWidth=slider.clientWidth;
+        let mouseX = (event.clientX || event.touches)- sliderLeftx;
+
+        if (mouseX < 0 ) mouseX=0;
+                else if(mouseX > sliderWidth) mouseX= sliderWidth;
+
+       sliderImgWrapper.style.width='${((1- mouseX/sliderWidth)*100).toFixed(4)}%';
+       sliderHandle.style.left='calc(${((mouseX/sliderWidth)*100).toFixed(4)}% - $(sliderHandleWidth/2)px)';
+       
+
+    }
+    let isSliderLocked=false;
+
+    slider.addEventListener("mouseDown", sliderMouseDown);
+    slider.addEventListener("touchstart", sliderMouseDown);
+    slider.addEventListener("mouseup", sliderMouseUp);
+    slider.addEventListener("touchend", sliderMouseUp);
+    slider.addEventListener("mouseleave", sliderMouseLeave);
+
+    function sliderMouseUp() {
+        if (!isSliderLocked) isSliderLocked = true;
+    }
+    //se tolgo questo diventa click muovi e basta
+     function   sliderMouseLeave() {
+     
+         if (!isSliderLocked) isSliderLocked=false;
+     }
+     function sliderMouseDown(eventi) {
+             if (!isSliderLocked) isSliderLocked=false;
+             sliderMouseMove(event); 
+
+     }
+
+
+
+
+
+    </script>
+
 
 
     <script async defer src="https://maps.googleapis.com/maps/api/js?key=@googleMapsApiKey&callback=initMap"></script>

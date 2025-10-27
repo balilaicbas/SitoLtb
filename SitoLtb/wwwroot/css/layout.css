@@ -1,13 +1,13 @@
 ﻿/* ============ Base ============ */
-* { box-sizing: border-box; }
+
+* {
+    margin:0;
+    padding:0;
+    box-sizing: border-box; }
 
 body {
-    margin: 0;
-    font-family: sans-serif;
-    overflow-x: hidden;
-    overflow-y: visible;
-    padding-top: 180px;            /* 60 (upper) + 80 (main) */
-    padding-bottom: 100px;
+    width:100%;
+    min-height:100vh;
 }
 
 /* ============ Header fisso ============ */
@@ -183,89 +183,99 @@ body {
 
 /* ============ Section 6 (before/after) ============ */
 /* Sezione contenitore: nessun vincolo di altezza fissa */
-.section-6 {
-    position: relative;
-    padding: 0;            /* pulito, così l'immagine può toccare i bordi del contenitore */
-    margin: 0;
-}
 
 /* Wrapper image-comparison: piena larghezza, altezza max metà layout */
-.image-comparison {
-    height: 80vh;
-    margin: 0 auto;
-    border-radius: 20px;
+.section6 {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+.image-comparison-slider {
+    position:relative;
+    width:min(80vw,768px);
+    margin:0 auto;
     overflow: hidden;
-    position: relative; /* base per assoluti interni */
+    border-radius: 0.5rem;
+    box-shadow:-7px 5px 16px 1px rgba(56,86,122,0.6);
+    cursor:col-resize;
 }
-
-    /* il wrapper occupa tutto il container */
-    .image-comparison .images-container {
-        position: relative;
-        width: 100%;
-        height: 100%;
-    }
-    .image-comparison img {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
+    .image-comparison-slider img {
         display: block;
+        width: min(80vw,768px);
+        height: auto;
+        max-height: 80vh;
+        object-fit: cover;
+        pointer-events: none;
     }
- 
-    /* immagine "dopo" sotto: occupa tutto */
-    .image-comparison .after-image {
+    .image-comparison-slider .img-wrapper{
+        position:absolute;
+        top:0;
+        right:0;
+        height:100%;
+        width:50%;
+        overflow:hidden;
         z-index: 1;
-        object-position: left center; /* opzionale: mostra metà sinistra */
     }
+    .image-comparison-slider .img-wrapper  img{
+    position:absolute;
+    top:0;
+    right:0;
+    height:100%;
 
-
-
-
-    /* slider invisibile che copre tutto */
-    .image-comparison .slider {
-        position: absolute;
-        inset: 0;
-        opacity: 0;
-        cursor: ew-resize;
-        z-index: 3;
     }
-
-    /* linea e icona del cursore */
-    .image-comparison .slider-line {
-        position: absolute;
-        top: 0;
-        left: 50%;
-        height: 100%;
-        width: 4px;
-        background: #fff;
-        transform: translateX(-50%);
-        pointer-events: none;
-        z-index: 4;
-    }
-
-    .image-comparison .slider-icon {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 60px;
-        height: 60px;
-        color: #fff;
-        transform: translate(-50%, -50%) rotateZ(90deg);
-        pointer-events: none;
-        z-index: 4;
-    }
-
-/* mobile: resta al massimo metà layout */
-@media (max-width: 768px) {
-    .image-comparison {
-        height: 50vh;
-        max-height: 50vh;
-        border-radius: 12px;
-    }
-}
+ .image-comparison-slider .label{
+     position:absolute;
+     top:1rem;
+     z-index:3;
+     color:white;
+     background-color:rgba(0,0,0,0.33);
+     border-radius:0.25rem;
+     padding:0.5rem 0.75rem;
+     font-size:0.85rem;
+     text-align:center;
+     letter-spacing:1px;
+     user-select:none;
+     opacity:0;
+     transition:0.25s cubic-bezier(.68,.26,.58,1.22);
+ }
+ .image-comparison-slider:hover .label{
+     opacity:1;
+ }
+ .image-comparison-slider .label.label-before{
+     left:1rem;
+ }
+ .image-comparison-slider .label.label-after{
+     right:1rem;
+     background-color:red;
+ }
+ .image-comparison-slider .handle{
+     position:absolute;
+     top:0;
+     left:calc(50% - 25px);
+     width:50px;
+     height:100%;
+     display:flex;
+     flex-direction:column;
+     justify-content:center;
+     align-items:center;
+     user-select:none;
+     z-index:2;
+ }
+ .image-comparison-slider .handle-line{
+     width:2px;
+     flex-grow:1;
+     background-color:white;
+ }
+ .image-comparison-slider .handle-circle{
+     width:50px;
+     height:50px;
+     color:#fff;
+     border:2px solid #fff;
+     border-radius:50%;
+     display:flex;
+     align-items: center;
+     justify-content:space-evenly;
+ }
 
 
 /* ============ Tabelle / Extra ============ */
