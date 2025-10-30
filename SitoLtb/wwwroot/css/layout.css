@@ -206,6 +206,7 @@ body {
         max-height: 80vh;
         object-fit: cover;
         pointer-events: none;
+        user-select:none;
     }
     .image-comparison-slider .img-wrapper{
         position:absolute;
@@ -215,6 +216,7 @@ body {
         width:50%;
         overflow:hidden;
         z-index: 1;
+        transform:translateZ(0);
     }
     .image-comparison-slider .img-wrapper  img{
     position:absolute;
@@ -264,7 +266,7 @@ body {
  .image-comparison-slider .handle-line{
      width:2px;
      flex-grow:1;
-     background-color:white;
+     background-color:#fff;
  }
  .image-comparison-slider .handle-circle{
      width:50px;
