@@ -10,19 +10,9 @@ body {
     min-height:100vh;
 }
 
-/* ============ Header fisso ============ */
-.upper-header {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100%;
-    height: 60px;
-    background-color:black;
-    z-index: 1000;
-}   
-
 .main-header {
     position: fixed;
-    top: 60px; left: 0;
+    top: 0px; left: 0px;
     width: 100%;
     height: 80px;
     background-color:white;
@@ -30,7 +20,6 @@ body {
     justify-content:space-between;
     align-items: center;          /* permette alla navbar di coprire tutta l’altezza */
     padding: 60px;
-    box-shadow: 0 2px 5px rgba(0,0,0,.1);
     z-index: 999;
 }
 
@@ -69,33 +58,71 @@ body {
 }
 
 /* ============ Section 1 ============ */
-.section-1 { position: relative; width: 100%; display: block; }
-.section-1 img { width: 100%; height: auto; display: block; }
-
-.section-1 .hero-copy h1 {
-    position: absolute; top: 5%; left: 15%;
-    color: #fff; font-size: 40px; margin: 0; padding: 20px;
+.section-1 { 
+    position: relative;
+    top:125px;
+    left:15%;
+    width: 80%; 
+    display: block;
 }
-
+.section-1 h1{
+    display:none;
+}
+    .section-1 img {
+        width: 100%;
+        height: auto;
+        display: block;
+        left:10%;
+        border-radius: 10%;
+        box-shadow: -7px 5px 16px 1px rgba(56,86,122,0.6);
+    }
 .section-1 .hero-copy h2 {
-    position: absolute; top: 25%; left: 5%;
-    color: antiquewhite; font-size: 30px; margin: 0; padding: 20px;
+    position: absolute; top: 10%; left: 5%;
+    color: antiquewhite; font-size: 2.5vw; margin: 0; padding: 20px;
 }
 
-.section-1 .hero-copy button {
-    position: absolute; top: 50%; left: 5%;
-    background: #e91e63; color: #fff; border: 0;
-    padding: 12px 24px; font-size: 40px; font-weight: 700;
-    border-radius: 8px; cursor: pointer;
-    transition: background-color .3s, transform .2s;
-    box-shadow: 0 4px 6px rgba(0,0,0,.1);
+    .section-1 .hero-copy button {
+        position: absolute;
+        top: 35%;
+        left: 5%;
+        /* tipografia e spazi che scalano */
+        font-size: 2vw;
+        padding: clamp(10px, 1.2vw, 16px) clamp(16px, 3vw, 28px);
+        line-height: 1.2;
+        max-width: min(90vw, 32rem); /* evita overflow, consente a capo */
+        background: red;
+        color: #fff;
+        border: 0;
+        font-weight: 700;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color .3s, transform .2s;
+        box-shadow: 0 4px 6px rgba(0,0,0,.1);
+    }
+
+@media (max-width: 480px) {
+    /* su telefoni: centrato in basso, comodo da toccare */
+    .section-1 .hero-copy button {
+        left: 50%;
+        top: auto;
+        bottom: 10%;
+        transform: translateX(-50%);
+    }
 }
+
+/* accessibilità */
+.section-1 .hero-copy button:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: 2px;
+}
+
+
 
 .section-1 .hero-copy button:hover { background: #d81b60; transform: translateY(-2px); }
 .section-1 .hero-copy button:active { background: #c2185b; transform: translateY(0); }
 
 /* ============ Section 2 (slider) ============ */
-.section-2 { background: purple; min-height: 65vh; }
+.section-2 { background: white; min-height: 65vh; }
 
 .slider-wrapper {
     width: 100%;
@@ -143,19 +170,29 @@ body {
 }
 
 /* ============ Section 3 ============ */
-.section-3 { background: green; padding: 40px 20px; color: #fff; }
+.section-3 { background: white; padding: 40px 20px; color: white; }
+    .section-3 .section-3-container {
+        position:relative;
+        left:-10%;
+        width: 80%;
+        height: 30vw;
+        background: black;
+        border-radius: 25%;
+        box-shadow: -7px 5px 16px 1px rgba(56,86,122,0.6);
+        text-align:center;
+    }
 
-.container-div { display: flex; gap: 20px; align-items: stretch; }
+.container-div { display: flex; gap: 10px; align-items: stretch;position:relative;top:10%;width:80%;margin:0 auto;}
 
-.container1 { flex: 1; background: #d9d9d9; height: 300px; }
+.container1 { flex: 1; background: #d9d9d9; height: 20vw; }
 .container2 { flex: 1; background: gold; padding: 20px; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; }
 
 /* ============ Section 4 (galleria) ============ */
-.section-4 { position: relative; padding: 20px; min-height: 600px; }
+.section-4 {background:white; position: relative; padding: 20px; min-height: 3vw; }
 
 .section4-gallery-grid {
     display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 200px);
-    gap: 10px; height: 100%;
+    gap: 10px; 
 }
 
 .section4-gallery-grid img { width: 100%; height: 100%; object-fit: cover; border-radius: 4px; }
@@ -168,7 +205,7 @@ body {
 .section4-img-6 { grid-column: 4 / 5; grid-row: 2 / 3; }
 
 /* ============ Section 5 ============ */
-.section-5 { padding: 60px 20px; background: #eee; text-align: center; }
+.section-5 { padding: 60px 20px; background: white; text-align: center; }
 
 .section-5 ul {
     list-style: none; display: flex; justify-content: center;
