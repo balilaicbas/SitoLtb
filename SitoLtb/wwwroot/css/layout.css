@@ -170,16 +170,33 @@ body {
 }
 
 /* ============ Section 3 ============ */
-.section-3 { background: white; padding: 40px 20px; color: white; }
+.section-3 {
+    background: Khaki;
+    padding: 40px 20px;
+    color: black;
+}
     .section-3 .section-3-container {
+        margin:5% 0%;
         position:relative;
         left:-10%;
         width: 80%;
         height: 30vw;
-        background: black;
+        background: white;
+        border:3px solid blacK;
         border-radius: 25%;
         box-shadow: -7px 5px 16px 1px rgba(56,86,122,0.6);
         text-align:center;
+    }
+    .section-3 h2 {
+        position: relative;
+        top: 4%;
+        text-align:center;
+        font-size: 300%;
+    }
+    .section-3 h3 {
+        position: relative;
+        top: 4%;
+        font-size: 200%;
     }
 
 .container-div { display: flex; gap: 10px; align-items: stretch;position:relative;top:10%;width:80%;margin:0 auto;}
@@ -205,6 +222,7 @@ body {
 .section4-img-6 { grid-column: 4 / 5; grid-row: 2 / 3; }
 
 /* ============ Section 5 ============ */
+/*
 .section-5 { padding: 60px 20px; background: white; text-align: center; }
 
 .section-5 ul {
@@ -217,34 +235,43 @@ body {
 .section-5 img { width: 100%; height: auto; object-fit: cover; border: 1px solid #ccc; margin-bottom: 15px; }
 
 .section-5 span { display: block; font-size: 14px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
-
+*/
 /* ============ Section 6 (before/after) ============ */
 /* Sezione contenitore: nessun vincolo di altezza fissa */
 
 /* Wrapper image-comparison: piena larghezza, altezza max metà layout */
-.section6 {
-    display:flex;
-    align-items: center;
-    justify-content: center;
+.section-6 {
+    margin:5%;
+
 }
+.section-6 h2{
+    text-align:center;
+    font-size:400%;
+}
+    .section-6 .main-div-section-6 {
+        margin:5%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 .image-comparison-slider {
-    position:relative;
-    width:min(80vw,768px);
-    margin:0 auto;
+    position: relative;
+    width: min(95vw,1200px);
+    margin: 0 auto;
     overflow: hidden;
     border-radius: 0.5rem;
-    box-shadow:-7px 5px 16px 1px rgba(56,86,122,0.6);
-    cursor:col-resize;
+    box-shadow: -7px 5px 16px 1px rgba(56,86,122,0.6);
+    cursor: col-resize;
 }
-    .image-comparison-slider img {
-        display: block;
-        width: min(80vw,768px);
-        height: auto;
-        max-height: 80vh;
-        object-fit: cover;
-        pointer-events: none;
-        user-select:none;
-    }
+        .image-comparison-slider img {
+            display: block;
+            width: min(95vw,1200px);
+            height: auto;
+            max-height: 80vh;
+            object-fit: cover;
+            pointer-events: none;
+            user-select: none;
+        }
     .image-comparison-slider .img-wrapper{
         position:absolute;
         top:0;
@@ -349,3 +376,11 @@ body {
 
 .sinistra { justify-content: flex-start; margin-left: 0; margin-right: auto; }
 .destra   { justify-content: flex-start; margin-left: auto; margin-right: 0; }
+
+footer{
+
+    position:fixed;
+    bottom:0px;
+    left:0px;
+
+}
