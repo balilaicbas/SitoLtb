@@ -1,6 +1,5 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
-    var googleMapsApiKey = ViewData["ApiKey"];
 }
 @model SitoLtb.ViewModels.IndexVM
 
@@ -19,12 +18,12 @@
             @foreach (var post in Model.Posts.OrderByDescending(p => p.CreatedDate).Take(10))
             {
                 <div class="card">
-                    <ul>
-                        <li>@post.Title</li>
-                        <li>@post.ThumbnailUrl</li>
-                        <li>@post.Description</li>
-                        <li>@post.CreatedDate</li>
-                    </ul>
+                    <div class="post-title">@post.Title</div>
+                    <div class="post">
+                        <img src="@post.ThumbnailUrl" alt="post" />
+                        <main>@post.Description</main>
+                        <div>@post.AuthorName</div>
+                    </div>  
                 </div>
             }
         </div>

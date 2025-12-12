@@ -36,14 +36,16 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/login";
     options.AccessDeniedPath = "/AccessDenied";
 });
-builder.Services.Configure<FormOptions>(options =>
-{
-    options.MultipartBodyLengthLimit = 10485760; // 10 MB
-});
 builder.WebHost.ConfigureKestrel(serverOptions =>
 {
     serverOptions.Limits.MaxRequestBodySize = 10485760; // 10 MB
 });
+builder.Services.Configure<FormOptions>(options =>
+{
+    // ad esempio 100 MB
+    options.MultipartBodyLengthLimit = 1024 * 1024 * 100;
+});
+
 
 // Aggiungi il servizio di configurazione per ConnectionStrings
 

@@ -82,55 +82,69 @@ namespace SitoLtb.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(CreatePostVM vm)
         {
-            if (!ModelState.IsValid)
-                return View(vm);
-
-            // Ottieni l'utente loggato
-            var loggedInUser = await _userManager.Users
-                .FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
-
-            // ✅ Protezione extra: gestisci utente null
-            if (loggedInUser == null)
+            try
             {
-                _notification.Error("Utente non autenticato.");
-                return RedirectToAction("Login", "Account"); // o un'altra azione sicura
-            }
+                if (!ModelState.IsValid)
+                    return View(vm);
 
-            var post = new Post
-            {
-                Title = vm.Title,
-                Description = vm.Description,
-                Categoria = vm.Categoria,
-                ApplicationUserId = loggedInUser.Id
-            };
+                // Ottieni l'utente loggato
+                var loggedInUser = await _userManager.Users
+                    .FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
 
-            // Slug + GUID
-            if (!string.IsNullOrWhiteSpace(vm.Title))
-            {
-                string slug = vm.Title.Trim().Replace(" ", "-");
-                post.Url = slug + "-" + Guid.NewGuid();
-            }
+                // ✅ Protezione extra: gestisci utente null
+                if (loggedInUser == null)
+                {
+                    _notification.Error("Utente non autenticato.");
+                    return RedirectToAction("Login", "Account"); // o un'altra azione sicura
+                }
 
-            // Gestione immagine
-            if (vm.Thumbnail != null)
-            {
+                var post = new Post
+                {
+                    Title = vm.Title,
+                    Description = vm.Description,
+                    Categoria = vm.Categoria,
+                    ApplicationUserId = loggedInUser.Id
+                };
+
+                // Slug + GUID
+                if (!string.IsNullOrWhiteSpace(vm.Title))
+                {
+                    string slug = vm.Title.Trim().Replace(" ", "-");
+                    post.Url = slug + "-" + Guid.NewGuid();
+                }
+
+                // Gestione immagine
+                if (vm.Thumbnail != null)
+                {
+                    try
+                    {
+                        post.Image = UploadImage(vm.Thumbnail); // O async se hai UploadImageAsync
+                    }
+                    catch (Exception ex)
+                    {
+                        _notification.Error("Errore nel caricamento dell'immagine.");
+                        ModelState.AddModelError("Thumbnail", ex.Message);
+                        return View(vm);
+                    }
+                }
+
                 try
                 {
-                    post.Image = UploadImage(vm.Thumbnail); // O async se hai UploadImageAsync
+                    await _context.Posts.AddAsync(post);
+                    await _context.SaveChangesAsync();
+                    _notification.Success("Post Creato");
+                    return RedirectToAction("Index");
                 }
                 catch (Exception ex)
                 {
-                    _notification.Error("Errore nel caricamento dell'immagine.");
-                    ModelState.AddModelError("Thumbnail", ex.Message);
+                    _notification.Error("Errore di connessione al database: " + ex.Message);
                     return View(vm);
                 }
             }
-
-            await _context.Posts.AddAsync(post);
-            await _context.SaveChangesAsync();
-
-            _notification.Success("Post Creato");
-            return RedirectToAction("Index");
+            catch(Exception ex)
+            {
+                return Content("ERRORE CATTURATO: " + ex.ToString());
+            }
         }
 
         [HttpPost]
@@ -210,7 +224,7 @@ namespace SitoLtb.Areas.Admin.Controllers
                 throw new ArgumentException("File non valido");
 
             // 2. Controllo estensione del file
-            var estensioniConsentite = new[] { ".jpg", ".jpeg", ".png", ".gif",".webp" };
+            var estensioniConsentite = new[] {".jpeg",".jpg", ".png"};
             var estensione = Path.GetExtension(file.FileName).ToLowerInvariant();
 
             if (!estensioniConsentite.Contains(estensione))
