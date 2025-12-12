@@ -23,6 +23,7 @@
                     <th>Immagine</th>
                     <th>Ultima modifica</th>
                     <th>Autore</th>
+                    <th>Titolo</th>
                     <th>Categoria</th>
                     <th>Modifica</th>
                     <th>Elimina</th>
@@ -37,6 +38,7 @@
                         </td>
                         <td>@post.CreatedDate.ToString("dd/MM/yyyy")</td>
                         <td>@post.AuthorName</td>
+                        <td>@post.Title</td>
                         <td>@post.Categoria</td>
                         <td>
                             <a asp-area="Admin" asp-controller="Post" asp-action="Edit" asp-route-id="@post.Id" class="btn btn-primary">Edit</a>

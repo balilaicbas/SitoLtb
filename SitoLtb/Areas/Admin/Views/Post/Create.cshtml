@@ -58,9 +58,14 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const inputFile = document.querySelector('.custom-file');
+               document.addEventListener('DOMContentLoaded', function () {
+            const inputFile = document.querySelector('input[type="file"]');
             const preview = document.getElementById('thumbnail');
+
+            if (!inputFile || !preview) {
+                console.error("File input o thumbnail non trovati");
+                return;
+            }
 
             inputFile.addEventListener('change', function () {
                 if (this.files && this.files[0]) {
@@ -68,5 +73,6 @@
                 }
             });
         });
+
     </script>
 }

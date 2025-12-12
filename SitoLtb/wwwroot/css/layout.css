@@ -20,7 +20,7 @@ body {
     justify-content:space-between;
     align-items: center;          /* permette alla navbar di coprire tutta l’altezza */
     padding: 60px;
-    z-index: 999;
+    z-index: 9999;
 }
 
 .logo-title {
@@ -191,7 +191,7 @@ body {
         position: relative;
         top: 4%;
         text-align:center;
-        font-size: 300%;
+        font-size: 280%;
     }
     .section-3 h3 {
         position: relative;
@@ -246,7 +246,7 @@ body {
 }
 .section-6 h2{
     text-align:center;
-    font-size:400%;
+    font-size:300%;
 }
     .section-6 .main-div-section-6 {
         margin:5%;
@@ -377,10 +377,9 @@ body {
 .sinistra { justify-content: flex-start; margin-left: 0; margin-right: auto; }
 .destra   { justify-content: flex-start; margin-left: auto; margin-right: 0; }
 
-footer{
-
-    position:fixed;
-    bottom:0px;
-    left:0px;
-
+footer {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    z-index: 9999;
 }
