@@ -8,27 +8,35 @@
     <div class="hero-copy">
         <h1>Il Libero Torneificio del Borgo</h1>
         <h2>Tutti i mercoledì nella sede in via Bena 10/a e tutti i giovedì presso l'associazione "Comala" puoi partecipare agli eventi del circolo</h2>
-        <button asp-controller="Home" asp-action="Preiscrizione">Scopri gli eventi</button>
+        <a class="hero-btn" asp-controller="Home" asp-action="Preiscrizione">Scopri gli eventi</a>
+
     </div>
 </section>
 
 <section class="section-2">
     <div class="slider-wrapper">
         <div class="slider" id="slider">
-            @foreach (var post in Model.Posts.OrderByDescending(p => p.CreatedDate).Take(10))
+            @foreach (var post in Model.Posts
+            .OrderByDescending(p => p.CreatedDate)
+            .Take(10))
             {
-                <div class="card">
-                    <div class="post-title">@post.Title</div>
-                    <div class="post">
-                        <img src="@post.ThumbnailUrl" alt="post" />
-                        <main>@post.Description</main>
-                        <div>@post.AuthorName</div>
-                    </div>  
+                <div class="cards">
+                    <a href="@post.ThumbnailUrl" class="card-link">
+                        <div class="card">
+                            <div class="post-title">@post.Title</div>
+
+                            <div class="post">
+                                <img src="@post.ThumbnailUrl" alt="@post.Title" />
+                            </div>
+                        </div>
+                    </a>
                 </div>
             }
         </div>
     </div>
 </section>
+
+
 
 <section class="section-3">
     <h2>Chi siamo</h2>
@@ -137,22 +145,46 @@
 
 
     <script>
-        const sliderS2 = document.getElementById('slider');
-        const totalCards = sliderS2 ? sliderS2.querySelectorAll('.card').length : 0;
-        let index = 0;
-        setInterval(() => {
-          index++;
-          sliderS2.style.transition = "transform 0.5s ease-in-out";
-          sliderS2.style.transform = `translateX(-${(100 / 3) * index}%)`;
-          if (index === totalCards) {
-            setTimeout(() => {
-              sliderS2.style.transition = "none";
-              sliderS2.style.transform = `translateX(0)`;
-              index = 0;
-            }, 500);
-          }
-        }, 3000);
+        window.addEventListener('load', () => {
+            const sliderS2 = document.getElementById('slider');
+            if (!sliderS2) return;
+
+            const cards = sliderS2.querySelectorAll('.cards');
+            const totalCards = cards.length;
+            if (!totalCards) return;
+
+            let index = 0;
+
+            function stepPx() {
+                const gap = parseFloat(getComputedStyle(sliderS2).gap) || 0;
+                const cardWidth = cards[0].getBoundingClientRect().width;
+                return cardWidth + gap;
+            }
+
+            setInterval(() => {
+                index++;
+
+                sliderS2.style.transition = "transform 0.5s ease-in-out";
+                sliderS2.style.transform = `translateX(-${stepPx() * index}px)`;
+
+                if (index >= totalCards) {
+                    setTimeout(() => {
+                        sliderS2.style.transition = "none";
+                        sliderS2.style.transform = "translateX(0)";
+                        index = 0;
+                    }, 500);
+                }
+            }, 4000); // ✅ 4 secondi
+
+            window.addEventListener('resize', () => {
+                sliderS2.style.transition = "none";
+                sliderS2.style.transform = `translateX(-${stepPx() * index}px)`;
+            });
+        });
     </script>
+
+
+
     <script>
               VanillaTilt.init(document.querySelector(".image-comparison-slider"), {
                 max: 7,
@@ -210,4 +242,15 @@
      }
 
     </script>
+    <script>
+        function syncHeaderHeight() {
+            const header = document.querySelector('.main-header');
+            if (!header) return;
+            document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+        }
+
+        window.addEventListener('load', syncHeaderHeight);
+        window.addEventListener('resize', syncHeaderHeight);
+    </script>
+
 }

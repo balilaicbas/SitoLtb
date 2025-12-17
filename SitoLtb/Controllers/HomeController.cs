@@ -40,6 +40,7 @@ namespace SitoLtb.Controllers
             ViewData["ApiKey"] = googleMapsApiKey;
             return View(vm);
         }
+        //per il momento include solo i tornei alla Verdolina, poi sarà da aggiornare con i tornei al comala e i tornei dei bar
         public async Task<IActionResult> Preiscrizione(int? page)
         {
             int pageSize = 4;

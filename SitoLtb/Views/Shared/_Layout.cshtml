@@ -22,8 +22,14 @@
             <img src="/images/logo_LTB_Site_Icon.png" alt="Logo LTB" />
             <a asp-controller="Home" asp-action="Index">Libero Torneificio del Borgo</a>
         </div>
+            <button class="nav-toggle" type="button" aria-controls="main-nav" aria-expanded="false">
+                <span class="sr-only">Apri menu</span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </button>
 
-        <nav class="main-navbar" aria-label="Menu principale">
+            <nav class="main-navbar" id="main-nav" aria-label="Menu principale">
             <ul>
                 <li><a asp-controller="Home" asp-action="Preiscrizione">Tornei</a></li>
                 <li><a asp-controller="Home" asp-action="Corsi">Corsi</a></li>
@@ -52,5 +58,27 @@
 
 
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        window.addEventListener('load', () => {
+            const header = document.querySelector('.main-header');
+            const btn = document.querySelector('.nav-toggle');
+            const nav = document.getElementById('main-nav');
+            if (!header || !btn || !nav) return;
+
+            btn.addEventListener('click', () => {
+                const isOpen = header.classList.toggle('nav-open');
+                btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+            });
+
+            // opzionale: chiudi cliccando un link
+            nav.addEventListener('click', (e) => {
+                if (e.target.closest('a')) {
+                    header.classList.remove('nav-open');
+                    btn.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+    </script>
+
 </body>
 </html>
