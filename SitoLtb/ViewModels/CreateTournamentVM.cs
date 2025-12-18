@@ -11,5 +11,6 @@
 
         public string? LinkPreiscrizione { get; set; }
         public string? Url { get; set; }
+        public bool Elo { get; set; }
     }
 }

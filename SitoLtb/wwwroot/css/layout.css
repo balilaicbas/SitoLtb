@@ -887,7 +887,7 @@ main {
 
 .blog-container {
     width: min(92vw, 1200px);
-    margin: 10% auto;
+    margin: 2% auto;
     padding: 24px 0 40px;
 
 }
@@ -1025,5 +1025,135 @@ main {
             "d";
     }
 }
+.notizie-page-title {
+    text-align: center;
+    font-size: clamp(2.6rem, 6vw, 4rem);
+    font-weight: 800;
+    margin: 80px 0 60px;
+    color: #000;
+}
+.blog-section-title {
+    text-align: center;
+    font-size: clamp(1.8rem, 4vw, 2.4rem);
+    font-weight: 700;
+    margin: 2%;
+    color: #000;
+}
+/* =========================
+   BLOG POST (pagina singolo)
+   coerente con BLOG GRID
+========================= */
+
+/* wrapper pagina post: riusa blog-container ma senza il margin enorme */
+.blog-container.blog-post-page {
+    margin: 0 auto 70px;
+    padding: 0 0 40px;
+}
+
+/* Titolo MOLTO grande */
+.blog-post-title {
+    text-align: center;
+    font-size: clamp(3rem, 6vw, 4.6rem);
+    font-weight: 900;
+    line-height: 1.05;
+    margin: 18px 0 22px;
+    color: #000;
+}
+
+/* Immagine più piccola e più “editoriale” */
+.blog-post-image-wrapper {
+    max-width: 900px;
+    margin: 0 auto 20px;
+}
+
+/* Riusa .blog-image (background-cover) ma con altezza più contenuta */
+.blog-image.blog-post__image {
+    aspect-ratio: 16 / 6; /* più bassa della hero delle card */
+    border-radius: 18px;
+}
+
+/* Meta centrale, discreta ma leggibile */
+.blog-post__meta {
+    text-align: center;
+    font-size: 15px;
+    opacity: .82;
+    margin: 0 auto 34px;
+}
+
+.blog-post__author {
+    color: inherit;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+    .blog-post__author:hover {
+        text-decoration: underline;
+    }
+
+/* Corpo testo: colonna di lettura + font più grande + aria */
+.blog-post__content {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 12px 40px;
+    font-size: 1.22rem; /* testo più grande */
+    line-height: 1.85;
+    color: #111;
+}
+
+    /* spazi tra paragrafi */
+    .blog-post__content p {
+        margin: 0 0 1.2em 0;
+    }
+
+    /* liste più leggibili */
+    .blog-post__content ul,
+    .blog-post__content ol {
+        padding-left: 1.2em;
+        margin: 0 0 1.2em 0;
+    }
+
+    .blog-post__content li {
+        margin: .35em 0;
+    }
+
+    /* immagini dentro al contenuto */
+    .blog-post__content img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        margin: 28px auto;
+        border-radius: 14px;
+    }
+
+    /* titoli nel contenuto */
+    .blog-post__content h2 {
+        font-size: clamp(1.7rem, 3vw, 2.2rem);
+        margin: 2.2em 0 .8em;
+        line-height: 1.15;
+    }
+
+    .blog-post__content h3 {
+        font-size: clamp(1.35rem, 2.5vw, 1.8rem);
+        margin: 1.8em 0 .6em;
+        line-height: 1.2;
+    }
+
+/* responsive: immagine un filo più alta su mobile */
+@media (max-width: 560px) {
+    .blog-image.blog-post__image {
+        aspect-ratio: 16 / 8;
+    }
+
+    .blog-post-title {
+        margin: 14px 0 16px;
+    }
+
+    .blog-post__content {
+        font-size: 1.15rem;
+        line-height: 1.8;
+    }
+}
+
+
 
 

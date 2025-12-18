@@ -21,7 +21,7 @@
             .Take(10))
             {
                 <div class="cards">
-                    <a href="@post.ThumbnailUrl" class="card-link">
+                    <a asp-controller="Blog" asp-action="Post" class="card-link">
                         <div class="card">
                             <div class="post-title">@post.Title</div>
 
@@ -35,7 +35,6 @@
         </div>
     </div>
 </section>
-
 
 
 <section class="section-3">

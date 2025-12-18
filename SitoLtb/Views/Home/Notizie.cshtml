@@ -1,0 +1,20 @@
+﻿@using X.PagedList
+@using SitoLtb.Models
+
+<h1 class="notizie-page-title">Notizie</h1>
+@await Html.PartialAsync("_NotizieSection",
+        (Title: "In evidenza", Posts: (IPagedList<Post>?)Model.InEvidenza)
+    )
+
+@await Html.PartialAsync("_NotizieSection",
+        (Title: "Tornei", Posts: (IPagedList<Post>?)Model.Tornei)
+    )
+
+@await Html.PartialAsync("_NotizieSection",
+        (Title: "Eventi", Posts: (IPagedList<Post>?)Model.Eventi)
+    )
+
+@await Html.PartialAsync("_NotizieSection",
+        (Title: "CIS", Posts: (IPagedList<Post>?)Model.Cis)
+    )
+    

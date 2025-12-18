@@ -5,8 +5,9 @@ namespace SitoLtb.ViewModels
 {
     public class BlogVM
     {
-        public string? Title { get; set; }
-        public string? ThumbnailUrl { get; set; }
-        public IPagedList<Post>? Posts { get; set; }
+        public IPagedList<Post>? InEvidenza { get; set; }
+        public IPagedList<Post>? Tornei { get; set; }
+        public IPagedList<Post>? Eventi { get; set; }
+        public IPagedList<Post>? Cis { get; set; }
     }
 }

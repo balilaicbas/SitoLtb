@@ -1,0 +1,51 @@
+﻿@model (string Title, X.PagedList.IPagedList<SitoLtb.Models.Post>? Posts)
+
+@if (Model.Posts == null || !Model.Posts.Any())
+{
+    return;
+}
+
+@{
+    var items = Model.Posts.Take(5).ToList();
+    var first = items.First();
+
+    string Bg(string? img) =>
+        string.IsNullOrWhiteSpace(img)
+            ? Url.Content("~/images/placeholder.jpg")
+            : Url.Content($"~/{img.TrimStart('/')}");
+}
+
+<h2 class="blog-section-title">@Model.Title</h2>
+
+<section class="blog-container">
+    <div class="blog-grid__cards">
+
+        <!-- CARD GRANDE -->
+        <article class="blog-card blog-card--featured">
+            <a asp-controller="Blog" asp-action="Post" asp-route-slug="@first.Url" class="blog-link">
+                <div class="blog-image" style="background-image:url('@Bg(first.Image)');">
+                    <div class="blog-overlay">
+                        <p class="blog-kicker">@Model.Title</p>
+                        <h2 class="blog-title">@first.Title</h2>
+                        <p class="blog-description">@first.Description</p>
+                    </div>
+                </div>
+            </a>
+        </article>
+
+        <!-- 4 CARD PICCOLE -->
+        @foreach (var post in items.Skip(1))
+        {
+            <article class="blog-card">
+                <a asp-controller="Blog" asp-action="Post" asp-route-slug="@post.Url" class="blog-link">
+                    <div class="blog-image" style="background-image:url('@Bg(post.Image)');">
+                        <div class="blog-overlay">
+                            <h3 class="blog-title">@post.Title</h3>
+                        </div>
+                    </div>
+                </a>
+            </article>
+        }
+
+    </div>
+</section>

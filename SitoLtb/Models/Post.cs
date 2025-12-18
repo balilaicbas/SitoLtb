@@ -16,7 +16,7 @@ namespace SitoLtb.Models
 
         public string Url { get; set; }
 
-        public string? Categoria { get; set; }
+        public string Categoria { get; set; }
         public DateTime DateTimeCreated { get; set; } = DateTime.Now;
         public ApplicationUser? ApplicationUser { get; set; }
 

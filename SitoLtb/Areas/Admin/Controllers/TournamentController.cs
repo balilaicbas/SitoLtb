@@ -32,15 +32,16 @@ namespace SitoLtb.Area.Admin.Controllers
             var listOfTournaments = await _context.Tournaments.ToListAsync(); ;
 
             var loggedInUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
-            
+
 
             var listOfTournamentsVM = listOfTournaments.Select(x => new TournamentVM()
             {
                 Id = x.Id,
-                Nome=x.Nome,
-                Data=x.Data,
-                LinkBando=x.LinkBando,
-                LinkPreiscrizione=x.LinkPreiscrizione
+                Nome = x.Nome,
+                Data = x.Data,
+                LinkBando = x.LinkBando,
+                LinkPreiscrizione = x.LinkPreiscrizione,
+                Elo = x.Elo,
             }).ToList();
 
             int pageSize = 5;
@@ -66,6 +67,7 @@ namespace SitoLtb.Area.Admin.Controllers
 
             tournament.Nome = vm.Nome;
             tournament.Data= vm.Data;
+            tournament.Tipologia = vm.Tipologia;
             tournament.LinkBando = vm.LinkBando;
             tournament.LinkPreiscrizione= vm.LinkPreiscrizione;
 
