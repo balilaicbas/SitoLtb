@@ -34,7 +34,7 @@
                 {
                     <tr>
                         <td>
-                            <img src="~/thumbnails/@(post.ThumbnailUrl ?? "default_image.png")" style="width: 80px; height: auto; border-radius: 4px;" />
+                            <img src="~/@(post.ThumbnailUrl ?? "default_image.png")" style="width: 80px; height: auto; border-radius: 4px;" />
                         </td>
                         <td>@post.CreatedDate.ToString("dd/MM/yyyy")</td>
                         <td>@post.AuthorName</td>
@@ -69,3 +69,5 @@
         })
     </div>
 </main>
+
+

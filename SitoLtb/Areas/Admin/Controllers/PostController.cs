@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using X.PagedList;
 using SitoLtb.Data;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SitoLtb.Utilities;
 
 
 namespace SitoLtb.Areas.Admin.Controllers
@@ -35,23 +36,27 @@ namespace SitoLtb.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(int? page)
         {
-            var listOfPosts = await _context.Posts.ToListAsync();
-
+            var listOfPosts = new List<Post>();
 
             var loggedInUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
-            
+            var loggedInUserRole = await _userManager.GetRolesAsync(loggedInUser!);
+            if (loggedInUserRole[0] == WebsiteRoles.WebsiteAdmin)
+            {
+                listOfPosts = await _context.Posts!.Include(x => x.ApplicationUser).ToListAsync();
+            }
+            else
+            {
+                listOfPosts = await _context.Posts!.Include(x => x.ApplicationUser).Where(x => x.ApplicationUser!.Id == loggedInUser!.Id).ToListAsync();
+            }
 
             var listOfPostsVM = listOfPosts.Select(x => new PostVM()
             {
                 Id = x.Id,
                 Title = x.Title,
                 CreatedDate = x.DateTimeCreated,
-                ThumbnailUrl = x.Url,
+                ThumbnailUrl = x.Image,
                 Categoria=x.Categoria,
-                AuthorName = _userManager.Users
-                    .Where(u => u.Id == x.ApplicationUserId)
-                    .Select(u => u.FirstName + " " + u.LastName)
-                    .FirstOrDefault() ?? "Utente sconosciuto" // Gestisce il caso in cui l'utente non venga trovato
+                AuthorName = x.ApplicationUser!.FirstName + " " + x.ApplicationUser.LastName
             }).ToList();
 
             int pageSize = 5;
@@ -182,6 +187,7 @@ namespace SitoLtb.Areas.Admin.Controllers
             {
                 Id = post.Id,
                 Title = post.Title,
+                Categoria=post.Categoria,
                 Description = post.Description,
                 ThumbnailUrl = post.Image,
             };
@@ -203,6 +209,7 @@ namespace SitoLtb.Areas.Admin.Controllers
             post.Title = vm.Title;
             post.Description = vm.Description;
             post.Categoria = vm.Categoria;
+            post.Image = vm.ThumbnailUrl;
 
             if (vm.Thumbnail != null)
             {

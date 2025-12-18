@@ -1,23 +1,33 @@
 ﻿@model SitoLtb.ViewModels.BlogPostVM
 
+@{
+    string Bg(string? img) =>
+        string.IsNullOrWhiteSpace(img)
+            ? Url.Content("~/images/placeholder.jpg")
+            : Url.Content("~/" + img.TrimStart('/'));
+}
 
+<section class="blog-container blog-post-page">
 
+    <!-- TITOLO -->
+    <h1 class="blog-post-title">@Model.Title</h1>
 
+    <!-- IMMAGINE -->
+    <div class="blog-post-image-wrapper">
+        <div class="blog-image blog-post__image"
+             style="background-image:url('@Bg(Model.ThumbnailUrl)');">
+        </div>
+    </div>
 
-            
-                <article>
-                    <h1>@Model.Title</h1>
-                    <div>
-                        <img src="@Model.ThumbnailUrl"/>
-                    </div>
-                <div>
-                     @Html.Raw(Model.Description)
-                 </div>
-                    <span>
-                        Posted by
-                        <a href="#!">@Model.AuthorName</a>
-                        on @Model.CreatedDate.ToShortDateString()
-                    </span>
-                </article>
+    <!-- META -->
+    <div class="blog-post__meta">
+        Posted by <a href="#!" class="blog-post__author">@Model.AuthorName</a>
+        on @Model.CreatedDate.ToShortDateString()
+    </div>
 
-<!-- Post Content-->
+    <!-- TESTO -->
+    <article class="blog-post__content">
+        @Html.Raw(Model.Description)
+    </article>
+
+</section>

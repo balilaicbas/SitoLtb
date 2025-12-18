@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System.Runtime.CompilerServices;
 using SitoLtb.Models;
 using SitoLtb.Data;
 
@@ -25,7 +24,6 @@ namespace SitoLtb.Utilities
             if (!_roleManager.RoleExistsAsync(WebsiteRoles.WebsiteAdmin).GetAwaiter().GetResult())
             {
                 _roleManager.CreateAsync(new IdentityRole(WebsiteRoles.WebsiteAdmin)).GetAwaiter().GetResult();
-
                 _userManager.CreateAsync(new ApplicationUser()
                 {
                     UserName = "balilaicbas",

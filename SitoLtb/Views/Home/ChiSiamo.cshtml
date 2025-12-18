@@ -1,58 +1,141 @@
-﻿<section class="section-1">
-    <div>
+﻿<!-- HERO come Home (section-1) -->
+<section class="section-1">
+    <img src="/images/HeroImage.jpg" alt="Chi Siamo - LTB" />
+    <div class="hero-copy">
         <h1>Chi Siamo</h1>
-        <h3>
+        <h2>
             LTB è un "Libero Torneificio", si occupa quindi di organizzare e
             pubblicizzare qualsiasi evento che possa rendere agli scacchi quello che è
             degli scacchi, nell'amicizia e nella voglia di stare insieme.
-        </h3>
+        </h2>
+        <a class="hero-btn" href="#direttivo">Scopri il Direttivo</a>
     </div>
 </section>
 
-<section class="section-direttivo">
-    <h2>Il Direttivo di LTB</h2>
-    <ul class="lista-direttivo">
-        <li class="card sinistra">
-            <img src="/images/HeroImage.jpg" alt="Mario Iacomussi" />
-            <div class="info">
-                <p class="nome">Mario Iacomussi</p>
-                <p class="ruolo">Il Presidente</p>
+<!-- SLIDER come Home (section-2) -->
+<section class="section-2" id="direttivo">
+    <div class="slider-wrapper">
+        <div class="slider" id="slider-direttivo">
+
+            <div class="cards">
+                <a href="#!" class="card-link">
+                    <div class="card">
+                        <div class="post-title">Mario Iacomussi</div>
+                        <div class="post">
+                            <img src="/images/HeroImage.jpg" alt="Mario Iacomussi" />
+                        </div>
+                    </div>
+                </a>
             </div>
-        </li>
-        <li class="card destra">
-            <img src="/images/HeroImage.jpg" alt="Pasquale Partipilo" />
-            <div class="info">
-                <p class="nome">Pasquale Partipilo</p>
-                <p class="ruolo">Il Presidente</p>
+
+            <div class="cards">
+                <a href="#!" class="card-link">
+                    <div class="card">
+                        <div class="post-title">Pasquale Partipilo</div>
+                        <div class="post">
+                            <img src="/images/HeroImage.jpg" alt="Pasquale Partipilo" />
+                        </div>
+                    </div>
+                </a>
             </div>
-        </li>
-        <li class="card sinistra">
-            <img src="/images/HeroImage.jpg" alt="Max de Barberis" />
-            <div class="info">
-                <p class="nome">Max de Barberis</p>
-                <p class="ruolo">Il Vice Presidente</p>
+
+            <div class="cards">
+                <a href="#!" class="card-link">
+                    <div class="card">
+                        <div class="post-title">Max de Barberis</div>
+                        <div class="post">
+                            <img src="/images/HeroImage.jpg" alt="Max de Barberis" />
+                        </div>
+                    </div>
+                </a>
             </div>
-        </li>
-        <li class="card destra">
-            <img src="/images/HeroImage.jpg" alt="Manuel Macis" />
-            <div class="info">
-                <p class="nome">Manuel Macis</p>
-                <p class="ruolo">Il Consigliere</p>
+
+            <div class="cards">
+                <a href="#!" class="card-link">
+                    <div class="card">
+                        <div class="post-title">Manuel Macis</div>
+                        <div class="post">
+                            <img src="/images/HeroImage.jpg" alt="Manuel Macis" />
+                        </div>
+                    </div>
+                </a>
             </div>
-        </li>
-        <li class="card sinistra">
-            <img src="/images/HeroImage.jpg" alt="Marco Mina" />
-            <div class="info">
-                <p class="nome">Marco Mina</p>
-                <p class="ruolo">Il Consigliere</p>
+
+            <div class="cards">
+                <a href="#!" class="card-link">
+                    <div class="card">
+                        <div class="post-title">Marco Mina</div>
+                        <div class="post">
+                            <img src="/images/HeroImage.jpg" alt="Marco Mina" />
+                        </div>
+                    </div>
+                </a>
             </div>
-        </li>
-        <li class="card destra">
-            <img src="/images/HeroImage.jpg" alt="Caprioli" />
-            <div class="info">
-                <p class="nome">Caprioli</p>
-                <p class="ruolo">Il Responsabile al Safeguarding</p>
+
+            <div class="cards">
+                <a href="#!" class="card-link">
+                    <div class="card">
+                        <div class="post-title">Caprioli</div>
+                        <div class="post">
+                            <img src="/images/HeroImage.jpg" alt="Caprioli" />
+                        </div>
+                    </div>
+                </a>
             </div>
-        </li>
-    </ul>
+
+        </div>
+    </div>
 </section>
+<script>
+
+        function initAutoSlider(sliderId, intervalMs = 4000) {
+        const sliderEl = document.getElementById(sliderId);
+        if (!sliderEl) return;
+
+        const cards = sliderEl.querySelectorAll('.cards');
+        const totalCards = cards.length;
+        if (!totalCards) return;
+
+        let index = 0;
+
+        function stepPx() {
+          const gap = parseFloat(getComputedStyle(sliderEl).gap) || 0;
+        const cardWidth = cards[0].getBoundingClientRect().width;
+        return cardWidth + gap;
+        }
+
+        function go() {
+            index++;
+
+        sliderEl.style.transition = "transform 0.5s ease-in-out";
+        sliderEl.style.transform = `translateX(-${stepPx() * index}px)`;
+
+          if (index >= totalCards) {
+            setTimeout(() => {
+                sliderEl.style.transition = "none";
+                sliderEl.style.transform = "translateX(0)";
+                index = 0;
+            }, 500);
+          }
+        }
+
+        const timer = setInterval(go, intervalMs);
+
+        window.addEventListener('resize', () => {
+            sliderEl.style.transition = "none";
+        sliderEl.style.transform = `translateX(-${stepPx() * index}px)`;
+        });
+
+        // opzionale: stop quando la tab non è visibile (risparmia risorse)
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) clearInterval(timer);
+        });
+      }
+
+      window.addEventListener('load', () => {
+            initAutoSlider('slider', 4000);           // Home
+        initAutoSlider('slider-direttivo', 4000); // Chi Siamo
+      });
+
+
+</script>

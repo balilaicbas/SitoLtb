@@ -30,16 +30,14 @@ namespace SitoLtb.Controllers
         public IActionResult Index()
         {
             var vm = new IndexVM
-            { 
+            {
                 Posts = _postService.GetAll(),
                 Tournaments = _tournamentService.GetAll()
             };
-            var googleMapsApiKey = _configuration["GoogleMaps:ApiKey"];
-
-
-            ViewData["ApiKey"] = googleMapsApiKey;
+           
             return View(vm);
         }
+
         //per il momento include solo i tornei alla Verdolina, poi sarà da aggiornare con i tornei al comala e i tornei dei bar
         public async Task<IActionResult> Preiscrizione(int? page)
         {
@@ -124,33 +122,6 @@ namespace SitoLtb.Controllers
         {
             return View();
         }
-        public async Task<IActionResult> Blog(int? page)
-        {
-            var vm = new BlogVM();
-            int pageSize = 4;
-            int pageNumber = (page ?? 1);
-            vm.Posts = await _context.Posts!
-      .Include(x => x.ApplicationUser)
-      .Where(x => x.Categoria == "Tornei")
-      .OrderByDescending(x => x.DateTimeCreated)
-      .ToPagedListAsync(pageNumber, pageSize);
-
-            return View(vm);
-        }
-        public async Task<IActionResult> Universita(int? page)
-        {
-            var vm = new BlogVM();
-            int pageSize = 4;
-            int pageNumber = (page ?? 1);
-            vm.Posts = await _context.Posts!
-      .Include(x => x.ApplicationUser)
-      .Where(x => x.Categoria == "Universita")
-      .OrderByDescending(x => x.DateTimeCreated)
-      .ToPagedListAsync(pageNumber, pageSize);
-
-            return View(vm);
-        }
-
         public IActionResult ChiSiamo()
         {
             return View();
@@ -168,6 +139,37 @@ namespace SitoLtb.Controllers
         {
             return View();
         }
+        public IActionResult Notizie(int? pageInEvidenza, int? pageTornei, int? pageEventi, int? pageCis)
+        {
+            int pageSize = 5;
+
+            var vm = new BlogVM
+            {
+                InEvidenza = _context.Posts
+                    .Where(p => p.Categoria == "In evidenza")
+                    .OrderByDescending(p => p.DateTimeCreated)
+                    .ToPagedList(pageInEvidenza ?? 1, pageSize),
+
+                Tornei = _context.Posts
+                    .Where(p => p.Categoria == "Tornei")
+                    .OrderByDescending(p => p.DateTimeCreated)
+                    .ToPagedList(pageTornei ?? 1, pageSize),
+
+                Eventi = _context.Posts
+                    .Where(p => p.Categoria == "Eventi")
+                    .OrderByDescending(p => p.DateTimeCreated)
+                    .ToPagedList(pageEventi ?? 1, pageSize),
+
+                Cis = _context.Posts
+                    .Where(p => p.Categoria == "Cis")
+                    .OrderByDescending(p => p.DateTimeCreated)
+                    .ToPagedList(pageCis ?? 1, pageSize)
+            };
+
+            return View(vm);
+        }
+
+
 
     }
 }
