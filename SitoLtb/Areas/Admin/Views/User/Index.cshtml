@@ -39,9 +39,11 @@
                             </td>
                             <td>
                                 <!-- Modulo per la richiesta POST di eliminazione -->
-                        <button type="submit" class="btn btn-danger" title="Elimina">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
+                            <form asp-area="Admin" asp-controller="User" asp-action="Delete" asp-route-id="@user.Id" method="post" onsubmit="return confirm('Vuoi eliminare questo utente?')">
+                                <button type="submit" class="btn btn-danger" title="Elimina">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
                             </td>
                         </tr>
                     }

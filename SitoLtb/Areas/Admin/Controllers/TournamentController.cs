@@ -70,6 +70,7 @@ namespace SitoLtb.Area.Admin.Controllers
             tournament.Tipologia = vm.Tipologia;
             tournament.LinkBando = vm.LinkBando;
             tournament.LinkPreiscrizione= vm.LinkPreiscrizione;
+            tournament.Elo = vm.Elo;
 
             if (tournament.Nome!= null)
             {
@@ -115,20 +116,22 @@ namespace SitoLtb.Area.Admin.Controllers
 
 
 
-            var vm = new TournamentVM()
+            var vm = new CreateTournamentVM()
             {
                 Id = tournament.Id,
                 Nome = tournament.Nome,
                 Data = tournament.Data,
                 LinkBando = tournament.LinkBando,
                 LinkPreiscrizione = tournament.LinkPreiscrizione,
+                Tipologia=tournament.Tipologia,
+                Elo= tournament.Elo,
             };
 
             return View(vm);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(TournamentVM vm)
+        public async Task<IActionResult> Edit(CreateTournamentVM vm)
         {
             if (!ModelState.IsValid) { return View(vm); }
             var tournament = await _context.Tournaments!.FirstOrDefaultAsync(x => x.Id == vm.Id);
