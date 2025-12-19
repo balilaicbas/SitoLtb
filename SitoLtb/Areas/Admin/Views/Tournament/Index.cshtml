@@ -39,7 +39,7 @@
                         <td>
                             <a href="@tournament.LinkBando" target="_blank">Bando</a>
                         </td>
-                        <td>@(tournament.Elo == true ? "sì" : "no")</td>
+                        <td>@(tournament.Elo == true ? "si" : "no")</td>
                         <td>
                             <a asp-area="Admin" asp-controller="Tournament" asp-action="Edit" asp-route-id="@tournament.Id">
                                 <i class="fas fa-edit"></i> Modifica

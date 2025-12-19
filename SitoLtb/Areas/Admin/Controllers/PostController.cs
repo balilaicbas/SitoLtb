@@ -175,7 +175,7 @@ namespace SitoLtb.Areas.Admin.Controllers
             var post = await _context.Posts!.FirstOrDefaultAsync(x=> x.Id == id);
             if(post == null)
             {
-                _notification.Error("Post not found");
+                _notification.Error("Post non trovato");
                 return View();
             }
 

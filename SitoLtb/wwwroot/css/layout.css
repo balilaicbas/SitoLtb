@@ -1153,6 +1153,12 @@ main {
         line-height: 1.8;
     }
 }
+.checkbox-inline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 
 
 

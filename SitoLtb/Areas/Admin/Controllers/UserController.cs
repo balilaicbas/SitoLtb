@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SitoLtb.Utilities;
 
 namespace SitoLtb.Areas.Admin.Controllers
 {
@@ -121,10 +122,15 @@ namespace SitoLtb.Areas.Admin.Controllers
                 LastName = vm.LastName
             };
 
-            var result =   await _userManager.CreateAsync(applicationUser,vm.Password);
+            var result =  await _userManager.CreateAsync(applicationUser,vm.Password);
+            
             if (result.Succeeded)
-            { 
-                
+            {
+                if (vm.IsAdmin)
+                {
+                    await _userManager.AddToRoleAsync(applicationUser, WebsiteRoles.WebsiteAdmin);
+                }
+
                 _notification.Success("User registered successfully");
                 return RedirectToAction("Index", "User", new {area="Admin"});
             }
