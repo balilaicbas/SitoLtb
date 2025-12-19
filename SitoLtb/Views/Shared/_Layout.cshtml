@@ -30,16 +30,68 @@
             </button>
 
             <nav class="main-navbar" id="main-nav" aria-label="Menu principale">
-            <ul>
-                <li><a asp-controller="Home" asp-action="Preiscrizione">Tornei</a></li>
-                <li><a asp-controller="Home" asp-action="Corsi">Corsi</a></li>
-                    <li><a asp-controller="Home" asp-action="Notizie">Notizie</a></li>
-                    <li><a asp-controller="Home" asp-action="ChiSiamo">Chi siamo</a></li>
-                    <li><a asp-controller="Home" asp-action="Contatti">Contatti</a></li>
-                <li><a asp-controller="Home" asp-action="DoveGiocare">Dove giocare a Torino</a></li>
+                <ul class="menu">
+                    <!-- TORNEI -->
+                    <li class="has-submenu">
+                        <a asp-controller="Home" asp-action="Preiscrizione" aria-haspopup="true">
+                            Tornei
+                        </a>
 
-            </ul>
-        </nav>
+                        <ul class="submenu" aria-label="Sottomenu Tornei">
+                            <li><a asp-controller="Home" asp-action="Calendario">Il calendario 2026</a></li>
+                            <li><a asp-controller="Home" asp-action="Preiscrizione">Preiscrizione ai tornei</a></li>
+                            <li><a asp-controller="Home" asp-action="GrandeSlamBar">Grande slam dei Bar</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- CORSI -->
+                    <li class="has-submenu">
+                        <a asp-controller="Home" asp-action="Scuola3Livello" aria-haspopup="true">
+                            Corsi
+                        </a>
+
+                        <ul class="submenu" aria-label="Sottomenu Scuola3Livello">
+                            <li><a asp-controller="Home" asp-action="Scuola3Livello">Ltb scuola di scacchi di 3° livello</a></li>
+                            <li><a asp-controller="Home" asp-action="CorsoInterno">Il corso interno</a></li>
+                            <li><a asp-controller="Home" asp-action="CAT">Il CAT: Chess as Therapy</a></li>
+                            <li><a asp-controller="Home" asp-action="OffertaCorsi">La nostra offerta</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- NOTIZIE -->
+                    <li class="has-submenu">
+                        <a asp-controller="Home" asp-action="Notizie" aria-haspopup="true">
+                            Notizie
+                        </a>
+
+                        <ul class="submenu" aria-label="Sottomenu Notizie">
+                            <li><a asp-controller="Home" asp-action="NotizieInEvidenza">In evidenza</a></li>
+                            <li><a asp-controller="Home" asp-action="NotizieTornei">Tornei</a></li>
+                            <li><a asp-controller="Home" asp-action="NotizieEventi">Eventi</a></li>
+                            <li><a asp-controller="Home" asp-action="NotizieCis">Cis</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- CHI SIAMO -->
+                    <li class="has-submenu">
+                        <a asp-controller="Home" asp-action="ChiSiamo" aria-haspopup="true">
+                            Chi siamo
+                        </a>
+
+                        <ul class="submenu" aria-label="Sottomenu Chi siamo">
+                            <li><a asp-controller="Home" asp-action="ChiSiamo">Il direttivo LTB</a></li>
+                            <li><a asp-controller="Home" asp-action="Iscrizione">Iscrizione e vantaggi 2026</a></li>
+                            <li><a asp-controller="Home" asp-action="DoveSiamo">Dove siamo</a></li>
+                            <li><a asp-controller="Home" asp-action="ParlanoDiNoi">Parlano di noi</a></li>
+                        </ul>
+                    </li>
+
+                    <!-- voci normali -->
+                    <li><a asp-controller="Home" asp-action="Contatti">Contatti</a></li>
+                    <li><a asp-controller="Home" asp-action="DoveGiocare">Dove giocare a Torino</a></li>
+                </ul>
+            </nav>
+
     </header>
     </div>
 
