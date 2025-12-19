@@ -40,6 +40,7 @@ namespace SitoLtb.Area.Admin.Controllers
                 Nome = x.Nome,
                 Data = x.Data,
                 LinkBando = x.LinkBando,
+                Sede=x.Sede,
                 LinkPreiscrizione = x.LinkPreiscrizione,
                 Elo = x.Elo,
             }).ToList();
@@ -69,6 +70,7 @@ namespace SitoLtb.Area.Admin.Controllers
             tournament.Data= vm.Data;
             tournament.Tipologia = vm.Tipologia;
             tournament.LinkBando = vm.LinkBando;
+            tournament.Sede = vm.Sede;
             tournament.LinkPreiscrizione= vm.LinkPreiscrizione;
             tournament.Elo = vm.Elo;
 

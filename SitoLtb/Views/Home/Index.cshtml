@@ -241,15 +241,5 @@
      }
 
     </script>
-    <script>
-        function syncHeaderHeight() {
-            const header = document.querySelector('.main-header');
-            if (!header) return;
-            document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
-        }
-
-        window.addEventListener('load', syncHeaderHeight);
-        window.addEventListener('resize', syncHeaderHeight);
-    </script>
-
+    
 }

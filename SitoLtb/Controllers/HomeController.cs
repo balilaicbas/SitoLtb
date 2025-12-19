@@ -37,25 +37,45 @@ namespace SitoLtb.Controllers
         }
 
         //tornei ed eventi
-        public async Task<IActionResult> Preiscrizione(int? page)
+        public async Task<IActionResult> Preiscrizione(int? pageVerdolina, int? pageComala)
         {
             int pageSize = 4;
-            int pageNumber = (page ?? 1);
 
-            var tournaments = await _context.Tournaments!
+            int verdolinaPage = pageVerdolina ?? 1;
+            int comalaPage = pageComala ?? 1;
+
+            var verdolinaQuery = _context.Tournaments!
+                .Where(t => t.Data >= DateTime.Today && t.Sede == "Verdolina") // o Categoria
                 .OrderBy(t => t.Data)
-                .Where(x => x.Data >= DateTime.Today)
                 .Select(t => new SitoLtb.ViewModels.TournamentVM
                 {
                     Nome = t.Nome,
                     Data = t.Data,
                     LinkBando = t.LinkBando,
                     LinkPreiscrizione = t.LinkPreiscrizione
-                })
-                .ToPagedListAsync(pageNumber, pageSize); // Converte in PagedList
+                });
 
-            return View(tournaments); // Passa il modello corretto alla vista
+            var comalaQuery = _context.Tournaments!
+                .Where(t => t.Data >= DateTime.Today && t.Sede == "Comala") // o Categoria
+                .OrderBy(t => t.Data)
+                .Select(t => new SitoLtb.ViewModels.TournamentVM
+                {
+                    Nome = t.Nome,
+                    Data = t.Data,
+                    LinkBando = t.LinkBando,
+                    LinkPreiscrizione = t.LinkPreiscrizione
+                });
+
+            var vm = new SitoLtb.ViewModels.PreiscrizioneVM
+            {
+                Verdolina = await verdolinaQuery.ToPagedListAsync(verdolinaPage, pageSize),
+                Comala = await comalaQuery.ToPagedListAsync(comalaPage, pageSize)
+            };
+
+            return View(vm);
         }
+
+
         public IActionResult Calendario()
         {
             return View();
@@ -74,6 +94,10 @@ namespace SitoLtb.Controllers
             return View();
         }
         public IActionResult CAT()
+        {
+            return View();
+        }
+        public IActionResult Offerta()
         {
             return View();
         }

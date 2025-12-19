@@ -1,5 +1,4 @@
-﻿@model IEnumerable<SitoLtb.ViewModels.TournamentVM>
-@using X.PagedList
+﻿@model SitoLtb.ViewModels.PreiscrizioneVM
 @using X.PagedList.Mvc.Core
 @using X.PagedList.Web.Common
 
@@ -20,11 +19,11 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var tournament in Model)
+                @foreach (var tournament in Model.Verdolina)
                 {
                     <tr>
                         <td>@tournament.Nome</td>
-                        <td>@(tournament.Data != null ? tournament.Data.ToString("dd/MM/yyyy") : "Data non disponibile")</td>
+                        <td>@tournament.Data.ToString("dd/MM/yyyy")</td>
                         <td>
                             @if (!string.IsNullOrEmpty(tournament.LinkBando))
                             {
@@ -49,5 +48,60 @@
                 }
             </tbody>
         </table>
+         <div class="pagination">
+@Html.PagedListPager(
+    Model.Verdolina,
+    p => Url.Action("Preiscrizione", new { pageVerdolina = p, pageComala = Model.Comala.PageNumber }),
+    new PagedListRenderOptions { LiElementClasses = new[] { "page-item" }, PageClasses = new[] { "page-link" } }
+)
+</div>
+
+        <h3 class="title">Tornei al Comala - Scacchi Polito</h3>
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Data</th>
+                    <th>Link Bando</th>
+                    <th>Link Preiscrizione</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var tournament in Model.Comala)
+                {
+                    <tr>
+                        <td>@tournament.Nome</td>
+                        <td>@tournament.Data.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(tournament.LinkBando))
+                            {
+                                <a href="@Html.Raw(tournament.LinkBando)" target="_blank">Bando</a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Non disponibile</span>
+                            }
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(tournament.LinkPreiscrizione))
+                            {
+                                <a href="@Html.Raw(tournament.LinkPreiscrizione)" target="_blank">Preiscrizione</a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">Non disponibile</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="pagination">
+            @Html.PagedListPager(
+                     Model.Comala,
+                     p => Url.Action("Preiscrizione", new { pageComala = p, pageVerdolina = Model.Verdolina.PageNumber }),
+                     new PagedListRenderOptions { LiElementClasses = new[] { "page-item" }, PageClasses = new[] { "page-link" } }
+                     )
+        </div>
     </section>
 </main>

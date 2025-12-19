@@ -1,5 +1,248 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10 col-xl-9">
+
+            <!-- Titolo -->
+            <header class="text-center mb-4">
+                <h1 class="display-5 fw-bold mb-0">La scuola di scacchi LTB</h1>
+            </header>
+
+            <hr class="my-4">
+
+            <!-- Alert iscrizioni -->
+            <div class="alert alert-warning text-center" role="alert">
+                <div class="fw-bold fs-5">
+                    ATTENZIONE: CORSI CON <span class="text-danger">MF ALESSIO BORASO</span>
+                    IN PARTENZA <span class="text-danger">03 Novembre</span>
+                </div>
+                <div class="mt-3">
+                    <a class="btn btn-primary btn-lg"
+                       href="https://docs.google.com/forms/d/e/1FAIpQLSeDNGIR4Co5B8GPL-39taYTRg_pyoXjYXAj7ahkldxN_J9DeQ/viewform?usp=publish-editor"
+                       target="_blank" rel="noopener">
+                        Iscrizione alle lezioni
+                    </a>
+                </div>
+            </div>
+
+            <!-- Intro corsi avanzati -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4 p-lg-5">
+                    <p class="mb-3">
+                        Il Libero Torneificio del Borgo ha il piacere di annunciare l’istituzione di
+                        <strong>due corsi avanzati</strong> di scacchi tenuti dal
+                        <strong>Maestro Fide Alessio Boraso</strong>.
+                    </p>
+
+                    <p class="mb-3">
+                        I corsi avranno durata di <strong>12 ore distribuite su 8 incontri</strong>.
+                        Per ottimizzare la riuscita della didattica si è deciso di formare <strong>due gruppi</strong>
+                        di <strong>massimo 10 partecipanti</strong>, suddivisi in base al livello di partenza:
+                    </p>
+
+                    <ul class="mb-4">
+                        <li><strong>Gruppo B</strong> — Elo <strong>1500–1800</strong></li>
+                        <li><strong>Gruppo A</strong> — <strong>Over 1800</strong></li>
+                    </ul>
+
+                    <div class="d-flex flex-column flex-md-row gap-2 align-items-md-center">
+                        <span class="badge text-bg-primary align-self-start">Sede</span>
+                        <div class="fw-semibold">
+                            Associazione Comala, Corso Ferrucci 56/a
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- Calendario lezioni -->
+                    <h2 class="h4 fw-bold text-center mb-3">Date e orari</h2>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="width: 160px;">Data</th>
+                                    <th>Gruppo B (1500–1800)</th>
+                                    <th>Gruppo A (Over 1800)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="fw-semibold">Lun 03/11</td>
+                                    <td>19:00–20:30</td>
+                                    <td>21:30–23:00</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-semibold">Lun 10/11</td>
+                                    <td>19:00–20:30</td>
+                                    <td>21:30–23:00</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-semibold">Lun 17/11</td>
+                                    <td>19:00–20:30</td>
+                                    <td>21:30–23:00</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-semibold">Lun 24/11</td>
+                                    <td>19:00–20:30</td>
+                                    <td>21:30–23:00</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-semibold">Lun 01/12</td>
+                                    <td>19:00–20:30</td>
+                                    <td>21:30–23:00</td>
+                                </tr>
+                                <tr>
+                                    <td class="fw-semibold">Lun 15/12</td>
+                                    <td>19:00–20:30</td>
+                                    <td>21:30–23:00</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="alert alert-info mt-4 mb-0" role="alert">
+                        Dopo la sesta lezione ci sarà la pausa delle vacanze di Natale e si riprenderà a gennaio:
+                        <ul class="mb-0 mt-2">
+                            <li><strong>Lun 12/01</strong> — Gruppo B 19:00–20:30, Gruppo A 21:30–23:00</li>
+                            <li><strong>Lun 19/01</strong> — Gruppo B 19:00–20:30, Gruppo A 21:30–23:00</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Costi -->
+            <div class="card border-danger mb-4">
+                <div class="card-body p-4 p-lg-5">
+                    <h2 class="h5 fw-bold text-danger mb-3">Costi per il pacchetto di 8 lezioni (12 ore)</h2>
+
+                    <div class="list-group">
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><strong>Studenti</strong></span>
+                            <span class="fw-semibold">€ 120 <span class="text-secondary fw-normal">(10€/h)</span></span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><strong>Soci LTB</strong></span>
+                            <span class="fw-semibold">€ 150 <span class="text-secondary fw-normal">(12,5€/h)</span></span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span><strong>Non studenti e non soci</strong></span>
+                            <span class="fw-semibold">€ 180 <span class="text-secondary fw-normal">(15€/h)</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Citazione -->
+            <figure class="border-start border-4 border-primary bg-body-tertiary rounded-3 p-4 mb-4">
+                <blockquote class="blockquote mb-0">
+                    <p class="mb-0">
+                        Nel pieno rispetto dell'identità di "torneificio" del nostro circolo, l'istruttore ha pensato
+                        ad un corso fortemente orientato verso il gioco pratico: relativamente poca teoria, molti esempi
+                        presi da partite ed esercizi finalizzati alla padronanza dei temi. Di seguito la traccia delle lezioni.
+                    </p>
+                </blockquote>
+            </figure>
+
+            <!-- Programmi -->
+            <div class="row g-4 mb-4">
+                <div class="col-12 col-lg-6">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <h3 class="h5 fw-bold mb-3">CORSO B</h3>
+                            <ol class="mb-0">
+                                <li>Attività dei pezzi e principi di apertura</li>
+                                <li>Strutture pedonali e avamposti</li>
+                                <li>Pedoni deboli</li>
+                                <li>Cavalli vs alfieri</li>
+                                <li>Finali fondamentali per il giocatore di torneo</li>
+                                <li>Difesa e profilassi</li>
+                                <li>Alfieri di colore contrario nel mediogioco</li>
+                                <li>Analisi di partite importanti</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-6">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body p-4">
+                            <h3 class="h5 fw-bold mb-3">CORSO A</h3>
+                            <ol class="mb-0">
+                                <li>Vantaggi e trasformazioni dei vantaggi</li>
+                                <li>Materiale vs attività</li>
+                                <li>Alfieri di colore contrario</li>
+                                <li>Strutture semplici e complesse</li>
+                                <li>Finali tipici</li>
+                                <li>Finali avanzati</li>
+                                <li>Trasformazioni di struttura</li>
+                                <li>Analisi di partite importanti</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Materiale + iscrizione -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4 p-lg-5">
+                    <p class="mb-3">
+                        Il materiale utilizzato durante il corso verrà messo a disposizione dei partecipanti.
+                        Se interessati, preiscriversi al link:
+                    </p>
+
+                    <a class="btn btn-primary btn-lg"
+                       href="https://docs.google.com/forms/d/e/1FAIpQLSeDNGIR4Co5B8GPL-39taYTRg_pyoXjYXAj7ahkldxN_J9DeQ/viewform?usp=publish-editor"
+                       target="_blank" rel="noopener">
+                        Iscrizione alle lezioni
+                    </a>
+                </div>
+            </div>
+
+            <!-- Contatti -->
+            <div class="card mb-5">
+                <div class="card-body p-4">
+                    <h2 class="h5 fw-bold mb-3">Per info</h2>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-1"><strong>Luca Princivalle</strong> — 334 333 6489</li>
+                        <li><strong>Marco Mina</strong> — 377 319 6357</li>
+                    </ul>
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <!-- Scuola base -->
+            <div class="card shadow-sm">
+                <div class="card-body p-4 p-lg-5">
+                    <h2 class="h4 fw-bold mb-3">Scuola di livello base</h2>
+
+                    <p class="mb-3">
+                        Le lezioni della scuola di livello base si svolgono presso la sede di
+                        <strong>Via Bena 10/A, Torino</strong> ogni <strong>sabato mattina</strong> dalle <strong>10</strong> alle <strong>12</strong>,
+                        <strong>a partire dal 27/09</strong>, data in cui verranno definite le classi in base al livello di gioco.
+                    </p>
+
+                    <p class="mb-2 fw-semibold">I corsi sono divisi in 3 livelli:</p>
+                    <ul class="mb-4">
+                        <li>Corso di avviamento: movimento dei pezzi e regole fondamentali</li>
+                        <li>Corsi di base: principi base di aperture e finali + tattica</li>
+                        <li>Corso intermedio: finali avanzati e aperture</li>
+                    </ul>
+
+                    <p class="mb-4">
+                        Tutti i corsi saranno tenuti da istruttori FSI, avranno la durata di <strong>10 lezioni</strong>
+                        e saranno attivati al raggiungimento minimo di <strong>6 partecipanti</strong>, con un
+                        <strong>costo a persona di € 40,00</strong>.
+                    </p>
+
+                    <h3 class="h5 fw-bold mb-3">Contatti</h3>
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-1"><strong>Max De Barberis</strong> — 335 215178</li>
+                        <li><strong>Mario Iacomussi</strong> — 339 7703130</li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
