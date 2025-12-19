@@ -1,7 +1,5 @@
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using SitoLtb.Data;
 using SitoLtb.ViewModels;
 using X.PagedList;
@@ -38,7 +36,7 @@ namespace SitoLtb.Controllers
             return View(vm);
         }
 
-        //per il momento include solo i tornei alla Verdolina, poi sarà da aggiornare con i tornei al comala e i tornei dei bar
+        //tornei ed eventi
         public async Task<IActionResult> Preiscrizione(int? page)
         {
             int pageSize = 4;
@@ -58,87 +56,28 @@ namespace SitoLtb.Controllers
 
             return View(tournaments); // Passa il modello corretto alla vista
         }
-        public async Task<IActionResult> PreiscrizioneVerdolina(int? page)
-        {
-            int pageSize = 4;
-            int pageNumber = (page ?? 1);
-
-            var tournaments = await _context.Tournaments!
-                .OrderByDescending(t => t.Data)
-                .Where(x => x.Data >= DateTime.Today)
-                .Where(x=> x.Tipologia=="Verdolina")
-                .Select(t => new SitoLtb.ViewModels.TournamentVM
-                {
-                    Nome = t.Nome,
-                    Data = t.Data,
-                    LinkBando = t.LinkBando,
-                    LinkPreiscrizione = t.LinkPreiscrizione
-                })
-                .ToPagedListAsync(pageNumber, pageSize); // Converte in PagedList
-
-            return View(tournaments); // Passa il modello corretto alla vista
-        }
-        public async Task<IActionResult> PreiscrizioneComala(int? page)
-        {
-            int pageSize = 4;
-            int pageNumber = (page ?? 1);
-
-            var tournaments = await _context.Tournaments!
-                .OrderByDescending(t => t.Data)
-                .Where(x => x.Data >= DateTime.Today)
-                .Where(x => x.Tipologia == "Comala")
-                .Select(t => new SitoLtb.ViewModels.TournamentVM
-                {
-                    Nome = t.Nome,
-                    Data = t.Data,
-                    LinkBando = t.LinkBando,
-                    LinkPreiscrizione = t.LinkPreiscrizione
-                })
-                .ToPagedListAsync(pageNumber, pageSize); // Converte in PagedList
-
-            return View(tournaments); // Passa il modello corretto alla vista
-        }
-        public async Task<IActionResult> PreiscrizioneWeekend(int? page)
-        {
-            int pageSize = 4;
-            int pageNumber = (page ?? 1);
-
-            var tournaments = await _context.Tournaments!
-                .OrderByDescending(t => t.Data)
-                .Where(x => x.Data >= DateTime.Today)
-                .Where(x => x.Tipologia == "Weekend")
-                .Select(t => new SitoLtb.ViewModels.TournamentVM
-                {
-                    Nome = t.Nome,
-                    Data = t.Data,
-                    LinkBando = t.LinkBando,
-                    LinkPreiscrizione = t.LinkPreiscrizione
-                })
-                .ToPagedListAsync(pageNumber, pageSize); // Converte in PagedList
-
-            return View(tournaments); // Passa il modello corretto alla vista
-        }
-        public IActionResult Corsi()
+        public IActionResult Calendario()
         {
             return View();
         }
-        public IActionResult ChiSiamo()
+        public IActionResult GrandeSlamBar()
         {
             return View();
         }
-        public IActionResult Contatti()
+        // scuola di scacchi LTB
+        public IActionResult Scuola3Livello()
         {
             return View();
         }
-        public IActionResult InserimentoSoci()
+        public IActionResult CorsoInterno()
         {
             return View();
         }
-       
-        public IActionResult DoveGiocare()
+        public IActionResult CAT()
         {
             return View();
         }
+        //blog
         public IActionResult Notizie(int? pageInEvidenza, int? pageTornei, int? pageEventi, int? pageCis)
         {
             int pageSize = 5;
@@ -168,6 +107,52 @@ namespace SitoLtb.Controllers
 
             return View(vm);
         }
+        public IActionResult NotizieInEvidenza()
+        {
+            return View();
+        }
+        public IActionResult NotizieTornei()
+        {
+            return View();
+        }
+        public IActionResult NotizieEventi()
+        {
+            return View();
+        }
+        public IActionResult NotizieCis()
+        {
+            return View();
+        }
+
+        //chi siamo
+        public IActionResult ChiSiamo()
+        {
+            return View();
+        }
+        public IActionResult Iscrizione()
+        {
+            return View();
+        }
+        public IActionResult DoveSiamo()
+        {
+            return View();
+        }
+        public IActionResult ParlanoDiNoi()
+        {
+            return View();
+        }
+        //contatti
+        public IActionResult Contatti()
+        {
+            return View();
+        }
+
+       //dove giocare a torino
+        public IActionResult DoveGiocare()
+        {
+            return View();
+        }
+       
 
 
 

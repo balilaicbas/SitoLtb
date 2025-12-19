@@ -1159,6 +1159,82 @@ main {
     gap: 8px;
 }
 
+/* =========================
+   DROPDOWN (2° livello)
+   MAI visibile senza hover/focus
+========================= */
+
+.main-navbar .menu > li {
+    position: relative;
+}
+
+.main-navbar .has-submenu > a::after {
+    content: " ▾";
+    font-size: 0.9em;
+}
+
+/* SUBMENU: nascosto di default */
+.main-navbar .submenu {
+    list-style: none;
+    margin: 0;
+    padding: 8px 0;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.10);
+    border-radius: 12px;
+    box-shadow: 0 10px 24px rgba(0,0,0,.12);
+    z-index: 10000;
+    /* hidden */
+    display: none;
+}
+
+/* DESKTOP: dropdown assoluto */
+@media (min-width: 769px) {
+    .main-navbar .submenu {
+        position: absolute;
+        top: calc(100% + 8px);
+        left: 0;
+        min-width: 240px;
+    }
+
+    /* visibile solo in hover/focus */
+    .main-navbar .has-submenu:hover > .submenu,
+    .main-navbar .has-submenu:focus-within > .submenu {
+        display: block;
+    }
+}
+
+/* MOBILE: submenu a blocco sotto la voce */
+@media (max-width: 768px) {
+    .main-navbar .submenu {
+        position: static;
+        border: 0;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 0 0 10px;
+    }
+
+    /* visibile solo quando la voce è in focus (tap) */
+    .main-navbar .has-submenu:focus-within > .submenu {
+        display: block;
+    }
+
+    .main-navbar .submenu a {
+        display: block;
+        padding: 10px 26px; /* indent */
+    }
+}
+
+/* link submenu */
+.main-navbar .submenu a {
+    display: block;
+    padding: 10px 14px;
+    font-size: 16px;
+    white-space: nowrap;
+}
+
+    .main-navbar .submenu a:hover {
+        background: rgba(0,0,0,.06);
+    }
 
 
 
