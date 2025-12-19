@@ -9,6 +9,7 @@ namespace SitoLtb.ViewModels
         public DateTime Data { get; set; }
         public string Tipologia { get; set; }
         public bool Elo { get; set; }
+        public string Sede { get; set; }
 
         public string LinkBando { get; set; }
 

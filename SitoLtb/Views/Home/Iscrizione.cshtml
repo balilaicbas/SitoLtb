@@ -1,5 +1,119 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿<section class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10 col-xl-9">
+
+            <!-- Intro -->
+            <p class="text-justify mb-4">
+                Negli anni abbiamo sempre voluto proporre un’offerta completa ad un costo contenuto.
+                Anche per il 2025 l’iscrizione al circolo sarà:
+            </p>
+
+            <!-- Quote associative -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4 p-lg-5">
+                    <h2 class="h4 fw-bold text-center mb-4">Quote associative 2025</h2>
+
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="fw-semibold">Socio sostenitore</span>
+                            <span class="fs-5 fw-bold">€ 70,00</span>
+                        </div>
+
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="fw-semibold">Socio ordinario</span>
+                            <span class="fs-5 fw-bold">€ 60,00</span>
+                        </div>
+
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="fw-semibold">Socie ordinarie</span>
+                            <span class="fs-5 fw-bold">€ 40,00</span>
+                        </div>
+
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <span class="fw-semibold">Soci U18</span>
+                            <span class="fs-5 fw-bold">€ 30,00</span>
+                        </div>
+
+                        <div class="list-group-item">
+                            <div class="fw-semibold mb-1">Soci tornei NO Elo</div>
+                            <div class="text-secondary">
+                                € 20,00 — il primo torneo costerà 20€ (anziché 15€ per i non soci),
+                                regolarizzando così l’iscrizione alla Verdolina.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vantaggi -->
+            <div class="alert alert-info mb-4" role="alert">
+                <p class="mb-2">
+                    In più, per chi si iscriverà e farà la <strong>tessera FSI</strong>
+                    (Ordinaria, Junior o Agonistica), il
+                    <strong>Libero Torneificio del Borgo</strong> offrirà la partecipazione
+                    ai tornei organizzati nella propria sede ad un prezzo <strong>“popolare”</strong>.
+                </p>
+                <p class="mb-0">
+                    I non iscritti all’associazione pagheranno un sovrapprezzo contenuto,
+                    pari a <strong>5 €</strong> rispetto alle quote per i Soci LTB.
+                </p>
+            </div>
+
+            <!-- Invito -->
+            <p class="mb-4">
+                Allora, cosa aspetti? Vieni a trovarci il prossimo mercoledì in
+                <strong>Via Bena 10</strong> per farti una birra e, magari,
+                un paio di partite lampo con noi.
+            </p>
+
+            <!-- Contatti -->
+            <div class="card mb-4">
+                <div class="card-body p-4">
+                    <h3 class="h5 fw-bold mb-3">Informazioni iscrizione</h3>
+                    <p class="mb-2">
+                        Puoi contattarci via
+                        <a href="mailto:info@liberotorneificioscacchi.it" class="fw-semibold">
+                            email
+                        </a>
+                        oppure al
+                        <strong>
+                            <a href="tel:+393397703130" class="link-dark">339 770 3130</a>
+                        </strong>
+                        (Mario).
+                    </p>
+                </div>
+            </div>
+
+            <!-- Tesseramento FSI -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4 p-lg-5">
+                    <h3 class="h5 fw-bold mb-3">
+                        <a asp-controller="Iscrizione" asp-action="TesseramentoFsi">
+                            Tesseramento FSI 2026
+                        </a>
+                    </h3>
+
+                    <p class="mb-3">
+                        Le quote di iscrizione possono essere pagate anche tramite bonifico bancario al seguente IBAN:
+                    </p>
+
+                    <div class="alert alert-warning fw-bold text-center mb-3">
+                        IBAN: IT07Z0103020000000000546777
+                    </div>
+
+                    <p class="mb-2">
+                        <strong>Banca Monte dei Paschi di Siena</strong> – Filiale di Moncalieri<br>
+                        Intestato a <strong>A.S.D. Libero Torneificio del Borgo</strong>
+                    </p>
+
+                    <p class="mb-0">
+                        Questo IBAN può essere utilizzato per tesseramenti, preiscrizioni ai tornei, ecc.
+                        Si raccomanda di indicare con chiarezza la <strong>causale del pagamento</strong>
+                        e se include anche le quote FSI.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>

@@ -12,50 +12,50 @@
     <div>
         <h4>Nuovo Post</h4>
     </div>
+        </main>
 
-    <div class="reset-password-container">
-        <form asp-action="Create" asp-controller="Post" asp-area="Admin" enctype="multipart/form-data">
 
-            <div class="form-group">
-                <label asp-for="Title">Titolo</label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="validation-message"></span>
+    <form asp-action="Create" asp-controller="Post" asp-area="Admin" enctype="multipart/form-data">
+
+        <div class="row mb-2">
+            <div class="col-9">
+                <div class="mb-2">
+                    <label>Titolo</label>
+                    <input type="text" asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+                <div class="mb-2">
+                    <label asp-for="Categoria">Categoria</label>
+                    <select asp-for="Categoria" class="form-control">
+                        <option value="In evidenza">In evidenza</option>
+                        <option value="Tornei">Tornei</option>
+                        <option value="Eventi">Eventi</option>
+                        <option value="Cis">Cis</option>
+                    </select>
+                    <span asp-validation-for="Categoria" class="validation-message"></span>
+                </div>
+                <div class="mb-2">
+                    <label>Testo Post</label>
+                    <textarea id="richEditor" asp-for="Description" class="form-control" rows="8"></textarea>
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
             </div>
-
-            <div class="form-group">
-                <label asp-for="Categoria">Categoria</label>
-                <select asp-for="Categoria" class="form-control">
-                    <option value="In evidenza">In evidenza</option>
-                    <option value="Tornei">Tornei</option>
-                    <option value="Eventi">Eventi</option>
-                    <option value="Cis">Cis</option>
-                </select>
-                <span asp-validation-for="Categoria" class="validation-message"></span>
+            <div class="col-3">
+                <div class="mb-2">
+                    <img src="~/thumbnails/default_image.png" class="img-fluid" id="thumbnail" />
+                </div>
+                <div class="mb-2">
+                    <label>Thumbnail</label>
+                    <input type="file" asp-for="Thumbnail" class="custom-file" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
             </div>
+        </div>
 
-            <div class="form-group">
-                <label asp-for="Description">Descrizione</label>
-                <textarea id="richEditor" asp-for="Description" rows="8" class="form-control"></textarea>
-                <span asp-validation-for="Description" class="validation-message"></span>
-            </div>
-
-            <div class="form-group">
-                <label>Anteprima Thumbnail</label>
-                <img src="~/thumbnails/default_image.png" id="thumbnail" style="width: 100%; max-width: 250px; border-radius: 6px;" />
-            </div>
-
-            <div class="form-group">
-                <label asp-for="Thumbnail">Thumbnail</label>
-                <input asp-for="Thumbnail" type="file" class="form-control custom-file" />
-                <span asp-validation-for="Thumbnail" class="validation-message"></span>
-            </div>
-
-            <div class="form-actions">
-                <button type="submit" class="submit-button">Salva</button>
-            </div>
-        </form>
-    </div>
-</main>
+        <div class="mb-2">
+            <button type="submit" class="btn btn-primary w-100">Salva</button>
+        </div>
+    </form>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

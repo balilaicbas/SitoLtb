@@ -7,6 +7,9 @@
     <title>Home | Libero Torneificio del Borgo</title>
     <link rel="icon" type="image/png" href="/images/logo_LTB_Site_Icon.png">
     <link rel="stylesheet" href="/css/layout.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.8.1/vanilla-tilt.min.js"> </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
@@ -15,85 +18,105 @@
           crossorigin="" />
 </head>
 <body>
-    <div class="header">
-
     <header class="main-header">
         <div class="logo-title">
             <img src="/images/logo_LTB_Site_Icon.png" alt="Logo LTB" />
             <a asp-controller="Home" asp-action="Index">Libero Torneificio del Borgo</a>
         </div>
-            <button class="nav-toggle" type="button" aria-controls="main-nav" aria-expanded="false">
-                <span class="sr-only">Apri menu</span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </button>
 
-            <nav class="main-navbar" id="main-nav" aria-label="Menu principale">
-                <ul class="menu">
-                    <!-- TORNEI -->
-                    <li class="has-submenu">
-                        <a asp-controller="Home" asp-action="Preiscrizione" aria-haspopup="true">
-                            Tornei
-                        </a>
+        <nav class="navbar navbar-expand-lg main-navbar" id="main-nav" aria-label="Menu principale">
+            <div class="container-fluid p-0">
+                <button class="navbar-toggler" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#mainNavCollapse"
+                        aria-controls="mainNavCollapse" aria-expanded="false" aria-label="Apri menu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-                        <ul class="submenu" aria-label="Sottomenu Tornei">
-                            <li><a asp-controller="Home" asp-action="Calendario">Il calendario 2026</a></li>
-                            <li><a asp-controller="Home" asp-action="Preiscrizione">Preiscrizione ai tornei</a></li>
-                            <li><a asp-controller="Home" asp-action="GrandeSlamBar">Grande slam dei Bar</a></li>
+                <div class="collapse navbar-collapse" id="mainNavCollapse">
+                    <ul class="navbar-nav ms-auto">
+
+                            <!-- TORNEI -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle"
+                                   href="#"
+                                   role="button"
+                                   data-bs-toggle="dropdown"
+                                   aria-expanded="false">
+                                    Tornei
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-controller="Home" asp-action="Calendario">Il calendario 2026</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Home" asp-action="Preiscrizione">Preiscrizione ai tornei</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Home" asp-action="GrandeSlamBar">Grande slam dei Bar</a></li>
+                                </ul>
+                            </li>
+
+                            <!-- CORSI -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle"
+                                   href="#"
+                                   role="button"
+                                   data-bs-toggle="dropdown"
+                                   aria-expanded="false">
+                                    Corsi
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-controller="Home" asp-action="Scuola3Livello">Ltb scuola di scacchi di 3° livello</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Home" asp-action="CorsoInterno">Il corso interno</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Home" asp-action="CAT">Il CAT: Chess as Therapy</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Home" asp-action="Offerta">La nostra offerta</a></li>
+                                </ul>
+                            </li>
+
+                            <!-- NOTIZIE -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle"
+                                   href="#"
+                                   role="button"
+                                   data-bs-toggle="dropdown"
+                                   aria-expanded="false">
+                                    Notizie
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-controller="Home" asp-action="NotizieInEvidenza">In evidenza</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Home" asp-action="NotizieTornei">Tornei</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Home" asp-action="NotizieEventi">Eventi</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Home" asp-action="NotizieCis">Cis</a></li>
+                                </ul>
+                            </li>
+
+                            <!-- CHI SIAMO -->
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle"
+                                   href="#"
+                                   role="button"
+                                   data-bs-toggle="dropdown"
+                                   aria-expanded="false">
+                                    Chi siamo
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-controller="Home" asp-action="ChiSiamo">Il direttivo LTB</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Home" asp-action="Iscrizione">Iscrizione e vantaggi 2026</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Home" asp-action="DoveSiamo">Dove siamo</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Home" asp-action="ParlanoDiNoi">Parlano di noi</a></li>
+                                </ul>
+                            </li>
+
+                            <!-- VOCI NORMALI -->
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="Contatti">Contatti</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" asp-controller="Home" asp-action="DoveGiocare">Dove giocare a Torino</a>
+                            </li>
+
                         </ul>
-                    </li>
-
-                    <!-- CORSI -->
-                    <li class="has-submenu">
-                        <a asp-controller="Home" asp-action="Scuola3Livello" aria-haspopup="true">
-                            Corsi
-                        </a>
-
-                        <ul class="submenu" aria-label="Sottomenu Scuola3Livello">
-                            <li><a asp-controller="Home" asp-action="Scuola3Livello">Ltb scuola di scacchi di 3° livello</a></li>
-                            <li><a asp-controller="Home" asp-action="CorsoInterno">Il corso interno</a></li>
-                            <li><a asp-controller="Home" asp-action="CAT">Il CAT: Chess as Therapy</a></li>
-                            <li><a asp-controller="Home" asp-action="OffertaCorsi">La nostra offerta</a></li>
-                        </ul>
-                    </li>
-
-                    <!-- NOTIZIE -->
-                    <li class="has-submenu">
-                        <a asp-controller="Home" asp-action="Notizie" aria-haspopup="true">
-                            Notizie
-                        </a>
-
-                        <ul class="submenu" aria-label="Sottomenu Notizie">
-                            <li><a asp-controller="Home" asp-action="NotizieInEvidenza">In evidenza</a></li>
-                            <li><a asp-controller="Home" asp-action="NotizieTornei">Tornei</a></li>
-                            <li><a asp-controller="Home" asp-action="NotizieEventi">Eventi</a></li>
-                            <li><a asp-controller="Home" asp-action="NotizieCis">Cis</a></li>
-                        </ul>
-                    </li>
-
-                    <!-- CHI SIAMO -->
-                    <li class="has-submenu">
-                        <a asp-controller="Home" asp-action="ChiSiamo" aria-haspopup="true">
-                            Chi siamo
-                        </a>
-
-                        <ul class="submenu" aria-label="Sottomenu Chi siamo">
-                            <li><a asp-controller="Home" asp-action="ChiSiamo">Il direttivo LTB</a></li>
-                            <li><a asp-controller="Home" asp-action="Iscrizione">Iscrizione e vantaggi 2026</a></li>
-                            <li><a asp-controller="Home" asp-action="DoveSiamo">Dove siamo</a></li>
-                            <li><a asp-controller="Home" asp-action="ParlanoDiNoi">Parlano di noi</a></li>
-                        </ul>
-                    </li>
-
-                    <!-- voci normali -->
-                    <li><a asp-controller="Home" asp-action="Contatti">Contatti</a></li>
-                    <li><a asp-controller="Home" asp-action="DoveGiocare">Dove giocare a Torino</a></li>
-                </ul>
+                    </div>
+                </div>
             </nav>
-
     </header>
-    </div>
+ 
 
   
         @RenderBody()
@@ -130,6 +153,50 @@
             });
         });
     </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          // 1) Chiudi dropdown rimasti "show"
+          document.querySelectorAll(".dropdown-menu.show").forEach(m => m.classList.remove("show"));
+          document.querySelectorAll(".nav-item.dropdown.show").forEach(li => li.classList.remove("show"));
+          document.querySelectorAll(".dropdown-toggle[aria-expanded='true']").forEach(a => a.setAttribute("aria-expanded", "false"));
+
+          // 2) Chiudi l'hamburger/collapse se rimasto aperto
+          const collapseEl = document.getElementById("mainNavCollapse");
+          if (collapseEl && collapseEl.classList.contains("show")) {
+            const bsCollapse = bootstrap.Collapse.getOrCreateInstance(collapseEl, { toggle: false });
+            bsCollapse.hide();
+          }
+        });
+    </script>
+    <script>
+        document.addEventListener("click", (e) => {
+          if (!e.target.closest(".dropdown-item")) return;
+
+          // chiudi tutti i dropdown aperti
+          document.querySelectorAll(".dropdown-toggle[aria-expanded='true']").forEach(t => {
+            const dd = bootstrap.Dropdown.getOrCreateInstance(t);
+            dd.hide();
+          });
+
+          // chiudi anche la navbar collapse (mobile)
+          const collapseEl = document.getElementById("mainNavCollapse");
+          if (collapseEl && collapseEl.classList.contains("show")) {
+            bootstrap.Collapse.getOrCreateInstance(collapseEl, { toggle: false }).hide();
+          }
+        });
+    </script>
+    <script>
+        function syncHeaderHeight() {
+            const header = document.querySelector('.main-header');
+            if (!header) return;
+            document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+        }
+
+        window.addEventListener('load', syncHeaderHeight);
+        window.addEventListener('resize', syncHeaderHeight);
+    </script>
+
+
 
 </body>
 </html>
