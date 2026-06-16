@@ -53,8 +53,6 @@ public partial class LtbDbContext : DbContext
 
     public virtual DbSet<SocioPolo> SocioPolos { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)=> optionsBuilder.UseSqlServer("Server=localhost;Database=LtbDb;Trusted_Connection=True;TrustServerCertificate=True;");
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Agonisti>(entity =>

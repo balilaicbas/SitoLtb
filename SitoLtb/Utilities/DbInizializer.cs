@@ -27,36 +27,54 @@ namespace SitoLtb.Utilities
         }
         public void Initialize()
         {
-            if (!_roleManager.RoleExistsAsync(WebsiteRoles.WebsiteAdmin).GetAwaiter().GetResult())
+            EnsureRolesExist();
+            EnsureAdminUserExists();
+            _context.SaveChanges();
+        }
+
+        private void EnsureRolesExist()
+        {
+            foreach (var role in WebsiteRoles.All)
             {
-                var adminUserName = _configuration["AdminUser:UserName"];
-                var adminEmail = _configuration["AdminUser:Email"];
-                var adminPassword = _configuration["AdminUser:Password"];
-                var adminFirstName = _configuration["AdminUser:FirstName"];
-                var adminLastName = _configuration["AdminUser:LastName"];
-
-                if (string.IsNullOrWhiteSpace(adminUserName) || string.IsNullOrWhiteSpace(adminEmail) || string.IsNullOrWhiteSpace(adminPassword))
+                if (!_roleManager.RoleExistsAsync(role).GetAwaiter().GetResult())
                 {
-                    _logger.LogWarning("Credenziali admin (AdminUser:UserName/Email/Password) non configurate: salto la creazione dell'utente admin. Configurale con 'dotnet user-secrets' in locale o come Application Settings in produzione.");
-                    return;
-                }
-
-                _roleManager.CreateAsync(new IdentityRole(WebsiteRoles.WebsiteAdmin)).GetAwaiter().GetResult();
-                _userManager.CreateAsync(new ApplicationUser()
-                {
-                    UserName = adminUserName,
-                    Email = adminEmail,
-                    FirstName = adminFirstName,
-                    LastName = adminLastName
-                }, adminPassword).Wait();
-
-                var appUser = _context.ApplicationUsers!.FirstOrDefault(x => x.Email == adminEmail);
-                if (appUser != null)
-                {
-                    _userManager.AddToRoleAsync(appUser, WebsiteRoles.WebsiteAdmin).GetAwaiter().GetResult();
+                    _roleManager.CreateAsync(new IdentityRole(role)).GetAwaiter().GetResult();
                 }
             }
-            _context.SaveChanges();
+        }
+
+        private void EnsureAdminUserExists()
+        {
+            var adminUserName = _configuration["AdminUser:UserName"];
+            var adminEmail = _configuration["AdminUser:Email"];
+            var adminPassword = _configuration["AdminUser:Password"];
+            var adminFirstName = _configuration["AdminUser:FirstName"];
+            var adminLastName = _configuration["AdminUser:LastName"];
+
+            if (string.IsNullOrWhiteSpace(adminUserName) || string.IsNullOrWhiteSpace(adminEmail) || string.IsNullOrWhiteSpace(adminPassword))
+            {
+                _logger.LogWarning("Credenziali admin (AdminUser:UserName/Email/Password) non configurate: salto la creazione dell'utente admin. Configurale con 'dotnet user-secrets' in locale o come Application Settings in produzione.");
+                return;
+            }
+
+            if (_context.ApplicationUsers!.Any(x => x.Email == adminEmail))
+            {
+                return;
+            }
+
+            _userManager.CreateAsync(new ApplicationUser()
+            {
+                UserName = adminUserName,
+                Email = adminEmail,
+                FirstName = adminFirstName,
+                LastName = adminLastName
+            }, adminPassword).Wait();
+
+            var appUser = _context.ApplicationUsers!.FirstOrDefault(x => x.Email == adminEmail);
+            if (appUser != null)
+            {
+                _userManager.AddToRoleAsync(appUser, WebsiteRoles.WebsiteAdmin).GetAwaiter().GetResult();
+            }
         }
     }
 }

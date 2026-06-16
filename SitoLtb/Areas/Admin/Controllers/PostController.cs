@@ -14,23 +14,34 @@ using SitoLtb.Utilities;
 namespace SitoLtb.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Roles = WebsiteRoles.WebsiteAdmin + "," + WebsiteRoles.Editor)]
     public class PostController : Controller
     {
         private readonly ApplicationDbContext _context;
         public INotyfService _notification { get; }
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<PostController> _logger;
 
         public PostController(ApplicationDbContext context,
                                 INotyfService notyfService,
                                 IWebHostEnvironment webHostEnvironment,
-                                UserManager<ApplicationUser> userManager)
+                                UserManager<ApplicationUser> userManager,
+                                ILogger<PostController> logger)
         {
             _context = context;
             _notification = notyfService;
             _webHostEnvironment = webHostEnvironment;
             _userManager = userManager;
+            _logger = logger;
+        }
+
+        private async Task<bool> CanModifyAsync(Post post)
+        {
+            var loggedInUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
+            if (loggedInUser == null) return false;
+            if (User.IsInRole(WebsiteRoles.WebsiteAdmin)) return true;
+            return post.ApplicationUserId == loggedInUser.Id;
         }
 
         [HttpGet]
@@ -148,7 +159,9 @@ namespace SitoLtb.Areas.Admin.Controllers
             }
             catch(Exception ex)
             {
-                return Content("ERRORE CATTURATO: " + ex.ToString());
+                _logger.LogError(ex, "Errore non gestito nella creazione di un post.");
+                _notification.Error("Si è verificato un errore durante la creazione del post.");
+                return View(vm);
             }
         }
 
@@ -156,17 +169,22 @@ namespace SitoLtb.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var post = await _context.Posts!.FirstOrDefaultAsync(x => x.Id == id);
-
-            var loggedInUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
-        
-
-            
-                _context.Posts!.Remove(post!);
-                await _context.SaveChangesAsync();
-                _notification.Success("Post Deleted Successfully");
+            if (post == null)
+            {
+                _notification.Error("Post non trovato");
                 return RedirectToAction("Index", "Post", new { area = "Admin" });
-            
-           
+            }
+
+            if (!await CanModifyAsync(post))
+            {
+                _logger.LogWarning("Utente {User} ha tentato di cancellare il post {PostId} senza autorizzazione.", User.Identity!.Name, id);
+                return Forbid();
+            }
+
+            _context.Posts!.Remove(post);
+            await _context.SaveChangesAsync();
+            _notification.Success("Post Deleted Successfully");
+            return RedirectToAction("Index", "Post", new { area = "Admin" });
         }
 
         [HttpGet]
@@ -179,9 +197,11 @@ namespace SitoLtb.Areas.Admin.Controllers
                 return View();
             }
 
-            var loggedInUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
-            
-            
+            if (!await CanModifyAsync(post))
+            {
+                _logger.LogWarning("Utente {User} ha tentato di accedere alla modifica del post {PostId} senza autorizzazione.", User.Identity!.Name, id);
+                return Forbid();
+            }
 
             var vm = new CreatePostVM()
             {
@@ -204,6 +224,12 @@ namespace SitoLtb.Areas.Admin.Controllers
             {
                 _notification.Error("Post not found");
                 return View();
+            }
+
+            if (!await CanModifyAsync(post))
+            {
+                _logger.LogWarning("Utente {User} ha tentato di salvare la modifica del post {PostId} senza autorizzazione.", User.Identity!.Name, vm.Id);
+                return Forbid();
             }
 
             post.Title = vm.Title;

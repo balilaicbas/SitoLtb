@@ -1,8 +1,6 @@
 
 using Microsoft.AspNetCore.Mvc;
-using SitoLtb.Data;
 using SitoLtb.ViewModels;
-using X.PagedList;
 using SitoLtb.Services;
 
 namespace SitoLtb.Controllers
@@ -11,15 +9,13 @@ namespace SitoLtb.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IConfiguration _configuration;
-        private readonly ApplicationDbContext _context;
         private readonly IPostService _postService;
         private readonly ITournamentService _tournamentService;
 
-        public HomeController(ILogger<HomeController> logger,IConfiguration configuration, ApplicationDbContext context, IPostService postService, ITournamentService tournamentService)
+        public HomeController(ILogger<HomeController> logger,IConfiguration configuration, IPostService postService, ITournamentService tournamentService)
         {
             _logger = logger;
             _configuration = configuration;
-            _context = context;
             _postService = postService;
             _tournamentService = tournamentService;
 
@@ -44,32 +40,10 @@ namespace SitoLtb.Controllers
             int verdolinaPage = pageVerdolina ?? 1;
             int comalaPage = pageComala ?? 1;
 
-            var verdolinaQuery = _context.Tournaments!
-                .Where(t => t.Data >= DateTime.Today && t.Sede == "Verdolina") // o Categoria
-                .OrderBy(t => t.Data)
-                .Select(t => new SitoLtb.ViewModels.TournamentVM
-                {
-                    Nome = t.Nome,
-                    Data = t.Data,
-                    LinkBando = t.LinkBando,
-                    LinkPreiscrizione = t.LinkPreiscrizione
-                });
-
-            var comalaQuery = _context.Tournaments!
-                .Where(t => t.Data >= DateTime.Today && t.Sede == "Comala") // o Categoria
-                .OrderBy(t => t.Data)
-                .Select(t => new SitoLtb.ViewModels.TournamentVM
-                {
-                    Nome = t.Nome,
-                    Data = t.Data,
-                    LinkBando = t.LinkBando,
-                    LinkPreiscrizione = t.LinkPreiscrizione
-                });
-
             var vm = new SitoLtb.ViewModels.PreiscrizioneVM
             {
-                Verdolina = await verdolinaQuery.ToPagedListAsync(verdolinaPage, pageSize),
-                Comala = await comalaQuery.ToPagedListAsync(comalaPage, pageSize)
+                Verdolina = await _tournamentService.GetUpcomingBySedePagedAsync("Verdolina", verdolinaPage, pageSize),
+                Comala = await _tournamentService.GetUpcomingBySedePagedAsync("Comala", comalaPage, pageSize)
             };
 
             return View(vm);
@@ -102,31 +76,16 @@ namespace SitoLtb.Controllers
             return View();
         }
         //blog
-        public IActionResult Notizie(int? pageInEvidenza, int? pageTornei, int? pageEventi, int? pageCis)
+        public async Task<IActionResult> Notizie(int? pageInEvidenza, int? pageTornei, int? pageEventi, int? pageCis)
         {
             int pageSize = 5;
 
             var vm = new BlogVM
             {
-                InEvidenza = _context.Posts
-                    .Where(p => p.Categoria == "In evidenza")
-                    .OrderByDescending(p => p.DateTimeCreated)
-                    .ToPagedList(pageInEvidenza ?? 1, pageSize),
-
-                Tornei = _context.Posts
-                    .Where(p => p.Categoria == "Tornei")
-                    .OrderByDescending(p => p.DateTimeCreated)
-                    .ToPagedList(pageTornei ?? 1, pageSize),
-
-                Eventi = _context.Posts
-                    .Where(p => p.Categoria == "Eventi")
-                    .OrderByDescending(p => p.DateTimeCreated)
-                    .ToPagedList(pageEventi ?? 1, pageSize),
-
-                Cis = _context.Posts
-                    .Where(p => p.Categoria == "Cis")
-                    .OrderByDescending(p => p.DateTimeCreated)
-                    .ToPagedList(pageCis ?? 1, pageSize)
+                InEvidenza = await _postService.GetByCategoriaPagedAsync("In evidenza", pageInEvidenza ?? 1, pageSize),
+                Tornei = await _postService.GetByCategoriaPagedAsync("Tornei", pageTornei ?? 1, pageSize),
+                Eventi = await _postService.GetByCategoriaPagedAsync("Eventi", pageEventi ?? 1, pageSize),
+                Cis = await _postService.GetByCategoriaPagedAsync("Cis", pageCis ?? 1, pageSize)
             };
 
             return View(vm);
@@ -176,8 +135,15 @@ namespace SitoLtb.Controllers
         {
             return View();
         }
-       
 
+        [Microsoft.AspNetCore.Mvc.Route("/Home/Error")]
+        public IActionResult Error()
+        {
+            return View(new SitoLtb.Models.ErrorViewModel
+            {
+                RequestId = System.Diagnostics.Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            });
+        }
 
 
     }

@@ -1,6 +1,6 @@
 ﻿<div class="container mt-5">
     <h2 class="mb-4 text-center">Inserimento soci nel Database</h2>
-    <form action="/Dati/Submit" method="post">
+    <form asp-controller="Dati" asp-action="Submit" method="post">
         <div class="mb-3">
             <label for="nome" class="form-label">nome: </label>
             <input type="text" id="nome" name="nome" required />

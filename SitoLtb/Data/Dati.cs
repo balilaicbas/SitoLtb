@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using SitoLtb.Utilities;
 
 namespace SitoLtb.Data
 {
+    [Authorize(Roles = WebsiteRoles.WebsiteAdmin + "," + WebsiteRoles.Data)]
     public class Dati : Controller
     {
 
@@ -40,10 +43,9 @@ namespace SitoLtb.Data
                 // Successo
                 return RedirectToAction("InserimentoDatiSoci");
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Errore
-                return Content($"Errore: {ex.Message}");
+                return Content("Si è verificato un errore durante l'inserimento.");
             }
         }
         [Route("/Dati/InserimentoSoci")]

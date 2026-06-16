@@ -14,14 +14,17 @@ namespace SitoLtb.Areas.Admin.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ILogger<UserController> _logger;
         public INotyfService _notification { get; }
-        public UserController(UserManager<ApplicationUser> userManager, 
-                                    SignInManager<ApplicationUser> signInManager, 
-                                    INotyfService notyfService)
+        public UserController(UserManager<ApplicationUser> userManager,
+                                    SignInManager<ApplicationUser> signInManager,
+                                    INotyfService notyfService,
+                                    ILogger<UserController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _notification = notyfService;
+            _logger = logger;
         }
 
         [Authorize(Roles = "Admin")]
@@ -38,15 +41,64 @@ namespace SitoLtb.Areas.Admin.Controllers
                 UserName = x.UserName,
                 Email = x.Email,
             }).ToList();
-            //assinging role
+            //assinging roles
             foreach(var user in vm)
             {
                 var singleUser = await _userManager.FindByIdAsync(user.Id);
-                var role = await _userManager.GetRolesAsync(singleUser);
-                user.Role = role.FirstOrDefault();
+                var roles = await _userManager.GetRolesAsync(singleUser);
+                user.Roles = roles;
             }
 
             return View(vm);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public async Task<IActionResult> EditRoles(string id)
+        {
+            var existingUser = await _userManager.FindByIdAsync(id);
+            if (existingUser == null)
+            {
+                _notification.Error("Utente non trovato");
+                return RedirectToAction(nameof(Index));
+            }
+            var roles = await _userManager.GetRolesAsync(existingUser);
+            var vm = new EditRolesVM()
+            {
+                Id = existingUser.Id,
+                UserName = existingUser.UserName,
+                IsAdmin = roles.Contains(WebsiteRoles.WebsiteAdmin),
+                IsEditor = roles.Contains(WebsiteRoles.Editor),
+                IsData = roles.Contains(WebsiteRoles.Data)
+            };
+            return View(vm);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        public async Task<IActionResult> EditRoles(EditRolesVM vm)
+        {
+            var existingUser = await _userManager.FindByIdAsync(vm.Id);
+            if (existingUser == null)
+            {
+                _notification.Error("Utente non trovato");
+                return RedirectToAction(nameof(Index));
+            }
+
+            var desiredRoles = new List<string>();
+            if (vm.IsAdmin) desiredRoles.Add(WebsiteRoles.WebsiteAdmin);
+            if (vm.IsEditor) desiredRoles.Add(WebsiteRoles.Editor);
+            if (vm.IsData) desiredRoles.Add(WebsiteRoles.Data);
+
+            var currentRoles = await _userManager.GetRolesAsync(existingUser);
+            await _userManager.RemoveFromRolesAsync(existingUser, currentRoles);
+            if (desiredRoles.Count > 0)
+            {
+                await _userManager.AddToRolesAsync(existingUser, desiredRoles);
+            }
+
+            _notification.Success("Ruoli aggiornati con successo");
+            return RedirectToAction(nameof(Index));
         }
 
         [Authorize(Roles = "Admin")]
@@ -123,12 +175,17 @@ namespace SitoLtb.Areas.Admin.Controllers
             };
 
             var result =  await _userManager.CreateAsync(applicationUser,vm.Password);
-            
+
             if (result.Succeeded)
             {
-                if (vm.IsAdmin)
+                var rolesToAssign = new List<string>();
+                if (vm.IsAdmin) rolesToAssign.Add(WebsiteRoles.WebsiteAdmin);
+                if (vm.IsEditor) rolesToAssign.Add(WebsiteRoles.Editor);
+                if (vm.IsData) rolesToAssign.Add(WebsiteRoles.Data);
+
+                if (rolesToAssign.Count > 0)
                 {
-                    await _userManager.AddToRoleAsync(applicationUser, WebsiteRoles.WebsiteAdmin);
+                    await _userManager.AddToRolesAsync(applicationUser, rolesToAssign);
                 }
 
                 _notification.Success("User registered successfully");
@@ -136,6 +193,7 @@ namespace SitoLtb.Areas.Admin.Controllers
             }
             return View(vm);
         }
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> Delete(string id)
         {
@@ -173,21 +231,22 @@ namespace SitoLtb.Areas.Admin.Controllers
         public async Task<IActionResult> Login(LoginVM vm)
         {
             if (!ModelState.IsValid) { return View(vm); }
-            var existingUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == vm.Username);
-            if(existingUser == null)
+
+            var result = await _signInManager.PasswordSignInAsync(vm.Username, vm.Password, isPersistent: true, lockoutOnFailure: true);
+            if (result.Succeeded)
             {
-                _notification.Error("Username does not exist");
+                _notification.Success("Login Successful");
+                return RedirectToAction("Index", "Post", new { area = "Admin" });
+            }
+            if (result.IsLockedOut)
+            {
+                _logger.LogWarning("Account {Username} bloccato temporaneamente per troppi tentativi di login falliti.", vm.Username);
+                _notification.Error("Account temporaneamente bloccato per troppi tentativi falliti. Riprova più tardi.");
                 return View(vm);
             }
-            var verifyPassword = await _userManager.CheckPasswordAsync(existingUser, vm.Password);
-            if (!verifyPassword)
-            {
-                _notification.Error("Password does not match");
-                return View(vm);
-            }
-            await _signInManager.PasswordSignInAsync(vm.Username, vm.Password,true, false);
-            _notification.Success("Login Successful");
-            return RedirectToAction("Index", "Post", new { area = "Admin" });
+
+            _notification.Error("Username o password non corretti");
+            return View(vm);
         }
 
         [HttpPost]

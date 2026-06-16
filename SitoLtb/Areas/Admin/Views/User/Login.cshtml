@@ -11,7 +11,7 @@
     </div>
     <div class="login-form-container">
         <h1>Benvenuto!</h1>
-        <form method="post" action="/Login" class="login-form">
+        <form asp-action="Login" asp-controller="User" asp-area="Admin" method="post" class="login-form">
             <div class="form-group">
                 <input type="text" name="Username" placeholder="Inserisci Username..." class="form-control" />
                 <span data-valmsg-for="Username" class="validation-message"></span>

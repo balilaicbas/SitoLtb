@@ -20,7 +20,7 @@
                         <th>Cognome</th>
                         <th>UserName</th>
                         <th>Email</th>
-                        <th>Ruolo</th>
+                        <th>Ruoli</th>
                         <th>Reset</th>
                         <th>Elimina</th>
                     </tr>
@@ -33,9 +33,11 @@
                             <td>@user.LastName</td>
                             <td>@user.UserName</td>
                             <td>@user.Email</td>
-                            <td>@user.Role</td>
+                            <td>@string.Join(", ", user.Roles)</td>
                             <td>
                                 <a asp-action="ResetPassword" asp-controller="User" asp-route-id="@user.Id">Reset Password</a>
+                                <br />
+                                <a asp-action="EditRoles" asp-controller="User" asp-route-id="@user.Id">Modifica Ruoli</a>
                             </td>
                             <td>
                                 <!-- Modulo per la richiesta POST di eliminazione -->

@@ -1,24 +1,22 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
-using SitoLtb.Data;
-using SitoLtb.ViewModels;
+using SitoLtb.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 
 namespace SitoLtb.Controllers
 {
     public class BlogController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IPostService _postService;
         public INotyfService _notification { get; }
 
-        public BlogController(ApplicationDbContext context, INotyfService notification)
+        public BlogController(IPostService postService, INotyfService notification)
         {
-            _context = context;
+            _postService = postService;
             _notification = notification;
         }
         [HttpGet("[controller]/{slug}")]
-        public IActionResult Post(string slug)
+        public async Task<IActionResult> Post(string slug)
         {
             if (string.IsNullOrWhiteSpace(slug))
             {
@@ -26,28 +24,13 @@ namespace SitoLtb.Controllers
                 return View();
             }
 
-            var post = _context.Posts!.Include(x => x.ApplicationUser).FirstOrDefault(x => x.Url == slug);
-            if (post == null)
+            var vm = await _postService.GetBySlugAsync(slug);
+            if (vm == null)
             {
                 _notification.Error("Post not found");
                 return View();
             }
-            var vm = new BlogPostVM()
-            {
-                Id = post.Id,
-                Title = post.Title,
-                AuthorName = post.ApplicationUser is not null
-                 ? $"{post.ApplicationUser.FirstName} {post.ApplicationUser.LastName}"
-                 : "Autore sconosciuto",
-                CreatedDate = post.DateTimeCreated,
-                ThumbnailUrl = post.Image,
-                Description = post.Description
-
-            };
             return View(vm);
         }
-          
-        
-           
     }
 }

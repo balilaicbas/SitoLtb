@@ -5,13 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SitoLtb.Data;
 using SitoLtb.Models;
+using SitoLtb.Utilities;
 using SitoLtb.ViewModels;
 using X.PagedList;
 
 namespace SitoLtb.Area.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Roles = WebsiteRoles.WebsiteAdmin)]
     public class TournamentController : Controller
     {
         private readonly ApplicationDbContext _context;

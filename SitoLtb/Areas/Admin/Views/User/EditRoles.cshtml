@@ -1,0 +1,43 @@
+@model SitoLtb.ViewModels.EditRolesVM
+
+@{
+    ViewData["Title"] = "Modifica Ruoli";
+}
+
+<main>
+    <div class="title-button">
+    <a asp-action="Index" asp-controller="User">Indietro</a>
+    </div>
+        <div>
+            <h4>Modifica Ruoli</h4>
+        </div>
+        <div class="reset-password-container">
+            <input type="hidden" asp-for="Id" />
+
+            <form asp-action="EditRoles" asp-controller="User" asp-area="Admin" class="reset-password-form">
+
+                <div class="form-group">
+                    <label for="UserName">Username</label>
+                    <input type="text" asp-for="UserName" readonly class="form-control" />
+                </div>
+
+                <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" class="custom-checkbox" asp-for="IsAdmin" />
+                    <label>Admin</label>
+                </div>
+                <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" class="custom-checkbox" asp-for="IsEditor" />
+                    <label>Editor</label>
+                </div>
+                <div class="form-group" style="display: flex; align-items: center; gap: 10px;">
+                    <input type="checkbox" class="custom-checkbox" asp-for="IsData" />
+                    <label>Data</label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="submit-button">Salva Ruoli</button>
+                </div>
+            </form>
+        </div>
+
+</main>

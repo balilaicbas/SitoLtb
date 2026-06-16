@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity;
 @using SitoLtb.Data
+@using SitoLtb.Utilities
 @inject UserManager<ApplicationUser> _userManager;
 @{
     var loggedInUser = new ApplicationUser();
@@ -44,31 +45,40 @@
                 </a>
             </li>
 
-            <li>
-                <a asp-action="Index" asp-controller="Post" asp-area="Admin">
-                    <i class="fas fa-fw fa-bell"></i>
-                    <span>Post</span>
-                </a>
-            </li>
+            @if (User.IsInRole(WebsiteRoles.WebsiteAdmin) || User.IsInRole(WebsiteRoles.Editor))
+            {
+                <li>
+                    <a asp-action="Index" asp-controller="Post" asp-area="Admin">
+                        <i class="fas fa-fw fa-bell"></i>
+                        <span>Post</span>
+                    </a>
+                </li>
+            }
 
-                <li>
-                    <a asp-action="Index" asp-controller="User" asp-area="Admin">
-                    <i class="fas fa-fw fa-user"></i>
-                        <span>Utenti</span>
-                    </a>
-                </li>
-                <li>
-                    <a asp-action="Index" asp-controller="Tournament" asp-area="Admin">
-                    <i class="fas fa-fw fa-chess"></i>
-                        <span>Tornei</span>
-                    </a>
-                </li>
-                <li>
-                    <a asp-action="Index" asp-controller="Dashboard" asp-area="Admin">
-                    <i class="fas fa-fw fa-database"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
+                @if (User.IsInRole(WebsiteRoles.WebsiteAdmin))
+                {
+                    <li>
+                        <a asp-action="Index" asp-controller="User" asp-area="Admin">
+                        <i class="fas fa-fw fa-user"></i>
+                            <span>Utenti</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Tournament" asp-area="Admin">
+                        <i class="fas fa-fw fa-chess"></i>
+                            <span>Tornei</span>
+                        </a>
+                    </li>
+                }
+                @if (User.IsInRole(WebsiteRoles.WebsiteAdmin) || User.IsInRole(WebsiteRoles.Data))
+                {
+                    <li>
+                        <a asp-action="Index" asp-controller="Data" asp-area="Admin">
+                        <i class="fas fa-fw fa-database"></i>
+                            <span>Data</span>
+                        </a>
+                    </li>
+                }
         </ul>
         </nav>
 
