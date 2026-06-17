@@ -1,0 +1,70 @@
+@{
+    ViewData["Title"] = "Gli istruttori LTB";
+}
+
+<main class="scuola-page">
+    <h1 class="noPhoto">Gli istruttori LTB</h1>
+
+    <section class="scuola-block">
+        <div class="scuola-two-col">
+            <div class="scuola-two-col__media">
+                <img src="#" alt="Pierluigi Passerotti" />
+            </div>
+
+            <div class="scuola-two-col__text">
+                <p>
+                    <strong>Istruttore Capo:</strong> MF Pierluigi Passerotti, giocatore con un curriculum di prestigio,
+                    con 2 partecipazioni in 1a scacchiera per la squadra italiana alle Olimpiadi.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section class="scuola-block">
+        <div class="scuola-two-col">
+            <div class="scuola-two-col__media">
+                <img src="#" alt="Marco Mina" />
+            </div>
+
+            <div class="scuola-two-col__text">
+                <p><strong>Coordinatore della scuola:</strong> Marco Mina</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="scuola-block scuola-instructors">
+        <div class="scuola-instructors__media">
+        </div>
+
+        <div class="scuola-instructors__lists">
+            <div class="scuola-list">
+                <h4>Istruttori SNAQ</h4>
+                <ul>
+                    <li>CM Federico Briata</li>
+                    <li>CM Bringas Osuna Ivan</li>
+                    <li>CM Manuel Macis</li>
+                    <li>CM Marco Mina</li>
+                    <li>CM Paolo Ragni</li>
+                    <li>1N Luca Princivalle</li>
+                    <li>1N Chiara Caprioli</li>
+                    <li>1N Francesco Sguaizer</li>
+                    <li>1N Andrea Figari</li>
+                    <li>2N Daniele Lazzaroni</li>
+                    <li>NC Antonella Balla (divulgatrice)</li>
+                </ul>
+            </div>
+
+            <div class="scuola-list">
+                <h4>Altri istruttori</h4>
+                <ul>
+                    <li>MF Ahmed Zeyat</li>
+                    <li>CM Sasan Alibabaei</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+
+</main>
+
+@await Html.PartialAsync("_CtaStrip")

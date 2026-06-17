@@ -1,5 +1,261 @@
-﻿<main>
-<h1 class="noPhoto">Calendario</h1>
+@model SitoLtb.ViewModels.CalendarioVM
+@{
+    ViewData["Title"] = "Calendario Tornei";
+}
+
+<main>
+    <h1 class="noPhoto">Calendario Tornei</h1>
+    <h3 class="subtitle">Tutti i tornei del Libero Torneificio del Borgo</h3>
+
+    <!-- Legenda tipologie -->
+    <div class="cal-legend">
+        <span class="cal-legend-item cal-tipo--Standard">♟ Standard</span>
+        <span class="cal-legend-item cal-tipo--Rapid">⚡ Rapid</span>
+        <span class="cal-legend-item cal-tipo--Blitz">🔥 Blitz</span>
+        <span class="cal-legend-item cal-tipo--Eterodosso">🎲 Eterodosso</span>
+        <span class="cal-legend-elo">★ = Valido ELO</span>
+    </div>
+
+    <!-- Layout principale -->
+    <div class="cal-layout">
+
+        <!-- ── Griglia mensile ── -->
+        <div class="cal-panel">
+            <div class="cal-wrap">
+                <div class="cal-nav">
+                    <button id="calPrev" class="cal-nav-btn" aria-label="Mese precedente">&#8592;</button>
+                    <h2 id="calTitle" class="cal-nav-title"></h2>
+                    <button id="calNext" class="cal-nav-btn" aria-label="Mese successivo">&#8594;</button>
+                </div>
+                <div class="cal-weekdays">
+                    <span>Lun</span><span>Mar</span><span>Mer</span>
+                    <span>Gio</span><span>Ven</span><span>Sab</span><span>Dom</span>
+                </div>
+                <div class="cal-grid" id="calGrid"></div>
+            </div>
+        </div>
+
+        <!-- ── Card tornei del mese ── -->
+        <div class="cal-cards-panel">
+            <h3 id="calCardsTitle" class="cal-cards-title"></h3>
+            <div id="calCards" class="cal-cards-list"></div>
+            <p id="calCardsEmpty" class="cal-cards-empty" style="display:none">
+                Nessun torneo in programma per questo mese.
+            </p>
+        </div>
+
+    </div>
 </main>
 
-<!--qua ci va la foto del calendario-->
+<!-- Modal dettagli torneo -->
+<div class="modal fade" id="torneoModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content cal-modal-content">
+            <div class="modal-header cal-modal-header" id="torneoModalHdr">
+                <h5 class="modal-title fw-bold" id="torneoModalLabel"></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Chiudi"></button>
+            </div>
+            <div class="modal-body" id="torneoModalBody"></div>
+            <div class="modal-footer gap-2" id="torneoModalFooter">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+const TOURNAMENTS = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+    Model.Tournaments.Select(t => new {
+        id                = t.Id,
+        nome              = t.Nome,
+        dateStr           = t.Data.ToString("yyyy-MM-dd"),
+        ora               = t.Data.TimeOfDay != System.TimeSpan.Zero ? t.Data.ToString("HH:mm") : (string)null,
+        tipologia         = t.Tipologia,
+        sede              = t.Sede,
+        elo               = t.Elo,
+        linkBando         = t.LinkBando,
+        linkPreiscrizione = t.LinkPreiscrizione
+    })
+));
+
+const MESI = ["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno",
+              "Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"];
+const GIORNI = ["domenica","lunedì","martedì","mercoledì","giovedì","venerdì","sabato"];
+
+const TIPO_COLORS = {
+    "Standard":   "#1a56db",
+    "Rapid":      "#057a55",
+    "Blitz":      "#d03801",
+    "Eterodosso": "#7e3af2"
+};
+
+const TIPO_ICONS = {
+    "Standard": "♟", "Rapid": "⚡", "Blitz": "🔥", "Eterodosso": "🎲"
+};
+
+let year  = new Date().getFullYear();
+let month = new Date().getMonth();
+
+function pad(n) { return String(n).padStart(2, "0"); }
+
+function fmtDate(dateStr, long) {
+    const p = dateStr.split("-");
+    const d = new Date(+p[0], +p[1]-1, +p[2]);
+    if (long) return d.toLocaleDateString("it-IT", { weekday:"long", day:"numeric", month:"long", year:"numeric" });
+    return d.toLocaleDateString("it-IT", { weekday:"short", day:"numeric", month:"short" });
+}
+
+// ── Griglia mensile ───────────────────────────────────────────────────────
+function buildCalendar(y, m) {
+    document.getElementById("calTitle").textContent = MESI[m] + " " + y;
+
+    const prefix   = y + "-" + pad(m + 1) + "-";
+    const monthTs  = TOURNAMENTS.filter(t => t.dateStr.startsWith(prefix));
+    const totalDays = new Date(y, m + 1, 0).getDate();
+    let   startDow  = new Date(y, m, 1).getDay();
+    startDow = (startDow + 6) % 7;
+
+    const today    = new Date();
+    const todayStr = today.getFullYear() + "-" + pad(today.getMonth()+1) + "-" + pad(today.getDate());
+    const grid     = document.getElementById("calGrid");
+    grid.innerHTML = "";
+
+    for (let i = 0; i < startDow; i++) {
+        const el = document.createElement("div");
+        el.className = "cal-cell cal-cell--empty";
+        grid.appendChild(el);
+    }
+
+    for (let d = 1; d <= totalDays; d++) {
+        const ds   = prefix + pad(d);
+        const dayT = monthTs.filter(t => t.dateStr === ds);
+        const isToday = ds === todayStr;
+
+        const cell = document.createElement("div");
+        cell.className = "cal-cell" + (isToday ? " cal-cell--today" : "") + (dayT.length ? " cal-cell--has-event" : "");
+
+        const num = document.createElement("span");
+        num.className = "cal-day-num";
+        num.textContent = d;
+        cell.appendChild(num);
+
+        dayT.forEach(t => {
+            const color = TIPO_COLORS[t.tipologia] || "#555";
+            const pill  = document.createElement("button");
+            pill.type      = "button";
+            pill.className = "cal-pill";
+            pill.style.setProperty("--pill-color", color);
+            pill.title     = t.nome + (t.ora ? " · " + t.ora : "");
+            pill.innerHTML = `<span>${TIPO_ICONS[t.tipologia] || "♟"}</span><span class="cal-pill-nome">${t.nome}${t.elo ? " ★" : ""}</span>`;
+            pill.addEventListener("click", () => openModal(t));
+            cell.appendChild(pill);
+        });
+
+        grid.appendChild(cell);
+    }
+
+    buildCards(monthTs, m);
+}
+
+// ── Card laterali ─────────────────────────────────────────────────────────
+let _monthTs = [];
+
+function buildCards(monthTs, m) {
+    _monthTs = monthTs.slice().sort((a,b) => a.dateStr.localeCompare(b.dateStr));
+    document.getElementById("calCardsTitle").textContent = "Tornei di " + MESI[m];
+    const container = document.getElementById("calCards");
+    const empty     = document.getElementById("calCardsEmpty");
+    container.innerHTML = "";
+
+    if (!_monthTs.length) {
+        empty.style.display = "";
+        return;
+    }
+    empty.style.display = "none";
+
+    _monthTs.forEach((t, i) => {
+        const color = TIPO_COLORS[t.tipologia] || "#555";
+        const card  = document.createElement("article");
+        card.className = "cal-card";
+
+        const preiscr = t.linkPreiscrizione
+            ? `<a href="${t.linkPreiscrizione}" target="_blank" rel="noopener" class="cal-card__btn cal-card__btn--primary" style="background:${color}">Iscriviti</a>` : "";
+        const bando = t.linkBando
+            ? `<a href="${t.linkBando}" target="_blank" rel="noopener" class="cal-card__btn cal-card__btn--outline" style="border-color:${color};color:${color}">Bando</a>` : "";
+
+        card.innerHTML = `
+            <div class="cal-card__stripe" style="background:${color}"></div>
+            <div class="cal-card__body">
+                <div class="cal-card__badges">
+                    <span class="cal-card__tipo" style="background:${color}">${TIPO_ICONS[t.tipologia] || "♟"} ${t.tipologia}</span>
+                    ${t.elo ? '<span class="cal-card__elo">★ ELO</span>' : ''}
+                </div>
+                <h4 class="cal-card__nome">${t.nome}</h4>
+                <ul class="cal-card__meta">
+                    <li><span class="cal-meta-icon">📅</span>${fmtDate(t.dateStr, false)}</li>
+                    <li><span class="cal-meta-icon">🕐</span>${t.ora ?? "orario da definire"}</li>
+                    <li><span class="cal-meta-icon">📍</span>${t.sede}</li>
+                </ul>
+                <div class="cal-card__actions">
+                    ${preiscr}${bando}
+                    <button type="button" class="cal-card__btn cal-card__btn--ghost" data-idx="${i}">Dettagli</button>
+                </div>
+            </div>`;
+
+        container.appendChild(card);
+    });
+
+    container.querySelectorAll("[data-idx]").forEach(btn => {
+        btn.addEventListener("click", () => openModal(_monthTs[+btn.dataset.idx]));
+    });
+}
+
+// ── Modal ─────────────────────────────────────────────────────────────────
+function openModal(t) {
+    const color = TIPO_COLORS[t.tipologia] || "#333";
+    const hdr   = document.getElementById("torneoModalHdr");
+    hdr.style.background = color;
+
+    document.getElementById("torneoModalLabel").textContent = t.nome;
+
+    document.getElementById("torneoModalBody").innerHTML = `
+        <dl class="torneo-dl">
+            <div class="torneo-dl-row"><dt>📅 Data</dt><dd>${fmtDate(t.dateStr, true)}</dd></div>
+            <div class="torneo-dl-row"><dt>🕐 Orario</dt><dd>${t.ora ?? "da definire"}</dd></div>
+            <div class="torneo-dl-row"><dt>♟ Tipologia</dt><dd><span class="cal-modal-badge" style="background:${color}">${t.tipologia}</span></dd></div>
+            <div class="torneo-dl-row"><dt>📍 Sede</dt><dd>${t.sede}</dd></div>
+            <div class="torneo-dl-row"><dt>⭐ Valido ELO</dt><dd>${t.elo ? "Sì" : "No"}</dd></div>
+        </dl>`;
+
+    const footer = document.getElementById("torneoModalFooter");
+    footer.innerHTML = '<button class="btn btn-secondary" data-bs-dismiss="modal">Chiudi</button>';
+    if (t.linkBando) {
+        const a = document.createElement("a");
+        a.href = t.linkBando; a.target = "_blank"; a.rel = "noopener";
+        a.className = "btn btn-outline-danger"; a.textContent = "Scarica il bando";
+        footer.prepend(a);
+    }
+    if (t.linkPreiscrizione) {
+        const a = document.createElement("a");
+        a.href = t.linkPreiscrizione; a.target = "_blank"; a.rel = "noopener";
+        a.className = "btn btn-danger"; a.textContent = "Iscriviti";
+        footer.prepend(a);
+    }
+
+    bootstrap.Modal.getOrCreateInstance(document.getElementById("torneoModal")).show();
+}
+
+// ── Nav ───────────────────────────────────────────────────────────────────
+document.getElementById("calPrev").addEventListener("click", () => {
+    if (--month < 0) { month = 11; year--; }
+    buildCalendar(year, month);
+});
+document.getElementById("calNext").addEventListener("click", () => {
+    if (++month > 11) { month = 0; year++; }
+    buildCalendar(year, month);
+});
+
+buildCalendar(year, month);
+</script>
+}
