@@ -1,0 +1,152 @@
+@model SitoLtb.ViewModels.ImpostazioniNotificheVM
+@{
+    ViewData["Title"] = "Impostazioni Notifiche";
+}
+
+<div class="coord-page">
+    <div class="coord-kpi-bar" style="margin-bottom:1.5rem">
+        <div>
+            <h2 style="margin:0;font-size:1.2rem;font-weight:700;color:#2d3a4a">
+                <i class="fas fa-bell"></i> Impostazioni Notifiche
+            </h2>
+            <p style="margin:2px 0 0;font-size:.82rem;color:#888">
+                Configura chi riceve il digest automatico dei progetti e con quale cadenza.
+            </p>
+        </div>
+        <div style="margin-left:auto;display:flex;gap:.6rem;align-items:center">
+            <form asp-action="InviaOra" method="post">
+                <button type="submit" class="coord-new-btn" style="background:#1cc88a"
+                        onclick="return confirm('Inviare il digest a tutti gli utenti configurati adesso?')">
+                    <i class="fas fa-paper-plane"></i> Invia ora
+                </button>
+            </form>
+            <a asp-action="Index" class="btn-det btn-det--back"><i class="fas fa-arrow-left"></i> Torna</a>
+        </div>
+    </div>
+
+    @if (TempData["Msg"] != null)
+    {
+        <div class="alert alert-success mb-3">@TempData["Msg"]</div>
+    }
+
+    <div class="det-body">
+
+        <!-- Aggiungi notifica -->
+        <div class="det-col det-col--main">
+            <div class="det-card">
+                <div class="det-card__head"><i class="fas fa-plus-circle"></i> Aggiungi destinatario</div>
+                <div class="det-card__body">
+                    <form asp-action="AggiungiNotifica" method="post" class="task-form">
+                        <div class="task-form__row" style="align-items:flex-end">
+                            <div class="form-group" style="flex:1">
+                                <label style="font-size:.8rem;color:#666;font-weight:600">Utente</label>
+                                <select name="userId" class="form-ctrl" required>
+                                    <option value="">— Seleziona utente —</option>
+                                    @foreach (var u in Model.UtentiDisponibili)
+                                    {
+                                        <option value="@u.UserId">@u.Nome (@u.Email)</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group" style="min-width:180px">
+                                <label style="font-size:.8rem;color:#666;font-weight:600">Cadenza</label>
+                                <select name="intervalloOre" class="form-ctrl">
+                                    <option value="24">Ogni giorno</option>
+                                    <option value="48">Ogni 2 giorni</option>
+                                    <option value="72">Ogni 3 giorni</option>
+                                    <option value="168" selected>Ogni settimana</option>
+                                    <option value="336">Ogni 2 settimane</option>
+                                    <option value="720">Ogni mese</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn-add" style="align-self:flex-end">
+                                <i class="fas fa-plus"></i> Aggiungi
+                            </button>
+                        </div>
+                    </form>
+
+                    <div style="margin-top:1rem">
+                        @if (!Model.Impostazioni.Any())
+                        {
+                            <p class="side-empty">Nessun destinatario configurato.</p>
+                        }
+                        else
+                        {
+                            <table style="width:100%;border-collapse:collapse">
+                                <thead>
+                                    <tr style="font-size:.78rem;color:#aaa;text-transform:uppercase;letter-spacing:.05em">
+                                        <th style="padding:.5rem .8rem;text-align:left;border-bottom:1px solid #eee">Utente</th>
+                                        <th style="padding:.5rem .8rem;text-align:left;border-bottom:1px solid #eee">Cadenza</th>
+                                        <th style="padding:.5rem .8rem;text-align:left;border-bottom:1px solid #eee">Ultimo invio</th>
+                                        <th style="padding:.5rem .8rem;text-align:left;border-bottom:1px solid #eee">Stato</th>
+                                        <th style="border-bottom:1px solid #eee"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var n in Model.Impostazioni)
+                                    {
+                                        <tr style="font-size:.88rem">
+                                            <td style="padding:.7rem .8rem;border-bottom:1px solid #f5f5f5">
+                                                <div class="membro-avatar" style="display:inline-flex;width:28px;height:28px;font-size:.78rem;margin-right:.5rem">
+                                                    @(n.NomeUtente.Length > 0 ? n.NomeUtente[0].ToString().ToUpper() : "?")
+                                                </div>
+                                                @n.NomeUtente
+                                            </td>
+                                            <td style="padding:.7rem .8rem;border-bottom:1px solid #f5f5f5;color:#555">
+                                                <i class="fas fa-clock fa-xs"></i> @n.IntervalloLabel
+                                            </td>
+                                            <td style="padding:.7rem .8rem;border-bottom:1px solid #f5f5f5;color:#888;font-size:.8rem">
+                                                @(n.UltimoInvio.HasValue ? n.UltimoInvio.Value.ToString("dd/MM/yyyy HH:mm") : "Mai")
+                                            </td>
+                                            <td style="padding:.7rem .8rem;border-bottom:1px solid #f5f5f5">
+                                                <form asp-action="ToggleNotifica" method="post" style="display:inline">
+                                                    <input type="hidden" name="idNotifica" value="@n.IdNotifica"/>
+                                                    <button type="submit" class="proj-badge @(n.Attiva ? "badge-attivo" : "badge-sospeso")"
+                                                            style="border:none;cursor:pointer">
+                                                        @(n.Attiva ? "Attiva" : "Sospesa")
+                                                    </button>
+                                                </form>
+                                            </td>
+                                            <td style="padding:.7rem .8rem;border-bottom:1px solid #f5f5f5">
+                                                <form asp-action="EliminaNotifica" method="post"
+                                                      onsubmit="return confirm('Rimuovere questa notifica?')">
+                                                    <input type="hidden" name="idNotifica" value="@n.IdNotifica"/>
+                                                    <button type="submit" class="task-del"><i class="fas fa-times"></i></button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Info panel -->
+        <div class="det-col det-col--side">
+            <div class="det-card">
+                <div class="det-card__head"><i class="fas fa-info-circle"></i> Come funziona</div>
+                <div class="det-card__body" style="font-size:.85rem;color:#555;line-height:1.6">
+                    <p><strong>Digest configurabile</strong><br/>
+                    Ogni utente in lista riceve un'email riepilogativa con tutti i progetti attivi,
+                    le scadenze imminenti e le task in corso, alla cadenza impostata.</p>
+
+                    <p><strong>Digest settimanale team</strong><br/>
+                    I membri assegnati a un progetto ricevono automaticamente ogni settimana
+                    un aggiornamento sul loro progetto (solo se non hanno già una notifica configurata qui).</p>
+
+                    <p><strong>Invia ora</strong><br/>
+                    Il pulsante "Invia ora" forza l'invio immediato del digest a tutti
+                    gli utenti attivi, indipendentemente dalla cadenza.</p>
+
+                    <p><strong>Google Calendar</strong><br/>
+                    Dalla pagina di ogni progetto puoi scaricare un file
+                    <code>.ics</code> con tutte le scadenze, importabile in Google Calendar,
+                    Outlook o qualsiasi altro calendario.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

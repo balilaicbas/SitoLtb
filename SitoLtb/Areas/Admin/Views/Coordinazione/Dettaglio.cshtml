@@ -26,7 +26,12 @@
                 <input type="hidden" name="id" value="@Model.IdProgetto"/>
                 <button type="submit" class="btn-det btn-det--del"><i class="fas fa-trash"></i> Elimina</button>
             </form>
-            <a asp-action="Index" class="btn-det btn-det--back"><i class="fas fa-arrow-left"></i> Torna</a>
+            <a href="https://calendar.google.com" target="_blank" rel="noopener"
+           class="btn-det" style="background:#e8f5e9;color:#1cc88a" title="Apri Google Calendar">
+            <i class="fab fa-google"></i> Calendar
+        </a>
+
+        <a asp-action="Index" class="btn-det btn-det--back"><i class="fas fa-arrow-left"></i> Torna</a>
         </div>
     </div>
 

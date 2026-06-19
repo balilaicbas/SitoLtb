@@ -19,14 +19,16 @@ namespace SitoLtb.Data
         public DbSet<TaskCommento>    TaskCommenti   { get; set; } = null!;
         public DbSet<ProgettoScadenza> ProgettoScadenze { get; set; } = null!;
         public DbSet<ProgettoNota>    ProgettoNote   { get; set; } = null!;
-        public DbSet<ProgettoMembro>  ProgettoMembri { get; set; } = null!;
+        public DbSet<ProgettoMembro>          ProgettoMembri        { get; set; } = null!;
+        public DbSet<NotificaImpostazione>    NotificheImpostazioni  { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
             // Chiavi primarie esplicite (nomi non seguono la convenzione EF "Id" / "ProgettoId")
-            builder.Entity<Progetto>()       .HasKey(p => p.IdProgetto);
+            builder.Entity<Progetto>()            .HasKey(p => p.IdProgetto);
+            builder.Entity<NotificaImpostazione>().HasKey(n => n.IdNotifica);
             builder.Entity<ProgettoTask>()   .HasKey(t => t.IdTask);
             builder.Entity<TaskCommento>()   .HasKey(c => c.IdCommento);
             builder.Entity<ProgettoScadenza>().HasKey(s => s.IdScadenza);

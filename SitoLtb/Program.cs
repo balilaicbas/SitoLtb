@@ -38,6 +38,8 @@ builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ITournamentService, TournamentService>();
 builder.Services.AddScoped<IArchiveService, ArchiveService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddSingleton<SitoLtb.Services.CoordinazioneDigestService>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<SitoLtb.Services.CoordinazioneDigestService>());
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
@@ -172,6 +174,15 @@ void EnsureTable(SitoLtb.Data.ApplicationDbContext db)
               IdProgetto INT NOT NULL REFERENCES Progetti(IdProgetto) ON DELETE CASCADE,
               UserId     NVARCHAR(450) NOT NULL,
               CONSTRAINT PK_ProgettoMembri PRIMARY KEY (IdProgetto, UserId)
+          )",
+        @"IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name='NotificheImpostazioni')
+          CREATE TABLE NotificheImpostazioni (
+              IdNotifica     INT IDENTITY(1,1) PRIMARY KEY,
+              UserId         NVARCHAR(450) NOT NULL,
+              IntervalloOre  INT NOT NULL DEFAULT 168,
+              UltimoInvio    DATETIME2 NULL,
+              Attiva         BIT NOT NULL DEFAULT 1,
+              DataCreazione  DATETIME2 NOT NULL DEFAULT GETUTCDATE()
           )",
     };
 

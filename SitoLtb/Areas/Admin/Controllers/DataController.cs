@@ -59,6 +59,11 @@ namespace SitoLtb.Areas.Admin.Controllers
             var torneiPerMese = Enumerable.Range(1, 12)
                 .Select(m => torneiAnno.Count(e => e.DataInizio.Month == m))
                 .ToArray();
+            var partecipazioniPerMese = Enumerable.Range(1, 12)
+                .Select(m => torneiAnno
+                    .Where(e => e.DataInizio.Month == m)
+                    .Sum(e => partPerEvento.GetValueOrDefault(e.IdEvento, 0)))
+                .ToArray();
 
             var tipiEvento = eventi
                 .Where(e => e.DataInizio >= from && e.DataInizio <= to)
@@ -172,8 +177,9 @@ namespace SitoLtb.Areas.Admin.Controllers
                 TorneiLabels = torneiChart.Select(e => e.Descrizione).ToArray(),
                 TorneiCounts = torneiChart.Select(e => partPerEvento.GetValueOrDefault(e.IdEvento, 0)).ToArray(),
 
-                MesiLabels    = mesiNomi,
-                TorneiPerMese = torneiPerMese,
+                MesiLabels            = mesiNomi,
+                TorneiPerMese         = torneiPerMese,
+                PartecipazioniPerMese = partecipazioniPerMese,
 
                 TipiEventoLabels = tipiEvento.Select(t => t.Tipo).ToArray(),
                 TipiEventoCounts = tipiEvento.Select(t => t.Count).ToArray(),

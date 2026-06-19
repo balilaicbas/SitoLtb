@@ -89,6 +89,32 @@ public class ProgettoDetailVM
         : (int)Math.Round(Tasks.Count(t => t.Stato == StatoTask.Risolto) * 100.0 / Tasks.Count);
 }
 
+public class NotificaVM
+{
+    public int      IdNotifica    { get; set; }
+    public string   UserId        { get; set; } = "";
+    public string   NomeUtente    { get; set; } = "";
+    public int      IntervalloOre { get; set; }
+    public DateTime? UltimoInvio  { get; set; }
+    public bool     Attiva        { get; set; }
+
+    public string IntervalloLabel => IntervalloOre switch {
+        24   => "Ogni giorno",
+        48   => "Ogni 2 giorni",
+        72   => "Ogni 3 giorni",
+        168  => "Ogni settimana",
+        336  => "Ogni 2 settimane",
+        720  => "Ogni mese",
+        _    => $"Ogni {IntervalloOre}h"
+    };
+}
+
+public class ImpostazioniNotificheVM
+{
+    public List<NotificaVM> Impostazioni      { get; set; } = [];
+    public List<MembroVM>   UtentiDisponibili { get; set; } = [];
+}
+
 public class CreaProgettoVM
 {
     public string  Titolo       { get; set; } = "";

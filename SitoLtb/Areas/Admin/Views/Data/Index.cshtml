@@ -25,6 +25,7 @@
     var corsiPart     = J(Model.CorsiPartecipanti);
     var livelliLab    = J(Model.LivelliLabels);
     var livelliCount  = J(Model.CorsiPerLivello);
+    var partMesi      = J(Model.PartecipazioniPerMese);
 }
 
 <div class="data-page">
@@ -32,7 +33,7 @@
     <!-- Header -->
     <div class="data-header">
         <h1 class="data-title">Dashboard circolo — @Model.Anno</h1>
-        <p class="data-subtitle">Tornei · Soci · Giocatori · Corsi · Fornitori</p>
+        <p class="data-subtitle">Tornei · Soci · Giocatori · Corsi</p>
     </div>
 
     <!-- KPI -->
@@ -79,13 +80,6 @@
                 <div class="stat-label">Corsi @Model.Anno</div>
             </div>
         </div>
-        <div class="stat-card stat-red">
-            <div class="stat-icon"><i class="fas fa-handshake"></i></div>
-            <div class="stat-body">
-                <div class="stat-value">@Model.TotaleFornitori</div>
-                <div class="stat-label">Fornitori</div>
-            </div>
-        </div>
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════ TORNEI -->
@@ -110,6 +104,16 @@
             </div>
         </div>
     }
+
+    <div class="chart-card" style="margin-top:20px">
+        <div class="chart-card__header">
+            <span class="chart-card__title">Partecipazioni per mese</span>
+            <span class="chart-card__badge">@Model.Anno</span>
+        </div>
+        <div class="chart-card__body">
+            <canvas id="chartPartMesi" height="110"></canvas>
+        </div>
+    </div>
 
     <div class="chart-grid-2" style="margin-top:20px">
         <div class="chart-card">
@@ -201,59 +205,17 @@
     }
     else
     {
-        <div class="chart-grid-2">
-            <div class="chart-card">
-                <div class="chart-card__header">
-                    <span class="chart-card__title">Partecipanti per corso</span>
-                    <span class="chart-card__badge">@Model.Anno</span>
-                </div>
-                <div class="chart-card__body">
-                    <canvas id="chartCorsi" height="220"></canvas>
-                </div>
+        <div class="chart-card" style="max-width:600px">
+            <div class="chart-card__header">
+                <span class="chart-card__title">Partecipanti per corso</span>
+                <span class="chart-card__badge">@Model.Anno</span>
             </div>
-            <div class="chart-card">
-                <div class="chart-card__header">
-                    <span class="chart-card__title">Corsi per livello (storico)</span>
-                </div>
-                <div class="chart-card__body chart-card__body--center">
-                    <canvas id="chartLivelli" height="220"></canvas>
-                </div>
+            <div class="chart-card__body">
+                <canvas id="chartCorsi" height="160"></canvas>
             </div>
         </div>
     }
 
-    <!-- ═══════════════════════════════════════════════════════ FORNITORI -->
-    <div class="data-section">
-        <span class="data-section__icon"><i class="fas fa-handshake"></i></span>
-        <span class="data-section__title">Fornitori esterni</span>
-    </div>
-
-    @if (!Model.Fornitori.Any())
-    {
-        <p class="data-empty">Nessun fornitore registrato.</p>
-    }
-    else
-    {
-        <div class="fornitore-grid">
-            @foreach (var f in Model.Fornitori)
-            {
-                <div class="fornitore-card">
-                    <div class="fornitore-card__icon"><i class="fas fa-building"></i></div>
-                    <div class="fornitore-card__body">
-                        <div class="fornitore-card__nome">@f.Nome</div>
-                        @if (!string.IsNullOrWhiteSpace(f.Email))
-                        {
-                            <a class="fornitore-card__email" href="mailto:@f.Email">@f.Email</a>
-                        }
-                    </div>
-                    @if (f.IsGiocatore)
-                    {
-                        <span class="fornitore-tag">Giocatore</span>
-                    }
-                </div>
-            }
-        </div>
-    }
 
 </div>
 
@@ -404,6 +366,9 @@
     // Tornei — partecipanti per torneo
     multiBar('chartTornei', @Html.Raw(torneiLabels), @Html.Raw(torneiCounts));
 
+    // Partecipazioni per mese
+    line('chartPartMesi', @Html.Raw(mesiLabels), @Html.Raw(partMesi), BLUE, 'Partecipazioni');
+
     // Tornei — per mese
     bar('chartMesi', @Html.Raw(mesiLabels), @Html.Raw(mesiCounts), BLUE, 'Tornei');
 
@@ -427,9 +392,6 @@
 
     // Corsi — partecipanti
     bar('chartCorsi', @Html.Raw(corsiLabels), @Html.Raw(corsiPart), TEAL, 'Partecipanti');
-
-    // Corsi — per livello
-    doughnut('chartLivelli', @Html.Raw(livelliLab), @Html.Raw(livelliCount));
 
 })();
 </script>

@@ -18,8 +18,9 @@ public class DataDashboardVM
     public int[]    TorneiCounts { get; set; } = [];
 
     // ── Tornei — per mese ────────────────────────────────────────
-    public string[] MesiLabels    { get; set; } = [];
-    public int[]    TorneiPerMese { get; set; } = [];
+    public string[] MesiLabels           { get; set; } = [];
+    public int[]    TorneiPerMese        { get; set; } = [];
+    public int[]    PartecipazioniPerMese { get; set; } = [];
 
     // ── Tipi evento — doughnut ───────────────────────────────────
     public string[] TipiEventoLabels { get; set; } = [];

@@ -4,8 +4,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SitoLtb.Data;
 using SitoLtb.Models;
+using SitoLtb.Services;
 using SitoLtb.Utilities;
 using SitoLtb.ViewModels;
+using System.Text;
 
 namespace SitoLtb.Areas.Admin.Controllers;
 
@@ -15,11 +17,16 @@ public class CoordinazioneController : Controller
 {
     private readonly ApplicationDbContext _db;
     private readonly UserManager<ApplicationUser> _userManager;
+    private readonly CoordinazioneDigestService _digest;
+    private readonly IEmailService _email;
 
-    public CoordinazioneController(ApplicationDbContext db, UserManager<ApplicationUser> userManager)
+    public CoordinazioneController(ApplicationDbContext db, UserManager<ApplicationUser> userManager,
+        CoordinazioneDigestService digest, IEmailService email)
     {
         _db = db;
         _userManager = userManager;
+        _digest = digest;
+        _email = email;
     }
 
     // ── helpers ──────────────────────────────────────────────────────────────
@@ -70,6 +77,60 @@ public class CoordinazioneController : Controller
             DataCompletamento = t.DataCompletamento,
             Commenti          = commenti
         };
+    }
+
+    // ── ICS helpers ──────────────────────────────────────────────────────────
+
+    private static string BuildIcs(Progetto p)
+    {
+        var sb = new StringBuilder();
+        sb.AppendLine("BEGIN:VCALENDAR");
+        sb.AppendLine("VERSION:2.0");
+        sb.AppendLine("PRODID:-//LTB//Coordinazione//IT");
+        sb.AppendLine("CALSCALE:GREGORIAN");
+        sb.AppendLine("METHOD:PUBLISH");
+        foreach (var s in p.Scadenze.OrderBy(s => s.Data))
+        {
+            sb.AppendLine("BEGIN:VEVENT");
+            sb.AppendLine($"UID:ltb-scad-{s.IdScadenza}@ltb");
+            sb.AppendLine($"DTSTART;VALUE=DATE:{s.Data:yyyyMMdd}");
+            sb.AppendLine($"DTEND;VALUE=DATE:{s.Data.AddDays(1):yyyyMMdd}");
+            sb.AppendLine($"SUMMARY:{EscapeIcs(s.Titolo)} [{EscapeIcs(p.Titolo)}]");
+            if (!string.IsNullOrEmpty(s.Nota))
+                sb.AppendLine($"DESCRIPTION:{EscapeIcs(s.Nota)}");
+            sb.AppendLine($"DTSTAMP:{DateTime.UtcNow:yyyyMMddTHHmmssZ}");
+            sb.AppendLine("END:VEVENT");
+        }
+        sb.AppendLine("END:VCALENDAR");
+        return sb.ToString();
+    }
+
+    private async Task InviaEmailCalendario(IEmailService emailSvc, Progetto p, ApplicationUser dest, string motivazione)
+    {
+        if (dest.Email == null) return;
+        var nome    = $"{dest.FirstName} {dest.LastName}".Trim();
+        var ics     = BuildIcs(p);
+        var hasScad = p.Scadenze.Any();
+        var html    = $"""
+            <div style="font-family:sans-serif;max-width:600px;margin:auto">
+              <div style="background:{p.Colore};color:#fff;padding:20px 28px;border-radius:10px 10px 0 0">
+                <h2 style="margin:0">📋 {p.Titolo}</h2>
+                <p style="margin:6px 0 0;opacity:.85">{motivazione}</p>
+              </div>
+              <div style="background:#f8f9fc;padding:20px 28px;border-radius:0 0 10px 10px">
+                <p>Ciao <strong>{nome}</strong>,</p>
+                <p>{motivazione.TrimEnd('.')}.</p>
+                {(string.IsNullOrEmpty(p.Descrizione) ? "" : $"<p><em>{p.Descrizione}</em></p>")}
+                {(hasScad
+                    ? $"<p>In allegato trovi il file <strong>.ics</strong> con le scadenze del progetto:<br/>puoi aprirlo per aggiungere tutti gli eventi al tuo <strong>Google Calendar</strong>, Outlook o Apple Calendar.</p><ul>{string.Concat(p.Scadenze.OrderBy(s => s.Data).Select(s => $"<li><strong>{s.Data:dd/MM/yyyy}</strong> — {s.Titolo}</li>"))}</ul>"
+                    : "<p>Non ci sono ancora scadenze. Riceverai un aggiornamento non appena verranno aggiunte.</p>")}
+                <p style="color:#888;font-size:.85rem;margin-top:20px">— Team LTB</p>
+              </div>
+            </div>
+            """;
+        var slug = p.Titolo.ToLowerInvariant().Replace(" ", "-");
+        try { await emailSvc.SendWithIcsAsync(dest.Email, $"📋 Progetto: {p.Titolo}", html, ics, $"ltb-{slug}.ics"); }
+        catch { /* email non bloccante */ }
     }
 
     // ── Index ─────────────────────────────────────────────────────────────────
@@ -194,6 +255,16 @@ public class CoordinazioneController : Controller
         };
         _db.Progetti.Add(p);
         await _db.SaveChangesAsync();
+
+        // Email al referente con ICS (progetto appena creato, nessuna scadenza ancora)
+        if (p.ReferenteId != null)
+        {
+            var ref_ = await _userManager.FindByIdAsync(p.ReferenteId);
+            if (ref_ != null)
+                await InviaEmailCalendario(_email, p, ref_,
+                    $"Sei stato indicato come referente del progetto \"{p.Titolo}\"");
+        }
+
         return RedirectToAction("Dettaglio", new { id = p.IdProgetto });
     }
 
@@ -357,6 +428,23 @@ public class CoordinazioneController : Controller
             Nota       = nota
         });
         await _db.SaveChangesAsync();
+
+        // Ricarica progetto con scadenze aggiornate e invia ICS a tutti i membri
+        var p = await _db.Progetti
+            .Include(x => x.Scadenze)
+            .Include(x => x.Membri)
+            .FirstOrDefaultAsync(x => x.IdProgetto == idProgetto);
+        if (p != null)
+        {
+            foreach (var m in p.Membri)
+            {
+                var u = await _userManager.FindByIdAsync(m.UserId);
+                if (u != null)
+                    await InviaEmailCalendario(_email, p, u,
+                        $"Le scadenze del progetto \"{p.Titolo}\" sono state aggiornate");
+            }
+        }
+
         return RedirectToAction("Dettaglio", new { id = idProgetto });
     }
 
@@ -378,6 +466,15 @@ public class CoordinazioneController : Controller
         {
             _db.ProgettoMembri.Add(new ProgettoMembro { IdProgetto = idProgetto, UserId = userId });
             await _db.SaveChangesAsync();
+
+            // Email al nuovo membro con ICS delle scadenze attuali
+            var p = await _db.Progetti
+                .Include(x => x.Scadenze)
+                .FirstOrDefaultAsync(x => x.IdProgetto == idProgetto);
+            var newUser = await _userManager.FindByIdAsync(userId);
+            if (p != null && newUser != null)
+                await InviaEmailCalendario(_email, p, newUser,
+                    $"Sei stato aggiunto al progetto \"{p.Titolo}\"");
         }
         return RedirectToAction("Dettaglio", new { id = idProgetto });
     }
@@ -388,5 +485,113 @@ public class CoordinazioneController : Controller
         var m = await _db.ProgettoMembri.FindAsync(idProgetto, userId);
         if (m != null) { _db.ProgettoMembri.Remove(m); await _db.SaveChangesAsync(); }
         return RedirectToAction("Dettaglio", new { id = idProgetto });
+    }
+
+    // ── Export ICS ────────────────────────────────────────────────────────────
+
+    [HttpGet]
+    public async Task<IActionResult> ExportIcs(int idProgetto)
+    {
+        var p = await _db.Progetti
+            .Include(p => p.Scadenze)
+            .FirstOrDefaultAsync(p => p.IdProgetto == idProgetto);
+        if (p == null) return NotFound();
+
+        var sb = new StringBuilder();
+        sb.AppendLine("BEGIN:VCALENDAR");
+        sb.AppendLine("VERSION:2.0");
+        sb.AppendLine("PRODID:-//LTB//Coordinazione//IT");
+        sb.AppendLine("CALSCALE:GREGORIAN");
+        sb.AppendLine("METHOD:PUBLISH");
+
+        foreach (var s in p.Scadenze.OrderBy(s => s.Data))
+        {
+            var dateStr  = s.Data.ToString("yyyyMMdd");
+            var dateNext = s.Data.AddDays(1).ToString("yyyyMMdd");
+            sb.AppendLine("BEGIN:VEVENT");
+            sb.AppendLine($"UID:ltb-scad-{s.IdScadenza}@ltb");
+            sb.AppendLine($"DTSTART;VALUE=DATE:{dateStr}");
+            sb.AppendLine($"DTEND;VALUE=DATE:{dateNext}");
+            sb.AppendLine($"SUMMARY:{EscapeIcs(s.Titolo)} [{EscapeIcs(p.Titolo)}]");
+            if (!string.IsNullOrEmpty(s.Nota))
+                sb.AppendLine($"DESCRIPTION:{EscapeIcs(s.Nota)}");
+            sb.AppendLine($"DTSTAMP:{DateTime.UtcNow:yyyyMMddTHHmmssZ}");
+            sb.AppendLine("END:VEVENT");
+        }
+
+        sb.AppendLine("END:VCALENDAR");
+
+        var bytes = Encoding.UTF8.GetBytes(sb.ToString());
+        var slug  = p.Titolo.ToLowerInvariant().Replace(" ", "-");
+        return File(bytes, "text/calendar", $"ltb-{slug}.ics");
+    }
+
+    private static string EscapeIcs(string s) =>
+        s.Replace("\\", "\\\\").Replace(";", "\\;").Replace(",", "\\,").Replace("\n", "\\n");
+
+    // ── Impostazioni Notifiche ────────────────────────────────────────────────
+
+    [HttpGet]
+    public async Task<IActionResult> Impostazioni()
+    {
+        var impostazioni = await _db.NotificheImpostazioni.ToListAsync();
+        var tutti = await TuttiGliUtenti();
+
+        var vm = new ImpostazioniNotificheVM
+        {
+            Impostazioni      = impostazioni.Select(i => new NotificaVM
+            {
+                IdNotifica    = i.IdNotifica,
+                UserId        = i.UserId,
+                NomeUtente    = tutti.FirstOrDefault(u => u.UserId == i.UserId)?.Nome ?? i.UserId,
+                IntervalloOre = i.IntervalloOre,
+                UltimoInvio   = i.UltimoInvio,
+                Attiva        = i.Attiva
+            }).ToList(),
+            UtentiDisponibili = tutti
+        };
+        return View(vm);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> AggiungiNotifica(string userId, int intervalloOre)
+    {
+        var exists = await _db.NotificheImpostazioni.AnyAsync(n => n.UserId == userId);
+        if (!exists)
+        {
+            _db.NotificheImpostazioni.Add(new NotificaImpostazione
+            {
+                UserId        = userId,
+                IntervalloOre = intervalloOre,
+                Attiva        = true,
+                DataCreazione = DateTime.UtcNow
+            });
+            await _db.SaveChangesAsync();
+        }
+        return RedirectToAction("Impostazioni");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> ToggleNotifica(int idNotifica)
+    {
+        var n = await _db.NotificheImpostazioni.FindAsync(idNotifica);
+        if (n != null) { n.Attiva = !n.Attiva; await _db.SaveChangesAsync(); }
+        return RedirectToAction("Impostazioni");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> EliminaNotifica(int idNotifica)
+    {
+        var n = await _db.NotificheImpostazioni.FindAsync(idNotifica);
+        if (n != null) { _db.NotificheImpostazioni.Remove(n); await _db.SaveChangesAsync(); }
+        return RedirectToAction("Impostazioni");
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> InviaOra()
+    {
+        await _digest.RunDigest();
+        TempData["Msg"] = "Digest inviato manualmente.";
+        return RedirectToAction("Impostazioni");
     }
 }

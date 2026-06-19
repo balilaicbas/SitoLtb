@@ -74,17 +74,30 @@ namespace SitoLtb.Services
             };
         }
 
+        public async Task SendWithIcsAsync(string toEmail, string subject, string htmlBody,
+            string icsContent, string icsFileName)
+        {
+            var client = BuildClient();
+            using var msg = BuildMessage(toEmail, subject, htmlBody);
+            var icsBytes = System.Text.Encoding.UTF8.GetBytes(icsContent);
+            var stream   = new MemoryStream(icsBytes);
+            var att      = new Attachment(stream, icsFileName, "text/calendar");
+            msg.Attachments.Add(att);
+            try   { await client.SendMailAsync(msg); }
+            catch (Exception ex) { _logger.LogError(ex, "Errore invio email+ics a {To}", toEmail); throw; }
+        }
+
         private MailMessage BuildMessage(string to, string subject, string htmlBody)
         {
             var fromEmail = _config["Smtp:FromEmail"] ?? "noreply@example.com";
-            var fromName = _config["Smtp:FromName"] ?? "LTB";
+            var fromName  = _config["Smtp:FromName"]  ?? "LTB";
             return new MailMessage
             {
-                From = new MailAddress(fromEmail, fromName),
-                Subject = subject,
-                Body = htmlBody,
+                From       = new MailAddress(fromEmail, fromName),
+                Subject    = subject,
+                Body       = htmlBody,
                 IsBodyHtml = true,
-                To = { to }
+                To         = { to }
             };
         }
     }
