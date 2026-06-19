@@ -1,1 +1,436 @@
-﻿
+@model SitoLtb.ViewModels.DataDashboardVM
+@using System.Text.Json
+@{
+    ViewData["Title"] = $"Dashboard — {Model.Anno}";
+
+    string J(object? o) => JsonSerializer.Serialize(o);
+
+    var torneiLabels  = J(Model.TorneiLabels);
+    var torneiCounts  = J(Model.TorneiCounts);
+    var mesiLabels    = J(Model.MesiLabels);
+    var mesiCounts    = J(Model.TorneiPerMese);
+    var tipiLabels    = J(Model.TipiEventoLabels);
+    var tipiCounts    = J(Model.TipiEventoCounts);
+    var sociAnni      = J(Model.SociAnniLabels);
+    var sociCounts    = J(Model.SociPerAnno);
+    var tessereLabels = J(new[] { "Solo LTB", "Solo FSI", "Entrambi" });
+    var tessereCounts = J(new[] { Model.SoloLtb, Model.SoloFsi, Model.EntrambiLtbFsi });
+    var eloLabels     = J(Model.EloRangeLabels);
+    var eloCounts     = J(Model.EloDistribuzione);
+    var topEloNomi    = J(Model.TopEloNomi);
+    var topEloVals    = J(Model.TopEloValori);
+    var topPartNomi   = J(Model.TopPartNomi);
+    var topPartVals   = J(Model.TopPartValori);
+    var corsiLabels   = J(Model.CorsiLabels);
+    var corsiPart     = J(Model.CorsiPartecipanti);
+    var livelliLab    = J(Model.LivelliLabels);
+    var livelliCount  = J(Model.CorsiPerLivello);
+}
+
+<div class="data-page">
+
+    <!-- Header -->
+    <div class="data-header">
+        <h1 class="data-title">Dashboard circolo — @Model.Anno</h1>
+        <p class="data-subtitle">Tornei · Soci · Giocatori · Corsi · Fornitori</p>
+    </div>
+
+    <!-- KPI -->
+    <div class="stat-grid stat-grid-7">
+        <div class="stat-card stat-blue">
+            <div class="stat-icon"><i class="fas fa-user"></i></div>
+            <div class="stat-body">
+                <div class="stat-value">@Model.TotaleGiocatori</div>
+                <div class="stat-label">Giocatori</div>
+            </div>
+        </div>
+        <div class="stat-card stat-green">
+            <div class="stat-icon"><i class="fas fa-id-card"></i></div>
+            <div class="stat-body">
+                <div class="stat-value">@Model.SociLtb</div>
+                <div class="stat-label">Soci LTB @Model.Anno</div>
+            </div>
+        </div>
+        <div class="stat-card stat-teal">
+            <div class="stat-icon"><i class="fas fa-shield-alt"></i></div>
+            <div class="stat-body">
+                <div class="stat-value">@Model.SociFsi</div>
+                <div class="stat-label">Tessere FSI @Model.Anno</div>
+            </div>
+        </div>
+        <div class="stat-card stat-yellow">
+            <div class="stat-icon"><i class="fas fa-chess"></i></div>
+            <div class="stat-body">
+                <div class="stat-value">@Model.TotaleTornei</div>
+                <div class="stat-label">Tornei @Model.Anno</div>
+            </div>
+        </div>
+        <div class="stat-card stat-orange">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-body">
+                <div class="stat-value">@Model.TotalePartecipazioni</div>
+                <div class="stat-label">Partecipazioni</div>
+            </div>
+        </div>
+        <div class="stat-card stat-purple">
+            <div class="stat-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+            <div class="stat-body">
+                <div class="stat-value">@Model.TotaleCorsi</div>
+                <div class="stat-label">Corsi @Model.Anno</div>
+            </div>
+        </div>
+        <div class="stat-card stat-red">
+            <div class="stat-icon"><i class="fas fa-handshake"></i></div>
+            <div class="stat-body">
+                <div class="stat-value">@Model.TotaleFornitori</div>
+                <div class="stat-label">Fornitori</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ TORNEI -->
+    <div class="data-section">
+        <span class="data-section__icon"><i class="fas fa-chess-king"></i></span>
+        <span class="data-section__title">Tornei</span>
+    </div>
+
+    @if (Model.TorneiLabels.Length == 0)
+    {
+        <p class="data-empty">Nessun torneo registrato per @Model.Anno.</p>
+    }
+    else
+    {
+        <div class="chart-card">
+            <div class="chart-card__header">
+                <span class="chart-card__title">Partecipanti per torneo</span>
+                <span class="chart-card__badge">@Model.Anno</span>
+            </div>
+            <div class="chart-card__body">
+                <canvas id="chartTornei" height="100"></canvas>
+            </div>
+        </div>
+    }
+
+    <div class="chart-grid-2" style="margin-top:20px">
+        <div class="chart-card">
+            <div class="chart-card__header">
+                <span class="chart-card__title">Tornei per mese</span>
+            </div>
+            <div class="chart-card__body">
+                <canvas id="chartMesi" height="200"></canvas>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-card__header">
+                <span class="chart-card__title">Tipologie di evento</span>
+            </div>
+            <div class="chart-card__body chart-card__body--center">
+                <canvas id="chartTipi" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ SOCI -->
+    <div class="data-section">
+        <span class="data-section__icon"><i class="fas fa-id-card"></i></span>
+        <span class="data-section__title">Soci e tessere</span>
+    </div>
+
+    <div class="chart-grid-2">
+        <div class="chart-card">
+            <div class="chart-card__header">
+                <span class="chart-card__title">Andamento soci per anno</span>
+            </div>
+            <div class="chart-card__body">
+                <canvas id="chartSociAnni" height="200"></canvas>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-card__header">
+                <span class="chart-card__title">Ripartizione tessere @Model.Anno</span>
+            </div>
+            <div class="chart-card__body chart-card__body--center">
+                <canvas id="chartTessere" height="200"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════ GIOCATORI & ELO -->
+    <div class="data-section">
+        <span class="data-section__icon"><i class="fas fa-chart-bar"></i></span>
+        <span class="data-section__title">Giocatori e ELO</span>
+    </div>
+
+    <div class="chart-card">
+        <div class="chart-card__header">
+            <span class="chart-card__title">Distribuzione ELO Standard</span>
+        </div>
+        <div class="chart-card__body">
+            <canvas id="chartEloDistr" height="90"></canvas>
+        </div>
+    </div>
+
+    <div class="chart-grid-2" style="margin-top:20px">
+        <div class="chart-card">
+            <div class="chart-card__header">
+                <span class="chart-card__title">Top 10 per ELO Standard</span>
+            </div>
+            <div class="chart-card__body">
+                <canvas id="chartTopElo" height="260"></canvas>
+            </div>
+        </div>
+        <div class="chart-card">
+            <div class="chart-card__header">
+                <span class="chart-card__title">Top 10 per partecipazioni (all-time)</span>
+            </div>
+            <div class="chart-card__body">
+                <canvas id="chartTopPart" height="260"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ CORSI -->
+    <div class="data-section">
+        <span class="data-section__icon"><i class="fas fa-chalkboard-teacher"></i></span>
+        <span class="data-section__title">Corsi</span>
+    </div>
+
+    @if (Model.CorsiLabels.Length == 0)
+    {
+        <p class="data-empty">Nessun corso registrato per @Model.Anno.</p>
+    }
+    else
+    {
+        <div class="chart-grid-2">
+            <div class="chart-card">
+                <div class="chart-card__header">
+                    <span class="chart-card__title">Partecipanti per corso</span>
+                    <span class="chart-card__badge">@Model.Anno</span>
+                </div>
+                <div class="chart-card__body">
+                    <canvas id="chartCorsi" height="220"></canvas>
+                </div>
+            </div>
+            <div class="chart-card">
+                <div class="chart-card__header">
+                    <span class="chart-card__title">Corsi per livello (storico)</span>
+                </div>
+                <div class="chart-card__body chart-card__body--center">
+                    <canvas id="chartLivelli" height="220"></canvas>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- ═══════════════════════════════════════════════════════ FORNITORI -->
+    <div class="data-section">
+        <span class="data-section__icon"><i class="fas fa-handshake"></i></span>
+        <span class="data-section__title">Fornitori esterni</span>
+    </div>
+
+    @if (!Model.Fornitori.Any())
+    {
+        <p class="data-empty">Nessun fornitore registrato.</p>
+    }
+    else
+    {
+        <div class="fornitore-grid">
+            @foreach (var f in Model.Fornitori)
+            {
+                <div class="fornitore-card">
+                    <div class="fornitore-card__icon"><i class="fas fa-building"></i></div>
+                    <div class="fornitore-card__body">
+                        <div class="fornitore-card__nome">@f.Nome</div>
+                        @if (!string.IsNullOrWhiteSpace(f.Email))
+                        {
+                            <a class="fornitore-card__email" href="mailto:@f.Email">@f.Email</a>
+                        }
+                    </div>
+                    @if (f.IsGiocatore)
+                    {
+                        <span class="fornitore-tag">Giocatore</span>
+                    }
+                </div>
+            }
+        </div>
+    }
+
+</div>
+
+@section Scripts {
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+(function () {
+
+    // ── Palette ──────────────────────────────────────────────────
+    const BLUE    = '#4e73df';
+    const GREEN   = '#1cc88a';
+    const TEAL    = '#36b9cc';
+    const YELLOW  = '#f6c23e';
+    const ORANGE  = '#f4943c';
+    const RED     = '#e74a3b';
+    const PURPLE  = '#9b59b6';
+    const INDIGO  = '#6610f2';
+
+    const MULTI = [BLUE, GREEN, TEAL, YELLOW, ORANGE, RED, PURPLE, INDIGO,
+                   '#17a2b8','#fd7e14','#20c997','#6f42c1'];
+
+    function alpha(hex, a) {
+        const r = parseInt(hex.slice(1,3),16);
+        const g = parseInt(hex.slice(3,5),16);
+        const b = parseInt(hex.slice(5,7),16);
+        return `rgba(${r},${g},${b},${a})`;
+    }
+
+    function bar(id, labels, data, color, label) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        new Chart(el, {
+            type: 'bar',
+            data: {
+                labels,
+                datasets: [{ label, data,
+                    backgroundColor: alpha(color, 0.75),
+                    borderColor: color,
+                    borderWidth: 2, borderRadius: 6, borderSkipped: false }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false }, ticks: { font: { size: 12 } } },
+                    y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f0f0f0' } }
+                }
+            }
+        });
+    }
+
+    function multiBar(id, labels, data) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        new Chart(el, {
+            type: 'bar',
+            data: {
+                labels,
+                datasets: [{ label: 'Tornei', data,
+                    backgroundColor: labels.map((_,i) => alpha(MULTI[i % MULTI.length], 0.75)),
+                    borderColor:     labels.map((_,i) => MULTI[i % MULTI.length]),
+                    borderWidth: 2, borderRadius: 6, borderSkipped: false }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f0f0f0' } }
+                }
+            }
+        });
+    }
+
+    function doughnut(id, labels, data) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        new Chart(el, {
+            type: 'doughnut',
+            data: {
+                labels,
+                datasets: [{ data,
+                    backgroundColor: labels.map((_,i) => alpha(MULTI[i % MULTI.length], 0.85)),
+                    borderColor: '#fff', borderWidth: 3 }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom', labels: { padding: 14, font: { size: 12 } } }
+                }
+            }
+        });
+    }
+
+    function line(id, labels, data, color, label) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        new Chart(el, {
+            type: 'line',
+            data: {
+                labels,
+                datasets: [{ label, data,
+                    borderColor: color,
+                    backgroundColor: alpha(color, 0.12),
+                    borderWidth: 2.5,
+                    pointBackgroundColor: color,
+                    pointRadius: 5,
+                    fill: true,
+                    tension: 0.35 }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f0f0f0' } }
+                }
+            }
+        });
+    }
+
+    function hbar(id, labels, data, color, label) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        new Chart(el, {
+            type: 'bar',
+            data: {
+                labels,
+                datasets: [{ label, data,
+                    backgroundColor: alpha(color, 0.75),
+                    borderColor: color,
+                    borderWidth: 2, borderRadius: 4 }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: '#f0f0f0' } },
+                    y: { grid: { display: false }, ticks: { font: { size: 12 } } }
+                }
+            }
+        });
+    }
+
+    // ── Render charts ────────────────────────────────────────────
+
+    // Tornei — partecipanti per torneo
+    multiBar('chartTornei', @Html.Raw(torneiLabels), @Html.Raw(torneiCounts));
+
+    // Tornei — per mese
+    bar('chartMesi', @Html.Raw(mesiLabels), @Html.Raw(mesiCounts), BLUE, 'Tornei');
+
+    // Tipi evento
+    doughnut('chartTipi', @Html.Raw(tipiLabels), @Html.Raw(tipiCounts));
+
+    // Soci — andamento annuale
+    line('chartSociAnni', @Html.Raw(sociAnni), @Html.Raw(sociCounts), GREEN, 'Soci');
+
+    // Soci — LTB / FSI / Entrambi
+    doughnut('chartTessere', @Html.Raw(tessereLabels), @Html.Raw(tessereCounts));
+
+    // ELO distribuzione
+    bar('chartEloDistr', @Html.Raw(eloLabels), @Html.Raw(eloCounts), PURPLE, 'Giocatori');
+
+    // Top 10 ELO
+    hbar('chartTopElo', @Html.Raw(topEloNomi), @Html.Raw(topEloVals), INDIGO, 'ELO Standard');
+
+    // Top 10 partecipazioni
+    hbar('chartTopPart', @Html.Raw(topPartNomi), @Html.Raw(topPartVals), ORANGE, 'Partecipazioni');
+
+    // Corsi — partecipanti
+    bar('chartCorsi', @Html.Raw(corsiLabels), @Html.Raw(corsiPart), TEAL, 'Partecipanti');
+
+    // Corsi — per livello
+    doughnut('chartLivelli', @Html.Raw(livelliLab), @Html.Raw(livelliCount));
+
+})();
+</script>
+}

@@ -30,6 +30,8 @@ namespace SitoLtb.Controllers
                 _notification.Error("Post not found");
                 return View();
             }
+
+            vm.RelatedPosts = await _postService.GetRelatedAsync(vm.Id, vm.Categoria ?? "", vm.Title ?? "");
             return View(vm);
         }
     }

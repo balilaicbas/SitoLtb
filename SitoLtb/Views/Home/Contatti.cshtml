@@ -1,4 +1,9 @@
-﻿<section class="container py-5">
+﻿@model SitoLtb.ViewModels.ContattiVM
+@{
+    ViewData["Title"] = "Contatti";
+}
+
+<section class="container py-5">
     <div class="row justify-content-center">
         <div class="col-12 col-lg-8 col-xl-7">
 
@@ -86,5 +91,86 @@
             </div>
 
         </div>
+
+            @* ── Feedback messaggi ── *@
+            @if (TempData["ContattiOk"] != null)
+            {
+                <div class="alert alert-success mt-4">@TempData["ContattiOk"]</div>
+            }
+            @if (TempData["ContattiErr"] != null)
+            {
+                <div class="alert alert-danger mt-4">@TempData["ContattiErr"]</div>
+            }
+            @if (TempData["NewsletterOk"] != null)
+            {
+                <div class="alert alert-success mt-4">@TempData["NewsletterOk"]</div>
+            }
+            @if (TempData["NewsletterErr"] != null)
+            {
+                <div class="alert alert-danger mt-4">@TempData["NewsletterErr"]</div>
+            }
+
+            @* ── Form contatti ── *@
+            <div class="card shadow-sm mt-4" id="contact-form">
+                <div class="card-body p-4 p-lg-5">
+                    <h2 class="h5 fw-bold mb-1">Scrivici un messaggio</h2>
+                    <p class="text-secondary mb-4">Ti risponderemo all'indirizzo email che ci fornisci.</p>
+
+                    <form asp-action="Contatti" asp-controller="Home" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3" style="display:@(ViewData.ModelState.IsValid ? "none" : "block")"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Nome" class="form-label fw-semibold">Nome</label>
+                            <input asp-for="Nome" class="form-control" placeholder="Il tuo nome" />
+                            <span asp-validation-for="Nome" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label fw-semibold">Email</label>
+                            <input asp-for="Email" class="form-control" placeholder="tua@email.it" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-4">
+                            <label asp-for="Messaggio" class="form-label fw-semibold">Messaggio</label>
+                            <textarea asp-for="Messaggio" class="form-control" rows="5"
+                                      placeholder="Scrivi qui il tuo messaggio…"></textarea>
+                            <span asp-validation-for="Messaggio" class="text-danger small"></span>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <i class="fas fa-paper-plane me-2"></i>Invia messaggio
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            @* ── Newsletter ── *@
+            <div class="card shadow-sm mt-4 border-0" id="newsletter" style="background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);color:#fff;">
+                <div class="card-body p-4 p-lg-5">
+                    <h2 class="h5 fw-bold mb-1">
+                        <i class="fas fa-envelope-open-text me-2" style="color:#e74c3c"></i>Newsletter LTB
+                    </h2>
+                    <p class="mb-4" style="opacity:.8">
+                        Ricevi aggiornamenti su tornei, corsi ed eventi direttamente nella tua casella email.
+                    </p>
+                    <form asp-action="NewsletterIscriviti" asp-controller="Home" method="post">
+                        <div class="row g-2">
+                            <div class="col-12 col-sm-4">
+                                <input name="Nome" class="form-control" placeholder="Nome (opzionale)" />
+                            </div>
+                            <div class="col-12 col-sm-5">
+                                <input name="Email" type="email" class="form-control" placeholder="tua@email.it" required />
+                            </div>
+                            <div class="col-12 col-sm-3">
+                                <button type="submit" class="btn btn-danger w-100">Iscriviti</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+    </div>
     </div>
 </section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

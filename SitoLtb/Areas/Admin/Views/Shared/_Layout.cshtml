@@ -74,8 +74,35 @@
                 {
                     <li>
                         <a asp-action="Index" asp-controller="Data" asp-area="Admin">
-                        <i class="fas fa-fw fa-database"></i>
+                            <i class="fas fa-fw fa-database"></i>
                             <span>Data</span>
+                        </a>
+                    </li>
+                }
+                @if (User.IsInRole(WebsiteRoles.WebsiteAdmin))
+                {
+                    <li>
+                        <a asp-action="Index" asp-controller="Archive" asp-area="Admin">
+                            <i class="fa-solid fa-book-open"></i>
+                            <span>Archivio</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Newsletter" asp-area="Admin">
+                            <i class="fas fa-fw fa-envelope"></i>
+                            <span>Newsletter</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Coordinazione" asp-area="Admin">
+                            <i class="fas fa-fw fa-diagram-project"></i>
+                            <span>Coordinazione</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a asp-action="Index" asp-controller="Seed" asp-area="Admin">
+                            <i class="fas fa-fw fa-database"></i>
+                            <span>Seed DB</span>
                         </a>
                     </li>
                 }

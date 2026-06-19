@@ -1,4 +1,4 @@
-﻿@using X.PagedList
+@using X.PagedList
 @using X.PagedList.Mvc.Core
 @using X.PagedList.Web.Common
 @model IPagedList<SitoLtb.ViewModels.PostVM>
@@ -14,6 +14,14 @@
 
     <div class="Title-list-of-users">
         <h4>Lista dei post</h4>
+    </div>
+
+    <div class="table-filters">
+        <input type="text" id="fTitolo"    class="filter-input" placeholder="Titolo…"    oninput="filterPosts()">
+        <input type="text" id="fAutore"    class="filter-input" placeholder="Autore…"    oninput="filterPosts()">
+        <input type="text" id="fCategoria" class="filter-input" placeholder="Categoria…" oninput="filterPosts()">
+        <button class="btn-reset-filters" onclick="resetPosts()">Azzera</button>
+        <span id="countPosts" class="filter-count"></span>
     </div>
 
     <section>
@@ -34,17 +42,21 @@
                 {
                     <tr>
                         <td>
-                            <img src="~/@(post.ThumbnailUrl ?? "default_image.png")" style="width: 80px; height: auto; border-radius: 4px;" />
+                            <img src="~/@(post.ThumbnailUrl ?? "default_image.png")"
+                                 style="width:80px;height:auto;border-radius:4px;" />
                         </td>
                         <td>@post.CreatedDate.ToString("dd/MM/yyyy")</td>
                         <td>@post.AuthorName</td>
                         <td>@post.Title</td>
                         <td>@post.Categoria</td>
                         <td>
-                            <a asp-area="Admin" asp-controller="Post" asp-action="Edit" asp-route-id="@post.Id" class="btn btn-primary">Edit</a>
+                            <a asp-area="Admin" asp-controller="Post" asp-action="Edit"
+                               asp-route-id="@post.Id" class="btn btn-primary">Modifica</a>
                         </td>
                         <td>
-                            <form asp-area="Admin" asp-controller="Post" asp-action="Delete" asp-route-id="@post.Id" method="post" onsubmit="return confirm('Vuoi eliminare questo post?')">
+                            <form asp-area="Admin" asp-controller="Post" asp-action="Delete"
+                                  asp-route-id="@post.Id" method="post"
+                                  onsubmit="return confirm('Vuoi eliminare questo post?')">
                                 <button type="submit" class="btn btn-danger" title="Elimina">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
@@ -56,18 +68,47 @@
         </table>
     </section>
 
-    <div>
-        Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
-        @Html.PagedListPager(Model, page => Url.Action("Index",
-                 new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }),
-                 new PagedListRenderOptions
-        {
-            ContainerDivClasses = new List<string> { "blog", "navigation" },
-            UlElementClasses = new List<string> { "pagination" },
-            LiElementClasses = new List<string> { "page-item", "page-link" },
-            ActiveLiElementClass = "active"
-        })
+    <div class="pagination-container">
+        Pagina @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) di @Model.PageCount
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+            new PagedListRenderOptions {
+                ContainerDivClasses  = new List<string> { "blog", "navigation" },
+                UlElementClasses     = new List<string> { "pagination" },
+                LiElementClasses     = new List<string> { "page-item" },
+                ActiveLiElementClass = "active",
+                PageClasses          = new List<string> { "page-link" }
+            })
     </div>
 </main>
 
+@section Scripts {
+<script>
+    // colonne: 0=Img 1=Data 2=Autore 3=Titolo 4=Categoria
+    function filterPosts() {
+        const titolo    = document.getElementById('fTitolo').value.toLowerCase();
+        const autore    = document.getElementById('fAutore').value.toLowerCase();
+        const categoria = document.getElementById('fCategoria').value.toLowerCase();
+        const rows      = document.querySelectorAll('#UsersTable tbody tr');
+        let visible     = 0;
 
+        rows.forEach(row => {
+            const c = row.cells;
+            const match =
+                (!titolo    || c[3].textContent.toLowerCase().includes(titolo))    &&
+                (!autore    || c[2].textContent.toLowerCase().includes(autore))    &&
+                (!categoria || c[4].textContent.toLowerCase().includes(categoria));
+            row.style.display = match ? '' : 'none';
+            if (match) visible++;
+        });
+
+        const total = rows.length;
+        document.getElementById('countPosts').textContent =
+            (titolo || autore || categoria) ? visible + ' / ' + total : '';
+    }
+
+    function resetPosts() {
+        ['fTitolo','fAutore','fCategoria'].forEach(id => document.getElementById(id).value = '');
+        filterPosts();
+    }
+</script>
+}

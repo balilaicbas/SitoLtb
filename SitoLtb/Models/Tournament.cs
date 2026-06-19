@@ -8,26 +8,27 @@ namespace SitoLtb.Models
 
         [Required]
         [StringLength(200)]
-        public string Nome { get; set; }
+        public string Nome { get; set; } = string.Empty;
+
         public DateTime Data { get; set; }
 
         [Required]
         [StringLength(100)]
-        public string Tipologia { get; set; }
+        public string Tipologia { get; set; } = string.Empty;
 
         [Required]
         [StringLength(100)]
-        public string Sede { get; set; }
+        public string Sede { get; set; } = string.Empty;
 
         [StringLength(500)]
-        public string LinkBando { get; set; }
+        public string? LinkBando { get; set; }
 
         [StringLength(500)]
-        public string LinkPreiscrizione { get; set; }
+        public string? LinkPreiscrizione { get; set; }
 
         [StringLength(300)]
-        public string Url { get; set; }
-        public bool Elo { get; set; } = false;
+        public string? Url { get; set; }
 
+        public bool Elo { get; set; } = false;
     }
 }

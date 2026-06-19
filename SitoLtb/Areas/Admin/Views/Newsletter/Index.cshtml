@@ -1,0 +1,83 @@
+@model List<SitoLtb.Models.NewsletterSubscriber>
+@{
+    ViewData["Title"] = "Newsletter — Iscritti";
+}
+
+<main>
+    <div class="Title-list-of-users">
+        <h4>Newsletter — Iscritti (@Model.Count)</h4>
+        <a asp-action="Invia" class="btn-create">
+            <i class="fas fa-paper-plane me-1"></i> Invia newsletter
+        </a>
+    </div>
+
+    @if (TempData["Ok"] != null)
+    {
+        <div class="alert alert-success mb-3">@TempData["Ok"]</div>
+    }
+    @if (TempData["Err"] != null)
+    {
+        <div class="alert alert-danger mb-3">@TempData["Err"]</div>
+    }
+
+    @if (!Model.Any())
+    {
+        <p class="text-muted mt-4">Nessun iscritto ancora.</p>
+    }
+    else
+    {
+        <div class="table-filters">
+            <input type="text" id="fEmail" class="filter-input" placeholder="Cerca email o nome…"
+                   oninput="filterTable()">
+            <span id="filterCount" class="filter-count"></span>
+        </div>
+
+        <table id="tableIscritti">
+            <thead>
+                <tr>
+                    <th>Data iscrizione</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Attivo</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var s in Model)
+                {
+                    <tr>
+                        <td>@s.DataIscrizione.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@(s.Nome ?? "—")</td>
+                        <td>@s.Email</td>
+                        <td>@(s.Attivo ? "✔" : "✘")</td>
+                        <td>
+                            <form asp-action="Delete" asp-route-id="@s.Id" method="post"
+                                  onsubmit="return confirm('Rimuovere @s.Email?')">
+                                <button class="btn-delete" type="submit">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</main>
+
+@section Scripts {
+<script>
+    function filterTable() {
+        const q = document.getElementById('fEmail').value.toLowerCase();
+        const rows = document.querySelectorAll('#tableIscritti tbody tr');
+        let visible = 0;
+        rows.forEach(r => {
+            const match = !q || r.textContent.toLowerCase().includes(q);
+            r.style.display = match ? '' : 'none';
+            if (match) visible++;
+        });
+        document.getElementById('filterCount').textContent =
+            q ? visible + ' / ' + rows.length : '';
+    }
+</script>
+}

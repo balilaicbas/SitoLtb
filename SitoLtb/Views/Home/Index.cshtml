@@ -4,29 +4,58 @@
 @model SitoLtb.ViewModels.IndexVM
 
 <section class="section-1">
+
+    @if (Model.TorneiProssimoMese.Any())
+    {
+        <div class="tournament-widget">
+            <div class="tournament-widget__header">
+                <span class="tournament-widget__icon">♟</span>
+                <span>Tornei del mese</span>
+            </div>
+            <ul class="tournament-widget__list">
+                @foreach (var t in Model.TorneiProssimoMese)
+                {
+                    <li class="tournament-widget__item">
+                        <span class="tournament-widget__date">@t.Data.ToString("dd MMM")</span>
+                        <span class="tournament-widget__name">@t.Nome</span>
+                        <a class="tournament-widget__link"
+                           asp-controller="Home" asp-action="Preiscrizione">
+                            Iscriviti →
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+
     <img src="~/images/HeroImage.jpg" alt="Chessboard" />
     <div class="hero-copy">
         <h1>Il Libero Torneificio del Borgo</h1>
         <h2>Tutti i mercoledì nella sede in via Bena 10/a e tutti i giovedì presso l'associazione "Comala" puoi partecipare agli eventi del circolo</h2>
         <a class="hero-btn" asp-controller="Home" asp-action="Preiscrizione">Scopri gli eventi</a>
-
     </div>
+
 </section>
 
 <section class="section-2">
     <div class="slider-wrapper">
         <div class="slider" id="slider">
-            @foreach (var post in Model.Posts
-            .OrderByDescending(p => p.CreatedDate)
-            .Take(10))
+            @foreach (var post in Model.PostsFuturi
+                .OrderByDescending(p => p.CreatedDate)
+                .Take(10))
             {
                 <div class="cards">
-                    <a asp-controller="Blog" asp-action="Post" class="card-link">
+                    <a asp-controller="Blog" asp-action="Post" asp-route-slug="@post.Url" class="card-link">
                         <div class="card">
-                            <div class="post-title">@post.Title</div>
-
                             <div class="post">
-                                <img src="@post.ThumbnailUrl" alt="@post.Title" />
+                                <img src="~/@post.ThumbnailUrl" alt="@post.Title" />
+                            </div>
+                            <div class="card-body">
+                                <div class="post-title">@post.Title</div>
+                                <div class="post-meta">
+                                    <span class="post-author">✍ @post.AuthorName</span>
+                                    <span class="post-date">@post.CreatedDate.ToString("dd/MM/yyyy")</span>
+                                </div>
                             </div>
                         </div>
                     </a>

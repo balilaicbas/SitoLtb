@@ -1,56 +1,105 @@
-﻿@model List<SitoLtb.ViewModels.UserVM>
+@model List<SitoLtb.ViewModels.UserVM>
 
 @{
     ViewData["Title"] = "Utenti";
 }
 
-
 <main>
-<div class="title-button">
-    <a  asp-action="Register" asp-controller="User">Aggiungi Utente</a>
+    <div class="title-button">
+        <a asp-action="Register" asp-controller="User">Aggiungi Utente</a>
     </div>
-        <div class="Title-list-of-users">
-            <h4>List of Users</h4>
-        </div>
-        <section>
-            <table id="UsersTable">
-                <thead> 
+
+    <div class="Title-list-of-users">
+        <h4>Lista degli utenti</h4>
+    </div>
+
+    <div class="table-filters">
+        <input type="text" id="fUtente" class="filter-input"
+               placeholder="Cerca per nome, username o email…" oninput="filterUsers()">
+        <select id="fRuolo" class="filter-select" onchange="filterUsers()">
+            <option value="">Tutti i ruoli</option>
+            <option value="Admin">Admin</option>
+            <option value="Editor">Editor</option>
+            <option value="Data">Data</option>
+        </select>
+        <button class="btn-reset-filters" onclick="resetUsers()">Azzera</button>
+        <span id="countUsers" class="filter-count"></span>
+    </div>
+
+    <section>
+        <table id="UsersTable">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Cognome</th>
+                    <th>UserName</th>
+                    <th>Email</th>
+                    <th>Ruoli</th>
+                    <th>Azioni</th>
+                    <th>Elimina</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
                     <tr>
-                        <th>Nome</th>
-                        <th>Cognome</th>
-                        <th>UserName</th>
-                        <th>Email</th>
-                        <th>Ruoli</th>
-                        <th>Reset</th>
-                        <th>Elimina</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach(var user in Model)
-                    {
-                        <tr>
-                            <td>@user.FirstName</td>
-                            <td>@user.LastName</td>
-                            <td>@user.UserName</td>
-                            <td>@user.Email</td>
-                            <td>@string.Join(", ", user.Roles)</td>
-                            <td>
-                                <a asp-action="ResetPassword" asp-controller="User" asp-route-id="@user.Id">Reset Password</a>
-                                <br />
-                                <a asp-action="EditRoles" asp-controller="User" asp-route-id="@user.Id">Modifica Ruoli</a>
-                            </td>
-                            <td>
-                                <!-- Modulo per la richiesta POST di eliminazione -->
-                            <form asp-area="Admin" asp-controller="User" asp-action="Delete" asp-route-id="@user.Id" method="post" onsubmit="return confirm('Vuoi eliminare questo utente?')">
+                        <td>@user.FirstName</td>
+                        <td>@user.LastName</td>
+                        <td>@user.UserName</td>
+                        <td>@user.Email</td>
+                        <td>@string.Join(", ", user.Roles)</td>
+                        <td>
+                            <a asp-action="ResetPassword" asp-controller="User" asp-route-id="@user.Id">Reset Password</a>
+                            <br />
+                            <a asp-action="EditRoles" asp-controller="User" asp-route-id="@user.Id">Modifica Ruoli</a>
+                        </td>
+                        <td>
+                            <form asp-area="Admin" asp-controller="User" asp-action="Delete"
+                                  asp-route-id="@user.Id" method="post"
+                                  onsubmit="return confirm('Vuoi eliminare questo utente?')">
                                 <button type="submit" class="btn btn-danger" title="Elimina">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
                             </form>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </section>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </section>
 </main>
 
+@section Scripts {
+<script>
+    // colonne: 0=Nome 1=Cognome 2=UserName 3=Email 4=Ruoli
+    function filterUsers() {
+        const term   = document.getElementById('fUtente').value.toLowerCase();
+        const ruolo  = document.getElementById('fRuolo').value.toLowerCase();
+        const rows   = document.querySelectorAll('#UsersTable tbody tr');
+        let visible  = 0;
+
+        rows.forEach(row => {
+            const c = row.cells;
+            const textMatch = !term ||
+                c[0].textContent.toLowerCase().includes(term) ||
+                c[1].textContent.toLowerCase().includes(term) ||
+                c[2].textContent.toLowerCase().includes(term) ||
+                c[3].textContent.toLowerCase().includes(term);
+            const ruoloMatch = !ruolo || c[4].textContent.toLowerCase().includes(ruolo);
+            const match = textMatch && ruoloMatch;
+            row.style.display = match ? '' : 'none';
+            if (match) visible++;
+        });
+
+        const total = rows.length;
+        document.getElementById('countUsers').textContent =
+            (term || ruolo) ? visible + ' / ' + total : '';
+    }
+
+    function resetUsers() {
+        document.getElementById('fUtente').value = '';
+        document.getElementById('fRuolo').selectedIndex = 0;
+        filterUsers();
+    }
+</script>
+}

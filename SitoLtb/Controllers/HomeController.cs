@@ -145,6 +145,9 @@ namespace SitoLtb.Controllers
             return Redirect(Url.IsLocalUrl(returnUrl) ? returnUrl! : Url.Action(nameof(Contatti))!);
         }
 
+        public IActionResult PrivacyPolicy()   => View();
+        public IActionResult Accessibilita()    => View();
+
         // ── Error ────────────────────────────────────────────────────────────
         [Route("/Home/Error")]
         public IActionResult Error() =>

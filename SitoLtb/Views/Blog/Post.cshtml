@@ -1,4 +1,4 @@
-﻿@model SitoLtb.ViewModels.BlogPostVM
+@model SitoLtb.ViewModels.BlogPostVM
 
 @{
     string Bg(string? img) =>
@@ -31,3 +31,47 @@
     </article>
 
 </section>
+
+@if (Model.RelatedPosts.Any())
+{
+    <section class="related-posts">
+        <div class="related-posts__header">
+            <h2 class="related-posts__title">Potrebbe anche interessarti</h2>
+            <div class="related-posts__nav">
+                <button class="related-nav" id="relatedPrev" aria-label="Precedente">&#8249;</button>
+                <button class="related-nav" id="relatedNext" aria-label="Successivo">&#8250;</button>
+            </div>
+        </div>
+
+        <div class="related-slider" id="relatedSlider">
+            @foreach (var post in Model.RelatedPosts)
+            {
+                <a class="related-card" href="/Blog/@post.Url">
+                    <div class="related-card__img"
+                         style="background-image:url('@Bg(post.ThumbnailUrl)');">
+                        <span class="related-card__overlay"></span>
+                    </div>
+                    <div class="related-card__body">
+                        <h3 class="related-card__title">@post.Title</h3>
+                        <div class="related-card__author">
+                            <span class="related-card__author-icon">✍</span>
+                            @post.AuthorName
+                        </div>
+                    </div>
+                </a>
+            }
+        </div>
+    </section>
+
+    <script>
+        (function () {
+            const slider  = document.getElementById('relatedSlider');
+            const gap     = 20;
+            const step    = () => slider.querySelector('.related-card').offsetWidth + gap;
+            document.getElementById('relatedPrev').addEventListener('click', () =>
+                slider.scrollBy({ left: -step(), behavior: 'smooth' }));
+            document.getElementById('relatedNext').addEventListener('click', () =>
+                slider.scrollBy({ left:  step(), behavior: 'smooth' }));
+        })();
+    </script>
+}

@@ -1,0 +1,97 @@
+@model SitoLtb.ViewModels.CoordinazioneIndexVM
+@{
+    ViewData["Title"] = "Coordinazione";
+}
+
+<div class="coord-page">
+
+    <!-- KPI Bar -->
+    <div class="coord-kpi-bar">
+        <div class="coord-kpi">
+            <span class="coord-kpi__val">@Model.TotaleProgetti</span>
+            <span class="coord-kpi__label">Totale</span>
+        </div>
+        <div class="coord-kpi coord-kpi--green">
+            <span class="coord-kpi__val">@Model.ProgettiAttivi</span>
+            <span class="coord-kpi__label">Attivi</span>
+        </div>
+        <div class="coord-kpi coord-kpi--blue">
+            <span class="coord-kpi__val">@Model.ProgettiCompletati</span>
+            <span class="coord-kpi__label">Completati</span>
+        </div>
+        <div class="coord-kpi coord-kpi--orange">
+            <span class="coord-kpi__val">@Model.ProgettiSospesi</span>
+            <span class="coord-kpi__label">Sospesi</span>
+        </div>
+        <a asp-action="Crea" class="coord-new-btn">
+            <i class="fas fa-plus"></i> Nuovo Progetto
+        </a>
+    </div>
+
+    @if (!Model.Progetti.Any())
+    {
+        <div class="coord-empty">
+            <i class="fas fa-folder-open"></i>
+            <p>Nessun progetto ancora. <a asp-action="Crea">Crea il primo!</a></p>
+        </div>
+    }
+    else
+    {
+        <div class="proj-grid">
+            @foreach (var p in Model.Progetti)
+            {
+                <a asp-action="Dettaglio" asp-route-id="@p.IdProgetto" class="proj-card" style="--proj-color:@p.Colore">
+                    <div class="proj-card__top">
+                        <div class="proj-card__color-bar"></div>
+                        <div class="proj-card__header">
+                            <span class="proj-card__title">@p.Titolo</span>
+                            @{
+                                var statoClass = p.Stato switch {
+                                    SitoLtb.Models.StatoProgetto.Completato => "badge-completato",
+                                    SitoLtb.Models.StatoProgetto.Sospeso => "badge-sospeso",
+                                    _ => "badge-attivo"
+                                };
+                                var statoLabel = p.Stato switch {
+                                    SitoLtb.Models.StatoProgetto.Completato => "Completato",
+                                    SitoLtb.Models.StatoProgetto.Sospeso => "Sospeso",
+                                    _ => "Attivo"
+                                };
+                            }
+                            <span class="proj-badge @statoClass">@statoLabel</span>
+                        </div>
+                        @if (!string.IsNullOrEmpty(p.Descrizione))
+                        {
+                            <p class="proj-card__desc">@(p.Descrizione!.Length > 90 ? p.Descrizione[..90] + "…" : p.Descrizione)</p>
+                        }
+                    </div>
+
+                    <div class="proj-card__progress">
+                        <div class="proj-progress-bar">
+                            <div class="proj-progress-fill" style="width:@p.Avanzamento%"></div>
+                        </div>
+                        <span class="proj-progress-pct">@p.Avanzamento%</span>
+                    </div>
+
+                    <div class="proj-card__footer">
+                        <div class="proj-card__meta">
+                            @if (p.ReferenteNome != null)
+                            {
+                                <span><i class="fas fa-user-tie"></i> @p.ReferenteNome</span>
+                            }
+                            @if (p.DataScadenza.HasValue)
+                            {
+                                var scClass = p.IsScaduto ? "text-danger" : p.IsInScadenza ? "text-warning" : "";
+                                <span class="@scClass"><i class="fas fa-calendar-alt"></i> @p.DataScadenza.Value.ToString("dd/MM/yyyy")</span>
+                            }
+                        </div>
+                        <div class="proj-card__counts">
+                            <span title="Task"><i class="fas fa-tasks"></i> @p.TaskRisolte/@p.TotaleTask</span>
+                            <span title="Membri"><i class="fas fa-users"></i> @p.NumMembri</span>
+                            <span title="Note"><i class="fas fa-sticky-note"></i> @p.NumNote</span>
+                        </div>
+                    </div>
+                </a>
+            }
+        </div>
+    }
+</div>

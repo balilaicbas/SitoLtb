@@ -53,11 +53,11 @@ namespace SitoLtb.Areas.Admin.Controllers
             var loggedInUserRole = await _userManager.GetRolesAsync(loggedInUser!);
             if (loggedInUserRole[0] == WebsiteRoles.WebsiteAdmin)
             {
-                listOfPosts = await _context.Posts!.Include(x => x.ApplicationUser).ToListAsync();
+                listOfPosts = await _context.Posts!.Include(x => x.ApplicationUser).Where(x => x.DateTimeCreated >= DateTime.Today).ToListAsync();
             }
             else
             {
-                listOfPosts = await _context.Posts!.Include(x => x.ApplicationUser).Where(x => x.ApplicationUser!.Id == loggedInUser!.Id).ToListAsync();
+                listOfPosts = await _context.Posts!.Include(x => x.ApplicationUser).Where(x => x.ApplicationUser!.Id == loggedInUser!.Id && x.DateTimeCreated >= DateTime.Today).ToListAsync();
             }
 
             var listOfPostsVM = listOfPosts.Select(x => new PostVM()

@@ -1,6 +1,5 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SitoLtb.Data;
@@ -16,24 +15,18 @@ namespace SitoLtb.Area.Admin.Controllers
     public class TournamentController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
         public INotyfService _notification { get; }
 
-         public TournamentController(ApplicationDbContext context,
-             UserManager<ApplicationUser> userManager,
-             INotyfService notyfService)
+        public TournamentController(ApplicationDbContext context, INotyfService notyfService)
         {
             _context = context;
             _notification = notyfService;
-            _userManager = userManager;
         }
+
         [HttpGet]
         public async Task<IActionResult> Index(int? page)
         {
-            var listOfTournaments = await _context.Tournaments.ToListAsync(); ;
-
-            var loggedInUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
-
+            var listOfTournaments = await _context.Tournaments.Where(x => x.Data >= DateTime.Today).ToListAsync();
 
             var listOfTournamentsVM = listOfTournaments.Select(x => new TournamentVM()
             {
@@ -61,9 +54,6 @@ namespace SitoLtb.Area.Admin.Controllers
         public async Task<IActionResult> Create(CreateTournamentVM vm)
         {
             if (!ModelState.IsValid) { return View(vm); }
-
-            //get logged in user id
-            var loggedInUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
 
             var tournament = new Tournament();
 
@@ -93,10 +83,6 @@ namespace SitoLtb.Area.Admin.Controllers
         {
             var tournament = await _context.Tournaments!.FirstOrDefaultAsync(x => x.Id == id);
 
-            var loggedInUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
-
-
-
             _context.Tournaments!.Remove(tournament!);
             await _context.SaveChangesAsync();
             _notification.Success("Torneo eliminato");
@@ -115,10 +101,6 @@ namespace SitoLtb.Area.Admin.Controllers
                 return View();
             }
 
-            var loggedInUser = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName == User.Identity!.Name);
-
-
-
             var vm = new CreateTournamentVM()
             {
                 Id = tournament.Id,
@@ -126,8 +108,9 @@ namespace SitoLtb.Area.Admin.Controllers
                 Data = tournament.Data,
                 LinkBando = tournament.LinkBando,
                 LinkPreiscrizione = tournament.LinkPreiscrizione,
-                Tipologia=tournament.Tipologia,
-                Elo= tournament.Elo,
+                Tipologia = tournament.Tipologia,
+                Sede = tournament.Sede,
+                Elo = tournament.Elo,
             };
 
             return View(vm);
@@ -144,12 +127,13 @@ namespace SitoLtb.Area.Admin.Controllers
                 return View();
             }
 
-            tournament.Nome= vm.Nome;
+            tournament.Nome = vm.Nome;
             tournament.Data = vm.Data;
             tournament.LinkBando = vm.LinkBando;
             tournament.LinkPreiscrizione = vm.LinkPreiscrizione;
+            tournament.Tipologia = vm.Tipologia;
+            tournament.Sede = vm.Sede;
 
-          
             await _context.SaveChangesAsync();
             _notification.Success("Torneo aggiornato con successo");
             return RedirectToAction("Index", "Tournament", new { area = "Admin" });

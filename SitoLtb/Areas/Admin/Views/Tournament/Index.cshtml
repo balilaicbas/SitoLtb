@@ -1,4 +1,4 @@
-﻿@using X.PagedList
+@using X.PagedList
 @using X.PagedList.Mvc.Core
 @using X.PagedList.Web.Common
 @model IPagedList<SitoLtb.ViewModels.TournamentVM>
@@ -12,11 +12,30 @@
         <h4>Lista dei tornei</h4>
     </div>
 
+    <div class="table-filters">
+        <input type="text"   id="fNome"      class="filter-input"  placeholder="Nome…"      oninput="filterTournaments()">
+        <input type="text"   id="fSede"      class="filter-input"  placeholder="Sede…"      oninput="filterTournaments()">
+        <select              id="fTipologia" class="filter-select"                           onchange="filterTournaments()">
+            <option value="">Tutte le tipologie</option>
+            <option>Standard</option>
+            <option>Rapid</option>
+            <option>Blitz</option>
+            <option>Eterodosso</option>
+        </select>
+        <select              id="fElo"       class="filter-select"                           onchange="filterTournaments()">
+            <option value="">Elo: tutti</option>
+            <option value="si">Sì</option>
+            <option value="no">No</option>
+        </select>
+        <button class="btn-reset-filters" onclick="resetTournaments()">Azzera</button>
+        <span id="countTournaments" class="filter-count"></span>
+    </div>
+
     <section>
         <table id="UsersTable">
             <thead>
                 <tr>
-                    <th>Data Torneo</th>
+                    <th>Data</th>
                     <th>Nome</th>
                     <th>Tipologia</th>
                     <th>Link preiscrizione</th>
@@ -35,20 +54,29 @@
                         <td>@tournament.Nome</td>
                         <td>@tournament.Tipologia</td>
                         <td>
-                            <a href="@tournament.LinkPreiscrizione" target="_blank">Link</a>
+                            @if (!string.IsNullOrEmpty(tournament.LinkPreiscrizione))
+                            {
+                                <a href="@tournament.LinkPreiscrizione" target="_blank">Link</a>
+                            }
+                            else { <span class="text-muted">—</span> }
                         </td>
                         <td>
-                            <a href="@tournament.LinkBando" target="_blank">Bando</a>
+                            @if (!string.IsNullOrEmpty(tournament.LinkBando))
+                            {
+                                <a href="@tournament.LinkBando" target="_blank">Bando</a>
+                            }
+                            else { <span class="text-muted">—</span> }
                         </td>
-                        <td>@tournament.Tipologia</td>
-                        <td>@(tournament.Elo == true ? "si" : "no")</td>
+                        <td>@tournament.Sede</td>
+                        <td>@(tournament.Elo ? "sì" : "no")</td>
                         <td>
                             <a asp-area="Admin" asp-controller="Tournament" asp-action="Edit" asp-route-id="@tournament.Id">
                                 <i class="fas fa-edit"></i> Modifica
                             </a>
                         </td>
                         <td>
-                            <form asp-area="Admin" asp-controller="Tournament" asp-action="Delete" asp-route-id="@tournament.Id" method="post" onsubmit="return confirm('Sei sicuro di voler eliminare questo torneo?');">
+                            <form asp-area="Admin" asp-controller="Tournament" asp-action="Delete" asp-route-id="@tournament.Id" method="post"
+                                  onsubmit="return confirm('Sei sicuro di voler eliminare questo torneo?');">
                                 <button type="submit" class="btn btn-danger" title="Elimina">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
@@ -61,17 +89,51 @@
     </section>
 
     <div class="pagination-container">
-        Page @(Model?.PageCount < Model?.PageNumber ? 0 : Model?.PageNumber) of @Model?.PageCount
-
-        @Html.PagedListPager(Model, page => Url.Action("Index",
-                 new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }),
-                 new PagedListRenderOptions()
-        {
-            ContainerDivClasses = new List<string> { "blog", "navigation" },
-            UlElementClasses = new List<string> { "pagination" },
-            LiElementClasses = new List<string> { "page-item" },
-            ActiveLiElementClass = "active",
-            PageClasses = new List<string> { "page-link" }
-        })
+        Pagina @(Model?.PageCount < Model?.PageNumber ? 0 : Model?.PageNumber) di @Model?.PageCount
+        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }),
+            new PagedListRenderOptions {
+                ContainerDivClasses = new List<string> { "blog", "navigation" },
+                UlElementClasses    = new List<string> { "pagination" },
+                LiElementClasses    = new List<string> { "page-item" },
+                ActiveLiElementClass = "active",
+                PageClasses         = new List<string> { "page-link" }
+            })
     </div>
 </main>
+
+@section Scripts {
+<script>
+    // colonne: 0=Data 1=Nome 2=Tipologia 3=LinkPreisc 4=LinkBando 5=Sede 6=Elo
+    function filterTournaments() {
+        const nome     = document.getElementById('fNome').value.toLowerCase();
+        const sede     = document.getElementById('fSede').value.toLowerCase();
+        const tipo     = document.getElementById('fTipologia').value.toLowerCase();
+        const elo      = document.getElementById('fElo').value.toLowerCase();
+        const rows     = document.querySelectorAll('#UsersTable tbody tr');
+        let visible    = 0;
+
+        rows.forEach(row => {
+            const c = row.cells;
+            const match =
+                (!nome || c[1].textContent.toLowerCase().includes(nome)) &&
+                (!sede || c[5].textContent.toLowerCase().includes(sede)) &&
+                (!tipo || c[2].textContent.toLowerCase().includes(tipo)) &&
+                (!elo  || c[6].textContent.toLowerCase().includes(elo));
+            row.style.display = match ? '' : 'none';
+            if (match) visible++;
+        });
+
+        const total = rows.length;
+        document.getElementById('countTournaments').textContent =
+            (nome || sede || tipo || elo) ? visible + ' / ' + total : '';
+    }
+
+    function resetTournaments() {
+        ['fNome','fSede','fTipologia','fElo'].forEach(id => {
+            const el = document.getElementById(id);
+            el.tagName === 'SELECT' ? el.selectedIndex = 0 : el.value = '';
+        });
+        filterTournaments();
+    }
+</script>
+}

@@ -10,5 +10,6 @@ namespace SitoLtb.ViewModels
         public DateTime CreatedDate { get; set; } = DateTime.Now;
         public string ThumbnailUrl { get; set; }
         public string Description { get; set; }
+        public string? Url { get; set; }
     }
 }

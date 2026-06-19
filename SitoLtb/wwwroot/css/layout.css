@@ -354,7 +354,6 @@ body {
     width: 100%;
     min-height: 100vh;
     padding-top: calc(var(--header-h) + var(--gap-under-header));
-    padding-bottom: 90px;
 }
 
 /* ============ Header ============ */
@@ -885,24 +884,153 @@ body {
 }
 
 /* ============ Footer ============ */
-footer {
+.main-footer {
+    width: 100%;
+    background: #1a1a2e;
+    color: #e8e8e8;
+    margin-top: 80px;
+}
+
+/* WhatsApp fisso ─ bottom-right */
+.wa-fixed {
     position: fixed;
-    bottom: 0;
-    left: 0;
+    bottom: 24px;
+    left: 24px;
     z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #25d366;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 12px 20px 12px 12px;
+    border-radius: 50px;
+    box-shadow: 0 4px 16px rgba(0,0,0,.28);
+    transition: transform .2s, box-shadow .2s;
+}
+.wa-fixed:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0,0,0,.35);
+    color: #fff;
+}
+.wa-fixed img {
+    width: 48px;
+    height: 48px;
+    object-fit: contain;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+@media (max-width: 560px) {
+    .wa-fixed span { display: none; }
+    .wa-fixed { padding: 10px; border-radius: 50%; }
 }
 
-@media (max-width: 520px) {
-    footer {
-        position: static;
-    }
+.footer-inner {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 56px 40px 48px;
+}
 
-    body {
-        padding-bottom: 0;
+.footer-heading {
+    font-size: .92rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: #fff;
+    margin: 0 0 18px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #b30000;
+}
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.footer-links a {
+    color: rgba(255,255,255,.62);
+    text-decoration: none;
+    font-size: .9rem;
+    line-height: 1.45;
+    transition: color .18s, padding-left .18s;
+    display: inline-block;
+}
+
+.footer-links a:hover {
+    color: #fff;
+    padding-left: 5px;
+}
+
+.footer-bottom {
+    border-top: 1px solid rgba(255,255,255,.10);
+}
+
+.footer-bottom-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.footer-copy {
+    margin: 0;
+    font-size: .82rem;
+    color: rgba(255,255,255,.40);
+}
+
+.footer-whatsapp {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: rgba(255,255,255,.70);
+    font-size: .88rem;
+    font-weight: 600;
+    transition: color .18s;
+}
+
+.footer-whatsapp:hover { color: #fff; }
+
+.footer-whatsapp img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    border-radius: 6px;
+}
+
+@media (max-width: 900px) {
+    .footer-inner {
+        grid-template-columns: 1fr 1fr;
+        gap: 32px;
+        padding: 44px 28px 40px;
     }
 }
 
-*/
+@media (max-width: 560px) {
+    .footer-inner {
+        grid-template-columns: 1fr;
+        gap: 28px;
+        padding: 36px 20px 32px;
+    }
+    .footer-bottom-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 18px 20px;
+    }
+}
 /* ============ Section 6 (before/after) ============ */
 /* Sezione contenitore: nessun vincolo di altezza fissa */
 
@@ -2174,4 +2302,125 @@ main {
     .torneo-dl-row   { grid-template-columns: 1fr; gap: 2px; }
     .cal-nav         { padding: 14px 16px; }
 }
+
+/* =========================
+   PRIVACY POLICY
+========================= */
+.privacy-page {
+    max-width: 860px;
+}
+
+.privacy-updated {
+    text-align: center;
+    color: #888;
+    font-size: .9rem;
+    margin-bottom: 48px;
+    font-style: italic;
+}
+
+.privacy-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.privacy-section {
+    padding: 32px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.privacy-section:last-child {
+    border-bottom: none;
+}
+
+.privacy-section h2 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: #111;
+    margin-bottom: 14px;
+    padding-left: 14px;
+    border-left: 4px solid #b30000;
+}
+
+.privacy-section p,
+.privacy-section li {
+    font-size: .97rem;
+    color: #333;
+    line-height: 1.75;
+}
+
+.privacy-section ul {
+    padding-left: 20px;
+    margin: 10px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.privacy-section a {
+    color: #b30000;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.privacy-section a:hover {
+    text-decoration: underline;
+}
+
+.privacy-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 14px;
+    font-size: .93rem;
+}
+
+.privacy-table th {
+    background: #b30000;
+    color: #fff;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 700;
+}
+
+.privacy-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #eee;
+    color: #333;
+    vertical-align: top;
+}
+
+.privacy-table tbody tr:nth-child(even) td {
+    background: #fafafa;
+}
+
+@media (max-width: 600px) {
+    .privacy-table thead { display: none; }
+    .privacy-table td {
+        display: block;
+        padding: 8px 12px;
+    }
+    .privacy-table td:first-child {
+        font-weight: 700;
+        padding-top: 14px;
+    }
+    .privacy-table tr {
+        display: block;
+        border-bottom: 1px solid #ddd;
+        margin-bottom: 4px;
+    }
+}
+
+/* Link Gestionale / Accedi nella navbar pubblica */
+.nav-gestionale,
+.nav-login {
+    font-weight: 600 !important;
+    border: 1.5px solid currentColor;
+    border-radius: 20px !important;
+    padding: .3rem .9rem !important;
+    transition: background .2s, color .2s !important;
+}
+.nav-gestionale { color: #f6c23e !important; border-color: #f6c23e; }
+.nav-gestionale:hover { background: #f6c23e !important; color: #1a1a2e !important; }
+.nav-login { color: rgba(255,255,255,.85) !important; border-color: rgba(255,255,255,.6); }
+.nav-login:hover { background: rgba(255,255,255,.15) !important; color: #fff !important; }
 

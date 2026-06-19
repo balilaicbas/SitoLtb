@@ -1,0 +1,37 @@
+@{
+    ViewData["Title"] = "Seed — risultato";
+    var log = ViewBag.Log as List<(string cls, string msg)> ?? [];
+    int ok   = log.Count(e => e.cls == "ok");
+    int skip = log.Count(e => e.cls == "skip");
+    int err  = log.Count(e => e.cls == "err");
+}
+
+<main style="padding:40px;max-width:700px">
+    <h2 style="color:darkslateblue;margin-bottom:4px">Seed completato</h2>
+    <p style="color:#888;margin-bottom:24px">
+        <strong style="color:#1cc88a">@ok OK</strong> &nbsp;·&nbsp;
+        <strong style="color:#f6c23e">@skip saltati</strong> &nbsp;·&nbsp;
+        <strong style="color:#e74a3b">@err errori</strong>
+    </p>
+
+    <div style="border:1px solid #e5e5e5;border-radius:8px;overflow:hidden;font-size:0.88rem;font-family:monospace">
+        @foreach (var (cls, msg) in log)
+        {
+            var bg    = cls == "ok"   ? "#f0fdf4" : cls == "skip" ? "#fffbeb" : "#fff1f1";
+            var color = cls == "ok"   ? "#166534" : cls == "skip" ? "#92400e" : "#991b1b";
+            var icon  = cls == "ok"   ? "✓"       : cls == "skip" ? "–"       : "✗";
+            <div style="padding:8px 16px;background:@bg;border-bottom:1px solid #eee;color:@color">
+                <span style="margin-right:8px;font-weight:700">@icon</span>@msg
+            </div>
+        }
+    </div>
+
+    <div style="margin-top:24px;display:flex;gap:12px">
+        <a href="/Admin/Data" class="submit-button" style="text-decoration:none;display:inline-block;padding:10px 20px">
+            Vai alla Dashboard
+        </a>
+        <a href="/Admin/Seed" style="padding:10px 20px;border:1px solid #ccc;border-radius:6px;color:#555;text-decoration:none">
+            Riesegui
+        </a>
+    </div>
+</main>

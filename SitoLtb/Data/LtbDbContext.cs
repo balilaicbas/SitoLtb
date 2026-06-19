@@ -1,656 +1,186 @@
-﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
 namespace SitoLtb.Data;
 
-public partial class LtbDbContext : DbContext
+public class LtbDbContext(DbContextOptions<LtbDbContext> options) : DbContext(options)
 {
-    public LtbDbContext()
-    {
-    }
 
-    public LtbDbContext(DbContextOptions<LtbDbContext> options)
-        : base(options)
-    {
-    }
+    // anag schema
+    public DbSet<LtbCircolo> Circoli { get; set; } = null!;
+    public DbSet<LtbFornitore> Fornitori { get; set; } = null!;
+    public DbSet<LtbGiocatore> Giocatori { get; set; } = null!;
+    public DbSet<LtbLivello> Livelli { get; set; } = null!;
+    public DbSet<LtbScuola> Scuole { get; set; } = null!;
+    public DbSet<LtbTipoEvento> TipiEvento { get; set; } = null!;
+    public DbSet<LtbTipoScuola> TipiScuola { get; set; } = null!;
 
-    public virtual DbSet<Agonisti> Agonistis { get; set; }
+    // hist schema
+    public DbSet<LtbEloScore> EloScores { get; set; } = null!;
 
-    public virtual DbSet<Allievi> Allievis { get; set; }
-
-    public virtual DbSet<AnnoAgonistico> AnnoAgonisticos { get; set; }
-
-    public virtual DbSet<ClasseAllievo> ClasseAllievos { get; set; }
-
-    public virtual DbSet<ClasseLavoratore> ClasseLavoratores { get; set; }
-
-    public virtual DbSet<Classi> Classis { get; set; }
-
-    public virtual DbSet<ControlliRicorrenti> ControlliRicorrentis { get; set; }
-
-    public virtual DbSet<Cooperazioni> Cooperazionis { get; set; }
-
-    public virtual DbSet<Eventi> Eventis { get; set; }
-
-    public virtual DbSet<Lavoratori> Lavoratoris { get; set; }
-
-    public virtual DbSet<Partecipanti> Partecipantis { get; set; }
-
-    public virtual DbSet<Persone> Persones { get; set; }
-
-    public virtual DbSet<Poli> Polis { get; set; }
-
-    public virtual DbSet<PoloScuola> PoloScuolas { get; set; }
-
-    public virtual DbSet<RealtaEsternaPersona> RealtaEsternaPersonas { get; set; }
-
-    public virtual DbSet<RealtaEsterne> RealtaEsternes { get; set; }
-
-    public virtual DbSet<Scuole> Scuoles { get; set; }
-
-    public virtual DbSet<Soci> Socis { get; set; }
-
-    public virtual DbSet<SocioPolo> SocioPolos { get; set; }
+    // orga schema
+    public DbSet<LtbCorso> Corsi { get; set; } = null!;
+    public DbSet<LtbEvento> Eventi { get; set; } = null!;
+    public DbSet<LtbPartecipanteCorso> PartecipantiCorsi { get; set; } = null!;
+    public DbSet<LtbPartecipanteTorneo> PartecipantiTornei { get; set; } = null!;
+    public DbSet<LtbSocio> Soci { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Agonisti>(entity =>
+        // ── anag.Circoli ──────────────────────────────────────────────────
+        modelBuilder.Entity<LtbCircolo>(e =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Agonisti__3213E83F2CC2EB13");
-
-            entity.ToTable("Agonisti");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Allievo).HasColumnName("allievo");
-            entity.Property(e => e.AnnoPrimaIscrizione).HasColumnName("annoPrimaIscrizione");
-            entity.Property(e => e.Cognome)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("cognome");
-            entity.Property(e => e.Email)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("email");
-            entity.Property(e => e.FkidPolo).HasColumnName("FKidPolo");
-            entity.Property(e => e.IdFide)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("idFide");
-            entity.Property(e => e.IdFsi)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("idFsi");
-            entity.Property(e => e.Lavoratore).HasColumnName("lavoratore");
-            entity.Property(e => e.Nome)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("nome");
-            entity.Property(e => e.Partecipante).HasColumnName("partecipante");
-            entity.Property(e => e.Socio).HasColumnName("socio");
-            entity.Property(e => e.Telefono)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("telefono");
-            entity.Property(e => e.TipoTessera)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("tipoTessera");
-
-            entity.HasOne(d => d.FkidPoloNavigation).WithMany(p => p.Agonistis)
-                .HasForeignKey(d => d.FkidPolo)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("Fk_AgonistaPolo");
+            e.ToTable("Circoli", schema: "anag");
+            e.HasKey(x => x.IdCircolo).HasName("PK_Circoli");
+            e.Property(x => x.RagioneSociale).HasMaxLength(100).IsRequired();
+            e.Property(x => x.Indirizzo).HasMaxLength(100);
+            e.Property(x => x.Localita).HasMaxLength(100).HasColumnName("Località");
+            e.Property(x => x.Note).HasMaxLength(10).IsFixedLength();
         });
 
-        modelBuilder.Entity<Allievi>(entity =>
+        // ── anag.Fornitori ────────────────────────────────────────────────
+        modelBuilder.Entity<LtbFornitore>(e =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Allievi__3213E83F25A9DF33");
-
-            entity.ToTable("Allievi");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Agonista).HasColumnName("agonista");
-            entity.Property(e => e.Cognome)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("cognome");
-            entity.Property(e => e.Elo).HasColumnName("elo");
-            entity.Property(e => e.Email)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("email");
-            entity.Property(e => e.Eta).HasColumnName("eta");
-            entity.Property(e => e.Lavoratore).HasColumnName("lavoratore");
-            entity.Property(e => e.Nome)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("nome");
-            entity.Property(e => e.Partecipante).HasColumnName("partecipante");
-            entity.Property(e => e.Socio).HasColumnName("socio");
-            entity.Property(e => e.Telefono)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("telefono");
+            e.ToTable("Fornitori", schema: "anag");
+            e.HasKey(x => x.IdFornitore).HasName("PK_Fornitori");
+            e.Property(x => x.RagioneSociale).HasMaxLength(100).IsRequired();
+            e.Property(x => x.Indirizzo).HasMaxLength(100);
+            e.Property(x => x.NumeroCivico).HasMaxLength(10).IsFixedLength();
+            e.Property(x => x.Email).HasMaxLength(50);
         });
 
-        modelBuilder.Entity<AnnoAgonistico>(entity =>
+        // ── anag.Giocatori ────────────────────────────────────────────────
+        modelBuilder.Entity<LtbGiocatore>(e =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("AnnoAgonistico");
-
-            entity.Property(e => e.Anno).HasColumnName("anno");
-            entity.Property(e => e.FkidAgonista).HasColumnName("FKidAgonista");
-            entity.Property(e => e.NTorneiSvolti).HasColumnName("nTorneiSvolti");
-            entity.Property(e => e.VariazioneElo).HasColumnName("variazioneElo");
-
-            entity.HasOne(d => d.FkidAgonistaNavigation).WithMany()
-                .HasForeignKey(d => d.FkidAgonista)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__AnnoAgoni__FKidA__3493CFA7");
+            e.ToTable("Giocatori", schema: "anag");
+            e.HasKey(x => x.IdGiocatore).HasName("PK_Giocatori");
+            e.Property(x => x.Nome).HasMaxLength(50);
+            e.Property(x => x.Cognome).HasMaxLength(50);
+            e.Property(x => x.Indirizzo).HasMaxLength(100);
+            e.Property(x => x.Email).HasMaxLength(50);
+            e.Property(x => x.NumeroCivico).HasMaxLength(10).IsFixedLength();
+            e.Property(x => x.Localita).HasMaxLength(100);
         });
 
-        modelBuilder.Entity<ClasseAllievo>(entity =>
+        // ── anag.Livello ──────────────────────────────────────────────────
+        modelBuilder.Entity<LtbLivello>(e =>
         {
-            entity.HasKey(e => new { e.FkidClasse, e.FkidAllievo, e.Anno }).HasName("PKClasseAllievo");
-
-            entity.ToTable("ClasseAllievo");
-
-            entity.Property(e => e.FkidClasse).HasColumnName("FKidClasse");
-            entity.Property(e => e.FkidAllievo).HasColumnName("FKidAllievo");
-            entity.Property(e => e.Anno).HasColumnName("anno");
-
-            entity.HasOne(d => d.FkidAllievoNavigation).WithMany(p => p.ClasseAllievos)
-                .HasForeignKey(d => d.FkidAllievo)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ClasseAll__FKidA__07C12930");
-
-            entity.HasOne(d => d.FkidClasseNavigation).WithMany(p => p.ClasseAllievos)
-                .HasForeignKey(d => d.FkidClasse)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ClasseAll__FKidC__06CD04F7");
+            e.ToTable("Livello", schema: "anag");
+            e.HasKey(x => x.IdLivello).HasName("PK_Livello");
+            e.Property(x => x.IdLivello).ValueGeneratedNever(); // no IDENTITY
+            e.Property(x => x.Descrizione).HasMaxLength(150).IsRequired();
         });
 
-        modelBuilder.Entity<ClasseLavoratore>(entity =>
+        // ── anag.TipoScuola ───────────────────────────────────────────────
+        modelBuilder.Entity<LtbTipoScuola>(e =>
         {
-            entity.HasKey(e => new { e.FkidClasse, e.FkidLavoratore, e.Anno }).HasName("PKClasseLavoratore");
-
-            entity.ToTable("ClasseLavoratore");
-
-            entity.Property(e => e.FkidClasse).HasColumnName("FKidClasse");
-            entity.Property(e => e.FkidLavoratore).HasColumnName("FKidLavoratore");
-            entity.Property(e => e.Anno).HasColumnName("anno");
-
-            entity.HasOne(d => d.FkidClasseNavigation).WithMany(p => p.ClasseLavoratores)
-                .HasForeignKey(d => d.FkidClasse)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ClasseLav__FKidC__01142BA1");
-
-            entity.HasOne(d => d.FkidLavoratoreNavigation).WithMany(p => p.ClasseLavoratores)
-                .HasForeignKey(d => d.FkidLavoratore)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__ClasseLav__FKidL__02084FDA");
+            e.ToTable("TipoScuola", schema: "anag");
+            e.HasKey(x => x.IdTipoScuola).HasName("PK_TipoScuola");
+            e.Property(x => x.Descrizione).HasMaxLength(100);
         });
 
-        modelBuilder.Entity<Classi>(entity =>
+        // ── anag.Scuole ───────────────────────────────────────────────────
+        modelBuilder.Entity<LtbScuola>(e =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Classi__3213E83F30F9F908");
-
-            entity.ToTable("Classi");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Argomento)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("argomento");
-            entity.Property(e => e.Data).HasColumnName("data");
-            entity.Property(e => e.FkidScuola).HasColumnName("FKidScuola");
-            entity.Property(e => e.Nome)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("nome");
-
-            entity.HasOne(d => d.FkidScuolaNavigation).WithMany(p => p.Classis)
-                .HasForeignKey(d => d.FkidScuola)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Classi__FKidScuo__7E37BEF6");
+            e.ToTable("Scuole", schema: "anag");
+            e.HasKey(x => x.IdScuola).HasName("PK_Scuole");
+            e.Property(x => x.Nome).HasMaxLength(50).IsRequired();
+            e.Property(x => x.Descrizione).HasMaxLength(50);
+            e.HasOne(x => x.TipoScuola)
+             .WithMany(x => x.Scuole)
+             .HasForeignKey(x => x.IdTipoScuola)
+             .HasConstraintName("FK_Scuole_TipoScuola");
         });
 
-        modelBuilder.Entity<ControlliRicorrenti>(entity =>
+        // ── anag.TipoEvento ───────────────────────────────────────────────
+        modelBuilder.Entity<LtbTipoEvento>(e =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("ControlliRicorrenti");
-
-            entity.Property(e => e.Data)
-                .HasMaxLength(10)
-                .IsFixedLength()
-                .HasColumnName("data");
-            entity.Property(e => e.Noccorrenze).HasColumnName("noccorrenze");
-            entity.Property(e => e.NomeTabella)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("nomeTabella");
+            e.ToTable("TipoEvento", schema: "anag");
+            e.HasKey(x => x.IdTipoEvento).HasName("PK_TipoEvento");
+            e.Property(x => x.Descrizione).HasMaxLength(100);
         });
 
-        modelBuilder.Entity<Cooperazioni>(entity =>
+        // ── hist.EloScores ────────────────────────────────────────────────
+        modelBuilder.Entity<LtbEloScore>(e =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Cooperaz__3213E83F76031D81");
-
-            entity.ToTable("Cooperazioni");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.DataFineCooperazione).HasColumnName("dataFineCooperazione");
-            entity.Property(e => e.DataInizioCooperazione).HasColumnName("dataInizioCooperazione");
-            entity.Property(e => e.FkpoloId).HasColumnName("FKPoloId");
-            entity.Property(e => e.FkrealtaEsternaId).HasColumnName("FKRealtaEsternaId");
-            entity.Property(e => e.Tipologia)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("tipologia");
-
-            entity.HasOne(d => d.Fkpolo).WithMany(p => p.Cooperazionis)
-                .HasForeignKey(d => d.FkpoloId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Cooperazi__FKPol__1F98B2C1");
-
-            entity.HasOne(d => d.FkrealtaEsterna).WithMany(p => p.Cooperazionis)
-                .HasForeignKey(d => d.FkrealtaEsternaId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Cooperazi__FKRea__208CD6FA");
+            e.ToTable("EloScores", schema: "hist");
+            e.HasKey(x => x.IdScore).HasName("PK_EloScores");
+            e.HasOne(x => x.Giocatore)
+             .WithMany(x => x.EloScores)
+             .HasForeignKey(x => x.IdGiocatore)
+             .HasConstraintName("FK_EloScores_Giocatori");
         });
 
-        modelBuilder.Entity<Eventi>(entity =>
+        // ── orga.Corsi ────────────────────────────────────────────────────
+        modelBuilder.Entity<LtbCorso>(e =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Eventi__3213E83FB73FAEA3");
-
-            entity.ToTable("Eventi", tb =>
-                {
-                    tb.HasTrigger("insert_table_eventopolo");
-                    tb.HasTrigger("trg_DeletePoloEvento");
-                });
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Classifica)
-                .HasColumnType("xml")
-                .HasColumnName("classifica");
-            entity.Property(e => e.Costo).HasColumnName("costo");
-            entity.Property(e => e.Data).HasColumnName("data");
-            entity.Property(e => e.LinkBando)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("linkBando");
-            entity.Property(e => e.Luogo)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("luogo");
-            entity.Property(e => e.Nome)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("nome");
-            entity.Property(e => e.Omologato).HasColumnName("omologato");
-            entity.Property(e => e.Tipologia)
-                .HasMaxLength(15)
-                .IsUnicode(false)
-                .HasColumnName("tipologia");
-
-            entity.HasMany(d => d.FkidLavoratores).WithMany(p => p.FkidEventos)
-                .UsingEntity<Dictionary<string, object>>(
-                    "EventoLavoratore",
-                    r => r.HasOne<Lavoratori>().WithMany()
-                        .HasForeignKey("FkidLavoratore")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__EventoLav__FKidL__75A278F5"),
-                    l => l.HasOne<Eventi>().WithMany()
-                        .HasForeignKey("FkidEvento")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__EventoLav__FKidE__74AE54BC"),
-                    j =>
-                    {
-                        j.HasKey("FkidEvento", "FkidLavoratore");
-                        j.ToTable("EventoLavoratore");
-                        j.IndexerProperty<int>("FkidEvento").HasColumnName("FKidEvento");
-                        j.IndexerProperty<int>("FkidLavoratore").HasColumnName("FKidLavoratore");
-                    });
-
-            entity.HasMany(d => d.FkidPartecipantes).WithMany(p => p.FkidEventos)
-                .UsingEntity<Dictionary<string, object>>(
-                    "EventoPartecipante",
-                    r => r.HasOne<Partecipanti>().WithMany()
-                        .HasForeignKey("FkidPartecipante")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__EventoPar__FKidP__6FE99F9F"),
-                    l => l.HasOne<Eventi>().WithMany()
-                        .HasForeignKey("FkidEvento")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__EventoPar__FKidE__6EF57B66"),
-                    j =>
-                    {
-                        j.HasKey("FkidEvento", "FkidPartecipante");
-                        j.ToTable("EventoPartecipante");
-                        j.IndexerProperty<int>("FkidEvento").HasColumnName("FKidEvento");
-                        j.IndexerProperty<int>("FkidPartecipante").HasColumnName("FKidPartecipante");
-                    });
+            e.ToTable("Corsi", schema: "orga");
+            e.HasKey(x => x.IdCorso).HasName("PK_Corsi");
+            e.Property(x => x.DataFine).HasColumnName("Datafine");
+            e.HasOne(x => x.Livello)
+             .WithMany(x => x.Corsi)
+             .HasForeignKey(x => x.IdLivello)
+             .HasConstraintName("FK_Corsi_Livello");
+            e.HasOne(x => x.Scuola)
+             .WithMany(x => x.Corsi)
+             .HasForeignKey(x => x.IdScuola)
+             .HasConstraintName("FK_Corsi_Scuole");
         });
 
-        modelBuilder.Entity<Lavoratori>(entity =>
+        // ── orga.Eventi ───────────────────────────────────────────────────
+        modelBuilder.Entity<LtbEvento>(e =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Lavorato__3213E83F53686E39");
-
-            entity.ToTable("Lavoratori");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Agonista).HasColumnName("agonista");
-            entity.Property(e => e.Allievo).HasColumnName("allievo");
-            entity.Property(e => e.Cognome)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("cognome");
-            entity.Property(e => e.Email)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("email");
-            entity.Property(e => e.Eta).HasColumnName("eta");
-            entity.Property(e => e.Nome)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("nome");
-            entity.Property(e => e.Partecipante).HasColumnName("partecipante");
-            entity.Property(e => e.Provenienza)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("provenienza");
-            entity.Property(e => e.Socio).HasColumnName("socio");
-            entity.Property(e => e.Telefono)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("telefono");
-            entity.Property(e => e.TipologiaLavoratore)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("tipologiaLavoratore");
+            e.ToTable("Eventi", schema: "orga");
+            e.HasKey(x => x.IdEvento).HasName("PK_Eventi");
+            e.Property(x => x.IdEvento).ValueGeneratedNever(); // no IDENTITY
+            e.HasOne(x => x.TipoEvento)
+             .WithMany(x => x.Eventi)
+             .HasForeignKey(x => x.IdTipoEvento)
+             .HasConstraintName("FK_Eventi_TipoEvento");
         });
 
-        modelBuilder.Entity<Partecipanti>(entity =>
+        // ── orga.PartecipantiCorsi ────────────────────────────────────────
+        modelBuilder.Entity<LtbPartecipanteCorso>(e =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Partecip__3213E83F855F149E");
-
-            entity.ToTable("Partecipanti", tb => tb.HasTrigger("InsertIntoEventoPartecipante"));
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Agonista).HasColumnName("agonista");
-            entity.Property(e => e.Allievo).HasColumnName("allievo");
-            entity.Property(e => e.Circolo)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("circolo");
-            entity.Property(e => e.Cognome)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("cognome");
-            entity.Property(e => e.Elo).HasColumnName("elo");
-            entity.Property(e => e.Email)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("email");
-            entity.Property(e => e.Eta).HasColumnName("eta");
-            entity.Property(e => e.Lavoratore).HasColumnName("lavoratore");
-            entity.Property(e => e.Nome)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("nome");
-            entity.Property(e => e.PrimoEvento).HasColumnName("primoEvento");
-            entity.Property(e => e.Socio).HasColumnName("socio");
-            entity.Property(e => e.Telefono)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("telefono");
+            e.ToTable("PartecipantiCorsi", schema: "orga");
+            e.HasKey(x => new { x.IdCorso, x.IdGiocatore }).HasName("PK_PartecipantiCorsi");
+            e.HasOne(x => x.Corso)
+             .WithMany(x => x.Partecipanti)
+             .HasForeignKey(x => x.IdCorso)
+             .HasConstraintName("FK_PartecipantiCorsi_Corsi");
+            e.HasOne(x => x.Giocatore)
+             .WithMany(x => x.PartecipantiCorsi)
+             .HasForeignKey(x => x.IdGiocatore)
+             .HasConstraintName("FK_PartecipantiCorsi_Giocatori");
         });
 
-        modelBuilder.Entity<Persone>(entity =>
+        // ── orga.PartecipantiTornei ───────────────────────────────────────
+        modelBuilder.Entity<LtbPartecipanteTorneo>(e =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Persone__3213E83F35604BA9");
-
-            entity.ToTable("Persone");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Agonista).HasColumnName("agonista");
-            entity.Property(e => e.Allievo).HasColumnName("allievo");
-            entity.Property(e => e.Cognome)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("cognome");
-            entity.Property(e => e.Email)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("email");
-            entity.Property(e => e.Eta).HasColumnName("eta");
-            entity.Property(e => e.Lavoratore).HasColumnName("lavoratore");
-            entity.Property(e => e.Nome)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("nome");
-            entity.Property(e => e.Partecipante).HasColumnName("partecipante");
-            entity.Property(e => e.Socio).HasColumnName("socio");
-            entity.Property(e => e.Telefono)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("telefono");
+            e.ToTable("PartecipantiTornei", schema: "orga");
+            e.HasKey(x => x.IdPartecipanteTornei).HasName("PK_PartecipantiTornei");
+            e.HasOne(x => x.Giocatore)
+             .WithMany(x => x.Partecipazioni)
+             .HasForeignKey(x => x.IdGiocatore)
+             .HasConstraintName("FK_PartecipantiTornei_Giocatori");
+            e.HasOne(x => x.Evento)
+             .WithMany(x => x.Partecipanti)
+             .HasForeignKey(x => x.IdEvento)
+             .HasConstraintName("FK_PartecipantiTornei_Eventi");
         });
 
-        modelBuilder.Entity<Poli>(entity =>
+        // ── orga.Socio ────────────────────────────────────────────────────
+        modelBuilder.Entity<LtbSocio>(e =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Poli__3213E83FF4797DCC");
-
-            entity.ToTable("Poli");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Indirizzo)
-                .HasMaxLength(200)
-                .IsUnicode(false)
-                .HasColumnName("indirizzo");
-            entity.Property(e => e.Nome)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("nome");
-            entity.Property(e => e.Piva)
-                .HasMaxLength(11)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("piva");
-
-            entity.HasMany(d => d.FkidEventos).WithMany(p => p.FkidPolos)
-                .UsingEntity<Dictionary<string, object>>(
-                    "PoloEvento",
-                    r => r.HasOne<Eventi>().WithMany()
-                        .HasForeignKey("FkidEvento")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__PoloEvent__FKidE__6A30C649"),
-                    l => l.HasOne<Poli>().WithMany()
-                        .HasForeignKey("FkidPolo")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__PoloEvent__FKidP__693CA210"),
-                    j =>
-                    {
-                        j.HasKey("FkidPolo", "FkidEvento");
-                        j.ToTable("PoloEvento");
-                        j.IndexerProperty<int>("FkidPolo").HasColumnName("FKidPolo");
-                        j.IndexerProperty<int>("FkidEvento").HasColumnName("FKidEvento");
-                    });
+            e.ToTable("Socio", schema: "orga");
+            e.HasKey(x => x.IdSocio).HasName("PK_Socio");
+            e.HasOne(x => x.Giocatore)
+             .WithMany(x => x.Soci)
+             .HasForeignKey(x => x.IdGiocatore)
+             .HasConstraintName("FK_Socio_Giocatori");
+            e.HasOne(x => x.Circolo)
+             .WithMany(x => x.Soci)
+             .HasForeignKey(x => x.IdCircolo)
+             .HasConstraintName("FK_Socio_Circoli");
         });
-
-        modelBuilder.Entity<PoloScuola>(entity =>
-        {
-            entity.HasKey(e => new { e.FkidPolo, e.FkidScuola, e.Anno }).HasName("PKPoloScuola");
-
-            entity.ToTable("PoloScuola");
-
-            entity.Property(e => e.FkidPolo).HasColumnName("FKidPolo");
-            entity.Property(e => e.FkidScuola).HasColumnName("FKidScuola");
-            entity.Property(e => e.Anno).HasColumnName("anno");
-
-            entity.HasOne(d => d.FkidPoloNavigation).WithMany(p => p.PoloScuolas)
-                .HasForeignKey(d => d.FkidPolo)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PoloScuol__FKidP__7A672E12");
-
-            entity.HasOne(d => d.FkidScuolaNavigation).WithMany(p => p.PoloScuolas)
-                .HasForeignKey(d => d.FkidScuola)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__PoloScuol__FKidS__7B5B524B");
-        });
-
-        modelBuilder.Entity<RealtaEsternaPersona>(entity =>
-        {
-            entity.HasKey(e => new { e.FkidRealtaEsterna, e.FkidPersona, e.Anno }).HasName("PKRealtaEsternaPersona");
-
-            entity.ToTable("RealtaEsternaPersona");
-
-            entity.Property(e => e.FkidRealtaEsterna).HasColumnName("FKidRealtaEsterna");
-            entity.Property(e => e.FkidPersona).HasColumnName("FKidPersona");
-            entity.Property(e => e.Anno).HasColumnName("anno");
-
-            entity.HasOne(d => d.FkidPersonaNavigation).WithMany(p => p.RealtaEsternaPersonas)
-                .HasForeignKey(d => d.FkidPersona)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RealtaEst__FKidP__66603565");
-
-            entity.HasOne(d => d.FkidRealtaEsternaNavigation).WithMany(p => p.RealtaEsternaPersonas)
-                .HasForeignKey(d => d.FkidRealtaEsterna)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RealtaEst__FKidR__656C112C");
-        });
-
-        modelBuilder.Entity<RealtaEsterne>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__RealtaEs__3213E83FAE65C21B");
-
-            entity.ToTable("RealtaEsterne");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Email)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("email");
-            entity.Property(e => e.Nome)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("nome");
-            entity.Property(e => e.Telefono)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("telefono");
-            entity.Property(e => e.Tipologia)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("tipologia");
-        });
-
-        modelBuilder.Entity<Scuole>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Scuole__3213E83F4468ADC2");
-
-            entity.ToTable("Scuole", tb =>
-                {
-                    tb.HasTrigger("InsertIntoPoloScuola");
-                    tb.HasTrigger("trg_DeletePoloScuola");
-                });
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Indirizzo)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("indirizzo");
-            entity.Property(e => e.Mail)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("mail");
-            entity.Property(e => e.Nome)
-                .HasMaxLength(1)
-                .IsUnicode(false)
-                .IsFixedLength()
-                .HasColumnName("nome");
-            entity.Property(e => e.Telefono)
-                .HasMaxLength(15)
-                .IsUnicode(false)
-                .HasColumnName("telefono");
-            entity.Property(e => e.TipologiaScuola)
-                .HasMaxLength(15)
-                .IsUnicode(false)
-                .HasColumnName("tipologiaScuola");
-        });
-
-        modelBuilder.Entity<Soci>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Soci__3213E83F6472C5CB");
-
-            entity.ToTable("Soci", tb =>
-                {
-                    tb.HasTrigger("after_insert_on_soci");
-                    tb.HasTrigger("trg_DeleteSocioPolo");
-                });
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Agonista).HasColumnName("agonista");
-            entity.Property(e => e.Allievo).HasColumnName("allievo");
-            entity.Property(e => e.AnnoPrimaIscrizione).HasColumnName("annoPrimaIscrizione");
-            entity.Property(e => e.Cognome)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("cognome");
-            entity.Property(e => e.Elo).HasColumnName("elo");
-            entity.Property(e => e.Email)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("email");
-            entity.Property(e => e.Eta).HasColumnName("eta");
-            entity.Property(e => e.Lavoratore).HasColumnName("lavoratore");
-            entity.Property(e => e.Nome)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("nome");
-            entity.Property(e => e.Partecipante).HasColumnName("partecipante");
-            entity.Property(e => e.Telefono)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("telefono");
-            entity.Property(e => e.TipologiaIscrizione)
-                .HasMaxLength(20)
-                .IsUnicode(false)
-                .HasColumnName("tipologiaIscrizione");
-        });
-
-        modelBuilder.Entity<SocioPolo>(entity =>
-        {
-            entity.HasKey(e => new { e.FkidPolo, e.FkidSocio, e.Anno }).HasName("Anno");
-
-            entity.ToTable("SocioPolo");
-
-            entity.Property(e => e.FkidPolo)
-                .HasDefaultValue(1)
-                .HasColumnName("FKidPolo");
-            entity.Property(e => e.FkidSocio).HasColumnName("FKidSocio");
-
-            entity.HasOne(d => d.FkidPoloNavigation).WithMany(p => p.SocioPolos)
-                .HasForeignKey(d => d.FkidPolo)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SocioPolo__FKidP__5FB337D6");
-
-            entity.HasOne(d => d.FkidSocioNavigation).WithMany(p => p.SocioPolos)
-                .HasForeignKey(d => d.FkidSocio)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__SocioPolo__FKidS__60A75C0F");
-        });
-
-        OnModelCreatingPartial(modelBuilder);
     }
-
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

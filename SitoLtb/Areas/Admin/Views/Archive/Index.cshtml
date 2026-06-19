@@ -1,0 +1,227 @@
+@model SitoLtb.ViewModels.ArchiveVM
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@{
+    var sezioneAttiva = Context.Request.Query["sezione"].ToString();
+    if (sezioneAttiva != "articoli") sezioneAttiva = "tornei";
+}
+
+<main>
+    <div class="Title-list-of-users">
+        <h4>Archivio LTB</h4>
+    </div>
+
+    <div style="margin-bottom:24px;">
+        <select id="archiveSelector" class="filter-select" onchange="switchPanel(this.value)" style="font-size:1rem;padding:9px 16px;">
+            <option value="tornei"   selected="@(sezioneAttiva == "tornei"   ? "selected" : null)">Tornei passati</option>
+            <option value="articoli" selected="@(sezioneAttiva == "articoli" ? "selected" : null)">Articoli passati</option>
+        </select>
+    </div>
+
+    <!-- ── TORNEI ── -->
+    <div id="panel-tornei" style="display:@(sezioneAttiva == "tornei" ? "block" : "none")">
+        <div class="table-filters">
+            <input type="text"   id="fNome"      class="filter-input"  placeholder="Nome…"      oninput="filterArchive('tornei')">
+            <input type="text"   id="fSede"      class="filter-input"  placeholder="Sede…"      oninput="filterArchive('tornei')">
+            <select              id="fTipologia" class="filter-select"                           onchange="filterArchive('tornei')">
+                <option value="">Tutte le tipologie</option>
+                <option>Standard</option>
+                <option>Rapid</option>
+                <option>Blitz</option>
+                <option>Eterodosso</option>
+            </select>
+            <select              id="fElo"       class="filter-select"                           onchange="filterArchive('tornei')">
+                <option value="">Elo: tutti</option>
+                <option value="sì">Sì</option>
+                <option value="no">No</option>
+            </select>
+            <button class="btn-reset-filters" onclick="resetArchiveFilter('tornei')">Azzera</button>
+            <span id="countTornei" class="filter-count"></span>
+        </div>
+
+        <table id="tableTornei">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Nome</th>
+                    <th>Tipologia</th>
+                    <th>Link preiscrizione</th>
+                    <th>Link bando</th>
+                    <th>Sede</th>
+                    <th>Elo</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in Model.TournamentsPassati!)
+                {
+                    <tr>
+                        <td>@t.Data.ToString("dd/MM/yyyy")</td>
+                        <td>@t.Nome</td>
+                        <td>@t.Tipologia</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(t.LinkPreiscrizione))
+                            { <a href="@Html.Raw(t.LinkPreiscrizione)" target="_blank">Link</a> }
+                            else
+                            { <span class="text-muted">—</span> }
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(t.LinkBando))
+                            { <a href="@Html.Raw(t.LinkBando)" target="_blank">Bando</a> }
+                            else
+                            { <span class="text-muted">—</span> }
+                        </td>
+                        <td>@t.Sede</td>
+                        <td>@(t.Elo ? "sì" : "no")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="pagination-container">
+            Pagina @(Model.TournamentsPassati.PageCount < Model.TournamentsPassati.PageNumber ? 0 : Model.TournamentsPassati.PageNumber)
+            di @Model.TournamentsPassati.PageCount
+            @Html.PagedListPager(
+                Model.TournamentsPassati,
+                p => Url.Action("Index", new { pageEventi = p, pageArticoli = Model.PostsPassati!.PageNumber, sezione = "tornei" }),
+                new PagedListRenderOptions {
+                    ContainerDivClasses = new[] { "blog", "navigation" },
+                    UlElementClasses = new[] { "pagination" },
+                    LiElementClasses = new[] { "page-item" },
+                    ActiveLiElementClass = "active",
+                    PageClasses = new[] { "page-link" }
+                }
+            )
+        </div>
+    </div>
+
+    <!-- ── ARTICOLI ── -->
+    <div id="panel-articoli" style="display:@(sezioneAttiva == "articoli" ? "block" : "none")">
+        <div class="table-filters">
+            <input type="text" id="fTitolo"    class="filter-input" placeholder="Titolo…"    oninput="filterArchive('articoli')">
+            <input type="text" id="fAutore"    class="filter-input" placeholder="Autore…"    oninput="filterArchive('articoli')">
+            <input type="text" id="fCategoria" class="filter-input" placeholder="Categoria…" oninput="filterArchive('articoli')">
+            <button class="btn-reset-filters" onclick="resetArchiveFilter('articoli')">Azzera</button>
+            <span id="countArticoli" class="filter-count"></span>
+        </div>
+
+        <table id="tableArticoli">
+            <thead>
+                <tr>
+                    <th>Immagine</th>
+                    <th>Ultima modifica</th>
+                    <th>Autore</th>
+                    <th>Titolo</th>
+                    <th>Categoria</th>
+                    <th>Descrizione</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var post in Model.PostsPassati!)
+                {
+                    var desc = post.Description ?? "";
+                    var truncated = desc.Length > 120 ? desc.Substring(0, 120).TrimEnd() + "…" : desc;
+                    <tr>
+                        <td>
+                            <img src="~/@post.ThumbnailUrl" alt="@post.Title"
+                                 style="width:80px;height:auto;border-radius:4px;" />
+                        </td>
+                        <td>@post.CreatedDate.ToString("dd/MM/yyyy")</td>
+                        <td>@post.AuthorName</td>
+                        <td>@post.Title</td>
+                        <td>@post.Categoria</td>
+                        <td>
+                            @truncated
+                            @if (desc.Length > 120 && !string.IsNullOrEmpty(post.Url))
+                            {
+                                <a href="/Blog/@post.Url" target="_blank" style="white-space:nowrap">Leggi tutto</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="pagination-container">
+            Pagina @(Model.PostsPassati.PageCount < Model.PostsPassati.PageNumber ? 0 : Model.PostsPassati.PageNumber)
+            di @Model.PostsPassati.PageCount
+            @Html.PagedListPager(
+                Model.PostsPassati,
+                p => Url.Action("Index", new { pageArticoli = p, pageEventi = Model.TournamentsPassati!.PageNumber, sezione = "articoli" }),
+                new PagedListRenderOptions {
+                    ContainerDivClasses = new[] { "blog", "navigation" },
+                    UlElementClasses = new[] { "pagination" },
+                    LiElementClasses = new[] { "page-item" },
+                    ActiveLiElementClass = "active",
+                    PageClasses = new[] { "page-link" }
+                }
+            )
+        </div>
+    </div>
+</main>
+
+@section Scripts {
+<script>
+    function switchPanel(name) {
+        document.getElementById('panel-tornei').style.display    = name === 'tornei'   ? '' : 'none';
+        document.getElementById('panel-articoli').style.display  = name === 'articoli' ? '' : 'none';
+        updateCount(name);
+    }
+
+    function filterArchive(name) {
+        let visible = 0;
+
+        if (name === 'tornei') {
+            // col: 0=Data 1=Nome 2=Tipologia 3=LinkPreisc 4=LinkBando 5=Sede 6=Elo
+            const nome  = document.getElementById('fNome').value.toLowerCase();
+            const sede  = document.getElementById('fSede').value.toLowerCase();
+            const tipo  = document.getElementById('fTipologia').value.toLowerCase();
+            const elo   = document.getElementById('fElo').value.toLowerCase();
+            const rows  = document.querySelectorAll('#tableTornei tbody tr');
+            rows.forEach(row => {
+                const c = row.cells;
+                const match =
+                    (!nome || c[1].textContent.toLowerCase().includes(nome)) &&
+                    (!sede || c[5].textContent.toLowerCase().includes(sede)) &&
+                    (!tipo || c[2].textContent.toLowerCase().includes(tipo)) &&
+                    (!elo  || c[6].textContent.toLowerCase().includes(elo));
+                row.style.display = match ? '' : 'none';
+                if (match) visible++;
+            });
+            const hasFilter = nome || sede || tipo || elo;
+            document.getElementById('countTornei').textContent =
+                hasFilter ? visible + ' / ' + rows.length : '';
+        } else {
+            // col: 0=Img 1=Data 2=Autore 3=Titolo 4=Categoria
+            const titolo    = document.getElementById('fTitolo').value.toLowerCase();
+            const autore    = document.getElementById('fAutore').value.toLowerCase();
+            const categoria = document.getElementById('fCategoria').value.toLowerCase();
+            const rows      = document.querySelectorAll('#tableArticoli tbody tr');
+            rows.forEach(row => {
+                const c = row.cells;
+                const match =
+                    (!titolo    || c[3].textContent.toLowerCase().includes(titolo))    &&
+                    (!autore    || c[2].textContent.toLowerCase().includes(autore))    &&
+                    (!categoria || c[4].textContent.toLowerCase().includes(categoria));
+                row.style.display = match ? '' : 'none';
+                if (match) visible++;
+            });
+            const hasFilter = titolo || autore || categoria;
+            document.getElementById('countArticoli').textContent =
+                hasFilter ? visible + ' / ' + rows.length : '';
+        }
+    }
+
+    function resetArchiveFilter(name) {
+        if (name === 'tornei') {
+            ['fNome', 'fSede'].forEach(id => document.getElementById(id).value = '');
+            ['fTipologia', 'fElo'].forEach(id => document.getElementById(id).selectedIndex = 0);
+        } else {
+            ['fTitolo', 'fAutore', 'fCategoria'].forEach(id => document.getElementById(id).value = '');
+        }
+        filterArchive(name);
+    }
+
+    function updateCount(name) { filterArchive(name); }
+
+</script>
+}

@@ -11,10 +11,10 @@ namespace SitoLtb.ViewModels
         public bool Elo { get; set; }
         public string Sede { get; set; }
 
-        public string LinkBando { get; set; }
+        public string? LinkBando { get; set; }
 
-        public string LinkPreiscrizione { get; set; }
-        public string Url { get; set; }
+        public string? LinkPreiscrizione { get; set; }
+        public string? Url { get; set; }
   
 
 

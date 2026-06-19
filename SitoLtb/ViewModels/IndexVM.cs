@@ -2,8 +2,8 @@
 {
     public class IndexVM
     {
-        public List<PostVM> Posts { get; set; }
-        public List<TournamentVM> Tournaments { get; set; }
-
+        public List<PostVM> PostsFuturi { get; set; }
+        public List<TournamentVM> TournamentsFuturi { get; set; }
+        public List<TournamentVM> TorneiProssimoMese { get; set; } = new();
     }
 }

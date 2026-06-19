@@ -1,0 +1,65 @@
+@using X.PagedList
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common
+@using SitoLtb.Models
+@model SitoLtb.ViewModels.CategoriaPostVM
+
+@{
+    ViewData["Title"] = Model.Titolo;
+
+    string Bg(string? img) =>
+        string.IsNullOrWhiteSpace(img)
+            ? Url.Content("~/images/placeholder.jpg")
+            : Url.Content($"~/{img.TrimStart('/')}");
+}
+
+<div class="notiziacat-header">
+    <a asp-controller="Home" asp-action="Notizie" class="notiziacat-back">← Notizie</a>
+    <h1 class="notiziacat-title">@Model.Titolo</h1>
+</div>
+
+@if (Model.Posts == null || !Model.Posts.Any())
+{
+    <p class="notiziacat-empty">Nessun articolo disponibile in questa categoria.</p>
+}
+else
+{
+    <div class="notiziacat-grid">
+        @foreach (var post in Model.Posts)
+        {
+            <article class="notiziacat-card">
+                <a asp-controller="Blog" asp-action="Post" asp-route-slug="@post.Url" class="notiziacat-link">
+                    <div class="notiziacat-img" style="background-image:url('@Bg(post.Image)');">
+                        <span class="notiziacat-kicker">@Model.Titolo</span>
+                    </div>
+                    <div class="notiziacat-body">
+                        <h2 class="notiziacat-card-title">@post.Title</h2>
+                        <p class="notiziacat-desc">@post.Description</p>
+                        <div class="notiziacat-meta">
+                            <span>@post.DateTimeCreated.ToString("dd/MM/yyyy")</span>
+                        </div>
+                    </div>
+                </a>
+            </article>
+        }
+    </div>
+
+    @await Html.PartialAsync("_CtaStrip")
+
+    <div class="pagination-container">
+        Pagina @(Model.Posts.PageCount < Model.Posts.PageNumber ? 0 : Model.Posts.PageNumber)
+        di @Model.Posts.PageCount
+        @Html.PagedListPager(
+            Model.Posts,
+            p => Url.Action(ViewContext.RouteData.Values["action"]!.ToString(), new { page = p }),
+            new PagedListRenderOptions
+            {
+                ContainerDivClasses = new[] { "blog", "navigation" },
+                UlElementClasses = new[] { "pagination" },
+                LiElementClasses = new[] { "page-item" },
+                ActiveLiElementClass = "active",
+                PageClasses = new[] { "page-link" }
+            }
+        )
+    </div>
+}

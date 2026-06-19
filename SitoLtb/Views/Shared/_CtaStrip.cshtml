@@ -1,0 +1,53 @@
+@{
+    var currentUrl = Context.Request.Path + Context.Request.QueryString;
+}
+
+<section class="cta-strip">
+
+    <!-- CONTATTI -->
+    <div class="cta-strip__half cta-strip__half--contact">
+        <div class="cta-strip__icon">
+            <i class="fas fa-comments"></i>
+        </div>
+        <div class="cta-strip__copy">
+            <h3 class="cta-strip__title">Hai domande?</h3>
+            <p class="cta-strip__text">
+                Scrivici, ti risponderemo al più presto.<br>
+                Siamo qui per ogni informazione su tornei, corsi e attività.
+            </p>
+        </div>
+        <a asp-controller="Home" asp-action="Contatti"
+           asp-fragment="contact-form"
+           class="cta-strip__btn cta-strip__btn--outline">
+            Scrivici <i class="fas fa-arrow-right ms-1"></i>
+        </a>
+    </div>
+
+    <div class="cta-strip__divider" aria-hidden="true"></div>
+
+    <!-- NEWSLETTER -->
+    <div class="cta-strip__half cta-strip__half--newsletter">
+        <div class="cta-strip__icon">
+            <i class="fas fa-envelope-open-text"></i>
+        </div>
+        <div class="cta-strip__copy">
+            <h3 class="cta-strip__title">Resta aggiornato</h3>
+            <p class="cta-strip__text">
+                Ricevi in anteprima le novità su tornei, corsi ed eventi LTB
+                direttamente nella tua casella email.
+            </p>
+        </div>
+        <form asp-action="NewsletterIscriviti" asp-controller="Home"
+              method="post" class="cta-strip__form">
+            <input type="hidden" name="returnUrl" value="@currentUrl" />
+            <div class="cta-strip__input-row">
+                <input type="email" name="Email" class="cta-strip__input"
+                       placeholder="tua@email.it" required />
+                <button type="submit" class="cta-strip__btn cta-strip__btn--solid">
+                    Iscriviti
+                </button>
+            </div>
+        </form>
+    </div>
+
+</section>

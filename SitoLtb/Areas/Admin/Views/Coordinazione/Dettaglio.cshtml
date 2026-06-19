@@ -1,0 +1,358 @@
+@model SitoLtb.ViewModels.ProgettoDetailVM
+@{
+    ViewData["Title"] = Model.Titolo;
+}
+
+<div class="coord-page">
+
+    <!-- Header Progetto -->
+    <div class="det-header" style="--proj-color:@Model.Colore">
+        <div class="det-header__left">
+            <div class="det-color-dot"></div>
+            <div>
+                <h1 class="det-title">@Model.Titolo</h1>
+                @if (!string.IsNullOrEmpty(Model.Descrizione))
+                {
+                    <p class="det-desc">@Model.Descrizione</p>
+                }
+            </div>
+        </div>
+        <div class="det-header__actions">
+            <a asp-action="Modifica" asp-route-id="@Model.IdProgetto" class="btn-det btn-det--edit">
+                <i class="fas fa-edit"></i> Modifica
+            </a>
+            <form asp-action="EliminaProgetto" method="post" style="display:inline"
+                  onsubmit="return confirm('Eliminare il progetto e tutti i dati collegati?')">
+                <input type="hidden" name="id" value="@Model.IdProgetto"/>
+                <button type="submit" class="btn-det btn-det--del"><i class="fas fa-trash"></i> Elimina</button>
+            </form>
+            <a asp-action="Index" class="btn-det btn-det--back"><i class="fas fa-arrow-left"></i> Torna</a>
+        </div>
+    </div>
+
+    <!-- KPI Strip -->
+    <div class="det-kpi-strip">
+        <div class="det-kpi">
+            <i class="fas fa-calendar-day"></i>
+            <div>
+                <span class="det-kpi__label">Inizio</span>
+                <span class="det-kpi__val">@Model.DataInizio.ToString("dd/MM/yyyy")</span>
+            </div>
+        </div>
+        @if (Model.DataScadenza.HasValue)
+        {
+            var sc = Model.DataScadenza.Value;
+            var oggi = DateOnly.FromDateTime(DateTime.Today);
+            var scClass = sc < oggi ? "det-kpi--danger" : sc <= oggi.AddDays(7) ? "det-kpi--warn" : "";
+            <div class="det-kpi @scClass">
+                <i class="fas fa-calendar-times"></i>
+                <div>
+                    <span class="det-kpi__label">Scadenza</span>
+                    <span class="det-kpi__val">@sc.ToString("dd/MM/yyyy")</span>
+                </div>
+            </div>
+        }
+        @if (Model.ReferenteNome != null)
+        {
+            <div class="det-kpi">
+                <i class="fas fa-user-tie"></i>
+                <div>
+                    <span class="det-kpi__label">Referente</span>
+                    <span class="det-kpi__val">@Model.ReferenteNome</span>
+                </div>
+            </div>
+        }
+        <div class="det-kpi">
+            <i class="fas fa-flag"></i>
+            <div>
+                <span class="det-kpi__label">Stato</span>
+                <span class="det-kpi__val">@Model.Stato</span>
+            </div>
+        </div>
+        <!-- Avanzamento globale -->
+        <div class="det-kpi det-kpi--progress">
+            <div class="det-avanzamento">
+                <div class="det-avanz-bar">
+                    <div class="det-avanz-fill" style="width:@Model.Avanzamento%"></div>
+                </div>
+                <span>@Model.Avanzamento% completato</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Body: 2 colonne -->
+    <div class="det-body">
+
+        <!-- Colonna sinistra: Task -->
+        <div class="det-col det-col--main">
+
+            <!-- Nuova Task -->
+            <div class="det-card">
+                <div class="det-card__head"><i class="fas fa-plus-circle"></i> Nuova Task</div>
+                <div class="det-card__body">
+                    <form asp-action="NuovaTask" method="post" class="task-form">
+                        <input type="hidden" name="idProgetto" value="@Model.IdProgetto"/>
+                        <div class="task-form__row">
+                            <input name="titolo" class="form-ctrl" placeholder="Titolo task *" required/>
+                            <select name="priorita" class="form-ctrl form-ctrl--sm">
+                                <option value="0">Bassa</option>
+                                <option value="1" selected>Media</option>
+                                <option value="2">Alta</option>
+                            </select>
+                            <input type="datetime-local" name="dataScadenza" class="form-ctrl form-ctrl--sm"/>
+                            <select name="assegnatoAId" class="form-ctrl form-ctrl--sm">
+                                <option value="">— Assegna a —</option>
+                                @foreach (var u in Model.UtentiDisponibili.Concat(Model.Membri))
+                                {
+                                    <option value="@u.UserId">@u.Nome</option>
+                                }
+                            </select>
+                            <button type="submit" class="btn-add"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <textarea name="descrizione" class="form-ctrl" rows="2" placeholder="Descrizione (opzionale)"></textarea>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Lista Task In Corso -->
+            @{
+                var inCorso = Model.Tasks.Where(t => t.Stato == SitoLtb.Models.StatoTask.InCorso).ToList();
+                var risolte = Model.Tasks.Where(t => t.Stato == SitoLtb.Models.StatoTask.Risolto).ToList();
+            }
+            <div class="det-card">
+                <div class="det-card__head">
+                    <i class="fas fa-spinner"></i> In Corso
+                    <span class="det-count">@inCorso.Count</span>
+                </div>
+                <div class="det-card__body task-list">
+                    @foreach (var t in inCorso)
+                    {
+                        <div class="task-item task-item--@t.Priorita.ToString().ToLower()">
+                            <div class="task-item__main">
+                                <form asp-action="ToggleTask" method="post" style="display:inline">
+                                    <input type="hidden" name="idTask" value="@t.IdTask"/>
+                                    <input type="hidden" name="idProgetto" value="@Model.IdProgetto"/>
+                                    <button type="submit" class="task-check task-check--open" title="Segna come risolto">
+                                        <i class="far fa-circle"></i>
+                                    </button>
+                                </form>
+                                <div class="task-item__info">
+                                    <span class="task-item__title">@t.Titolo</span>
+                                    <div class="task-item__meta">
+                                        <span class="task-prio task-prio--@t.Priorita.ToString().ToLower()">@t.Priorita</span>
+                                        @if (t.AssegnatoANome != null)
+                                        {
+                                            <span><i class="fas fa-user fa-xs"></i> @t.AssegnatoANome</span>
+                                        }
+                                        @if (t.DataScadenza.HasValue)
+                                        {
+                                            <span class="@(t.DataScadenza < DateTime.Now ? "text-danger" : "")">
+                                                <i class="fas fa-clock fa-xs"></i> @t.DataScadenza.Value.ToString("dd/MM HH:mm")
+                                            </span>
+                                        }
+                                    </div>
+                                    @if (!string.IsNullOrEmpty(t.Descrizione))
+                                    {
+                                        <p class="task-item__desc">@t.Descrizione</p>
+                                    }
+                                </div>
+                                <form asp-action="EliminaTask" method="post" style="display:inline"
+                                      onsubmit="return confirm('Eliminare questa task?')">
+                                    <input type="hidden" name="idTask" value="@t.IdTask"/>
+                                    <input type="hidden" name="idProgetto" value="@Model.IdProgetto"/>
+                                    <button type="submit" class="task-del"><i class="fas fa-times"></i></button>
+                                </form>
+                            </div>
+                            <!-- Commenti -->
+                            <div class="comment-thread">
+                                @foreach (var c in t.Commenti)
+                                {
+                                    <div class="comment-item">
+                                        <span class="comment-autore">@c.AutoreNome</span>
+                                        <span class="comment-testo">@c.Testo</span>
+                                        <span class="comment-data">@c.DataCreazione.ToString("dd/MM HH:mm")</span>
+                                    </div>
+                                }
+                                <form asp-action="NuovoCommento" method="post" class="comment-form">
+                                    <input type="hidden" name="idTask" value="@t.IdTask"/>
+                                    <input type="hidden" name="idProgetto" value="@Model.IdProgetto"/>
+                                    <input name="testo" class="form-ctrl form-ctrl--xs" placeholder="Commenta…" required/>
+                                    <button type="submit" class="btn-comment"><i class="fas fa-paper-plane"></i></button>
+                                </form>
+                            </div>
+                        </div>
+                    }
+                    @if (!inCorso.Any())
+                    {
+                        <div class="task-empty"><i class="fas fa-check-double"></i> Nessuna task in corso</div>
+                    }
+                </div>
+            </div>
+
+            <!-- Lista Task Risolte -->
+            @if (risolte.Any())
+            {
+                <details class="det-card det-card--resolved">
+                    <summary class="det-card__head">
+                        <i class="fas fa-check-circle"></i> Completate
+                        <span class="det-count det-count--green">@risolte.Count</span>
+                    </summary>
+                    <div class="det-card__body task-list">
+                        @foreach (var t in risolte)
+                        {
+                            <div class="task-item task-item--done">
+                                <div class="task-item__main">
+                                    <form asp-action="ToggleTask" method="post" style="display:inline">
+                                        <input type="hidden" name="idTask" value="@t.IdTask"/>
+                                        <input type="hidden" name="idProgetto" value="@Model.IdProgetto"/>
+                                        <button type="submit" class="task-check task-check--done" title="Riapri">
+                                            <i class="fas fa-check-circle"></i>
+                                        </button>
+                                    </form>
+                                    <div class="task-item__info">
+                                        <span class="task-item__title task-item__title--done">@t.Titolo</span>
+                                        @if (t.DataCompletamento.HasValue)
+                                        {
+                                            <span class="task-item__done-date"><i class="fas fa-check fa-xs"></i> @t.DataCompletamento.Value.ToString("dd/MM/yyyy")</span>
+                                        }
+                                    </div>
+                                    <form asp-action="EliminaTask" method="post" style="display:inline">
+                                        <input type="hidden" name="idTask" value="@t.IdTask"/>
+                                        <input type="hidden" name="idProgetto" value="@Model.IdProgetto"/>
+                                        <button type="submit" class="task-del"><i class="fas fa-times"></i></button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </details>
+            }
+        </div>
+
+        <!-- Colonna destra: Note, Scadenze, Membri -->
+        <div class="det-col det-col--side">
+
+            <!-- Scadenze -->
+            <div class="det-card">
+                <div class="det-card__head"><i class="fas fa-calendar-check"></i> Scadenze</div>
+                <div class="det-card__body">
+                    <form asp-action="NuovaScadenza" method="post" class="side-form">
+                        <input type="hidden" name="idProgetto" value="@Model.IdProgetto"/>
+                        <input name="titolo" class="form-ctrl" placeholder="Titolo scadenza *" required/>
+                        <div class="side-form__row">
+                            <input type="date" name="data" class="form-ctrl" required/>
+                            <button type="submit" class="btn-add"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <input name="nota" class="form-ctrl" placeholder="Nota (opzionale)"/>
+                    </form>
+                    <div class="scad-list">
+                        @{
+                            var oggi2 = DateOnly.FromDateTime(DateTime.Today);
+                        }
+                        @foreach (var s in Model.Scadenze)
+                        {
+                            var cls = s.Data < oggi2 ? "scad-item--past" : s.Data <= oggi2.AddDays(7) ? "scad-item--near" : "";
+                            <div class="scad-item @cls">
+                                <div class="scad-item__info">
+                                    <span class="scad-item__titolo">@s.Titolo</span>
+                                    <span class="scad-item__data">@s.Data.ToString("dd/MM/yyyy")</span>
+                                    @if (!string.IsNullOrEmpty(s.Nota))
+                                    {
+                                        <span class="scad-item__nota">@s.Nota</span>
+                                    }
+                                </div>
+                                <form asp-action="EliminaScadenza" method="post">
+                                    <input type="hidden" name="idScadenza" value="@s.IdScadenza"/>
+                                    <input type="hidden" name="idProgetto" value="@Model.IdProgetto"/>
+                                    <button type="submit" class="task-del"><i class="fas fa-times"></i></button>
+                                </form>
+                            </div>
+                        }
+                        @if (!Model.Scadenze.Any())
+                        {
+                            <p class="side-empty">Nessuna scadenza</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Note -->
+            <div class="det-card">
+                <div class="det-card__head"><i class="fas fa-sticky-note"></i> Note</div>
+                <div class="det-card__body">
+                    <form asp-action="NuovaNota" method="post" class="side-form">
+                        <input type="hidden" name="idProgetto" value="@Model.IdProgetto"/>
+                        <div class="side-form__row">
+                            <textarea name="testo" class="form-ctrl" rows="2" placeholder="Scrivi una nota…" required></textarea>
+                            <button type="submit" class="btn-add" style="align-self:flex-end"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </form>
+                    <div class="nota-list">
+                        @foreach (var n in Model.Note)
+                        {
+                            <div class="nota-item">
+                                <p class="nota-item__testo">@n.Testo</p>
+                                <div class="nota-item__footer">
+                                    <span class="nota-item__data">@n.DataCreazione.ToString("dd/MM HH:mm")</span>
+                                    <form asp-action="EliminaNota" method="post" style="display:inline">
+                                        <input type="hidden" name="idNota" value="@n.IdNota"/>
+                                        <input type="hidden" name="idProgetto" value="@Model.IdProgetto"/>
+                                        <button type="submit" class="task-del"><i class="fas fa-times"></i></button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                        @if (!Model.Note.Any())
+                        {
+                            <p class="side-empty">Nessuna nota</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Membri -->
+            <div class="det-card">
+                <div class="det-card__head"><i class="fas fa-users"></i> Team</div>
+                <div class="det-card__body">
+                    @if (Model.UtentiDisponibili.Any())
+                    {
+                        <form asp-action="AggiungiMembro" method="post" class="side-form">
+                            <input type="hidden" name="idProgetto" value="@Model.IdProgetto"/>
+                            <div class="side-form__row">
+                                <select name="userId" class="form-ctrl">
+                                    @foreach (var u in Model.UtentiDisponibili)
+                                    {
+                                        <option value="@u.UserId">@u.Nome</option>
+                                    }
+                                </select>
+                                <button type="submit" class="btn-add"><i class="fas fa-user-plus"></i></button>
+                            </div>
+                        </form>
+                    }
+                    <div class="membro-list">
+                        @foreach (var m in Model.Membri)
+                        {
+                            <div class="membro-item">
+                                <div class="membro-avatar">@(m.Nome.Length > 0 ? m.Nome[0].ToString().ToUpper() : "?")</div>
+                                <div class="membro-info">
+                                    <span class="membro-nome">@m.Nome</span>
+                                    <span class="membro-email">@m.Email</span>
+                                </div>
+                                <form asp-action="RimuoviMembro" method="post">
+                                    <input type="hidden" name="idProgetto" value="@Model.IdProgetto"/>
+                                    <input type="hidden" name="userId" value="@m.UserId"/>
+                                    <button type="submit" class="task-del" title="Rimuovi"><i class="fas fa-user-minus"></i></button>
+                                </form>
+                            </div>
+                        }
+                        @if (!Model.Membri.Any())
+                        {
+                            <p class="side-empty">Nessun membro assegnato</p>
+                        }
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

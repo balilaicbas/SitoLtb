@@ -36,6 +36,8 @@ builder.Services.Configure<IdentityOptions>(options =>
 builder.Services.AddScoped<IDbInizializer, DbInizializer>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ITournamentService, TournamentService>();
+builder.Services.AddScoped<IArchiveService, ArchiveService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails();
 
@@ -84,6 +86,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
+    name: "admin_root",
+    pattern: "Admin",
+    defaults: new { area = "Admin", controller = "Post", action = "Index" });
+
+app.MapControllerRoute(
     name: "area",
     pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
@@ -98,10 +105,79 @@ app.Run();
 
 void DataSeeding()
 {
+    using var scope = app.Services.CreateScope();
+    var DbInitialize = scope.ServiceProvider.GetRequiredService<IDbInizializer>();
+    DbInitialize.Initialize();
 
-    using (var scope = app.Services.CreateScope())
+    // Crea tabelle coordinazione se non esistono (uno statement per volta)
+    var db = scope.ServiceProvider.GetRequiredService<SitoLtb.Data.ApplicationDbContext>();
+    EnsureTable(db);
+}
+
+void EnsureTable(SitoLtb.Data.ApplicationDbContext db)
+{
+    var ddl = new[]
     {
-        var DbInitialize = scope.ServiceProvider.GetRequiredService<IDbInizializer>();
-        DbInitialize.Initialize();
+        @"IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name='Progetti')
+          CREATE TABLE Progetti (
+              IdProgetto    INT IDENTITY(1,1) PRIMARY KEY,
+              Titolo        NVARCHAR(200) NOT NULL,
+              Descrizione   NVARCHAR(MAX) NULL,
+              DataInizio    DATE NOT NULL,
+              DataScadenza  DATE NULL,
+              ReferenteId   NVARCHAR(450) NULL,
+              Colore        NVARCHAR(20) NOT NULL DEFAULT '#4e73df',
+              Stato         INT NOT NULL DEFAULT 0,
+              DataCreazione DATETIME2 NOT NULL DEFAULT GETUTCDATE()
+          )",
+        @"IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name='ProgettoTasks')
+          CREATE TABLE ProgettoTasks (
+              IdTask             INT IDENTITY(1,1) PRIMARY KEY,
+              IdProgetto         INT NOT NULL REFERENCES Progetti(IdProgetto) ON DELETE CASCADE,
+              Titolo             NVARCHAR(300) NOT NULL,
+              Descrizione        NVARCHAR(MAX) NULL,
+              Stato              INT NOT NULL DEFAULT 0,
+              Priorita           INT NOT NULL DEFAULT 1,
+              DataScadenza       DATETIME2 NULL,
+              AssegnatoAId       NVARCHAR(450) NULL,
+              DataCreazione      DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
+              DataCompletamento  DATETIME2 NULL
+          )",
+        @"IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name='TaskCommenti')
+          CREATE TABLE TaskCommenti (
+              IdCommento    INT IDENTITY(1,1) PRIMARY KEY,
+              IdTask        INT NOT NULL REFERENCES ProgettoTasks(IdTask) ON DELETE CASCADE,
+              AutoreId      NVARCHAR(450) NULL,
+              Testo         NVARCHAR(MAX) NOT NULL,
+              DataCreazione DATETIME2 NOT NULL DEFAULT GETUTCDATE()
+          )",
+        @"IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name='ProgettoScadenze')
+          CREATE TABLE ProgettoScadenze (
+              IdScadenza INT IDENTITY(1,1) PRIMARY KEY,
+              IdProgetto INT NOT NULL REFERENCES Progetti(IdProgetto) ON DELETE CASCADE,
+              Titolo     NVARCHAR(200) NOT NULL,
+              Data       DATE NOT NULL,
+              Nota       NVARCHAR(500) NULL
+          )",
+        @"IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name='ProgettoNote')
+          CREATE TABLE ProgettoNote (
+              IdNota        INT IDENTITY(1,1) PRIMARY KEY,
+              IdProgetto    INT NOT NULL REFERENCES Progetti(IdProgetto) ON DELETE CASCADE,
+              AutoreId      NVARCHAR(450) NULL,
+              Testo         NVARCHAR(MAX) NOT NULL,
+              DataCreazione DATETIME2 NOT NULL DEFAULT GETUTCDATE()
+          )",
+        @"IF NOT EXISTS (SELECT 1 FROM sys.tables WHERE name='ProgettoMembri')
+          CREATE TABLE ProgettoMembri (
+              IdProgetto INT NOT NULL REFERENCES Progetti(IdProgetto) ON DELETE CASCADE,
+              UserId     NVARCHAR(450) NOT NULL,
+              CONSTRAINT PK_ProgettoMembri PRIMARY KEY (IdProgetto, UserId)
+          )",
     };
+
+    foreach (var sql in ddl)
+    {
+        try { db.Database.ExecuteSqlRaw(sql); }
+        catch (Exception ex) { Console.WriteLine($"[DDL skip] {ex.Message}"); }
+    }
 }

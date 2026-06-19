@@ -30,13 +30,13 @@ jobs:
         run: dotnet test SitoLtb.Tests/SitoLtb.Tests.csproj --configuration Release --no-build
 
       - name: dotnet publish
-        run: dotnet publish SitoLtb/SitoLtb.csproj -c Release -o "${{env.DOTNET_ROOT}}/myapp"
+        run: dotnet publish SitoLtb/SitoLtb.csproj -c Release -o ./publish
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ./publish
 
   deploy:
     runs-on: windows-latest

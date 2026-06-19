@@ -1,4 +1,4 @@
-﻿@model (string Title, X.PagedList.IPagedList<SitoLtb.Models.Post>? Posts)
+﻿@model (string Title, X.PagedList.IPagedList<SitoLtb.Models.Post>? Posts, string ViewAllAction)
 
 @if (Model.Posts == null || !Model.Posts.Any())
 {
@@ -47,5 +47,10 @@
             </article>
         }
 
+    </div>
+    <div class="blog-view-all-wrap">
+        <a asp-controller="Home" asp-action="@Model.ViewAllAction" class="blog-view-all-btn">
+            Vedi tutti gli articoli in "@Model.Title" →
+        </a>
     </div>
 </section>
